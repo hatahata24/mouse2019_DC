@@ -39,5 +39,8 @@
 #define SI 1975
 #define DOO 2093
 
+//----goal point---
+#define GOAL_X 7	//7
+#define GOAL_Y 7	//7
 
 #endif /* INC_PARAMS_H_ */

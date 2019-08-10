@@ -69,9 +69,9 @@ float speed_l = 0;
 
 int mode = 0;
 int cnt = 0;
-int target_speed_l = 0;
-int target_speed_r = 0;
-int pulse_l, pulse_r;
+float target_speed_l = 0;
+float target_speed_r = 0;
+float pulse_l, pulse_r;
 
 //int value1, value2, value3, value4;
 
@@ -80,10 +80,6 @@ float old_epsilon = 0; 	//
 float epsilon_dif = 0;	//dif of dif
 float epsilon_l = 0; 	//dif between target & current
 float epsilon_r = 0;	//dif between target & current
-
-int hz;
-
-int drive_flag = 0;
 
 /* USER CODE END PV */
 
@@ -140,7 +136,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		TIM4 -> CNT = 0;
 		TIM8 -> CNT = 0;
 
-		if(drive_flag){
+		if(MF.FLAG.DRV){
 			epsilon_l = target_speed_l - speed_l;
 			pulse_l = Kp * epsilon_l;
 			if(pulse_l < 0){
@@ -183,41 +179,65 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
 			}
 		}else{
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);		//R_CW
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);	//R_CCW
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);			//R_CW
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);		//R_CCW
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);		//STBY
 		}
 
-		//ADchange interrupt
+		//===ADchange interrupt===
 		uint16_t delay = 0;
-		mode++;
-		cnt++;
-		mode = mode%2;
+		tp = (tp+1)%2;
 
-		switch(mode){
+		switch(tp){
 		  case 0:
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);  //L
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET); 	//L
 				for(delay=0; delay<sensor_wait; delay++);
-				ad_l = get_adc_value(&hadc1, ADC_CHANNEL_3);	//L
+				ad_l = get_adc_value(&hadc1, ADC_CHANNEL_3);			//L
 				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
 
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);   //R
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);  	//R
 				for(delay=0; delay<sensor_wait; delay++);
-				ad_r = get_adc_value(&hadc1, ADC_CHANNEL_1);	//R
+				ad_r = get_adc_value(&hadc1, ADC_CHANNEL_1);			//R
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
 			break;
 
 		  case 1:
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);  //FL
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET); 	//FL
 				for(delay=0; delay<sensor_wait; delay++);
-				ad_fl = get_adc_value(&hadc1, ADC_CHANNEL_2);	//FL
+				ad_fl = get_adc_value(&hadc1, ADC_CHANNEL_2);			//FL
 				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
 
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);   //FR
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);   	//FR
 				for(delay=0; delay<sensor_wait; delay++);
-				ad_fr = get_adc_value(&hadc1, ADC_CHANNEL_0);	//FR
+				ad_fr = get_adc_value(&hadc1, ADC_CHANNEL_0);			//FR
 				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
 			break;
+
+		  case 2:
+				//
+				if(MF.FLAG.CTRL){
+					//
+					int16_t dl_tmp = 0, dr_tmp = 0;
+					//
+					dif_l = (int32_t) ad_l - base_l;
+					dif_r = (int32_t) ad_r - base_r;
+
+					//
+					if(CTRL_BASE_L < dif_l){
+						dl_tmp += CTRL_CONT * dif_l;			//比例制御値を決定
+						dr_tmp += -1 * CTRL_CONT * dif_l;		//比例制御値を決定
+					}
+					else if(CTRL_BASE_R < dif_r){
+						dl_tmp += -1 * CTRL_CONT * dif_r;		//比例制御値を決定
+						dr_tmp += CTRL_CONT * dif_r;			//比例制御値を決定
+					}
+					dl = max(min(CTRL_MAX, dl_tmp), -1 * CTRL_MAX);
+					dr = max(min(CTRL_MAX, dr_tmp), -1 * CTRL_MAX);
+				}else{
+					//制御フラグがなければ制御値0
+					dl = dr = 0;
+				}
+				break;
 		}
 	}
 }
@@ -284,14 +304,14 @@ int main(void)
   {
 	  led_write(mode & 0b001, mode & 0b010, mode & 0b100);
 	  if(dist_r >= 20){
-//		  HAL_Delay(100);
-//		  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
 		  mode++;
 		  dist_r = 0;
 		  if(mode > 7){
 			  mode = 0;
 		  }
 		  printf("Mode : %d\n", mode);
+		  buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+		  buzzer(pitagola[2][0], pitagola[2][1]);
 	  }
 	  if(dist_r <= -20){
 		  mode--;
@@ -300,13 +320,16 @@ int main(void)
 			  mode = 7;
 		  }
 		  printf("Mode : %d\n", mode);
+		  buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+		  buzzer(pitagola[2][0], pitagola[2][1]);
 	  }
 	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
-		  HAL_Delay(100);
+		  HAL_Delay(50);
 		  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
 		  switch(mode){
+
 		  	  case 0:
-		  		  drive_flag = 1;
+		  		  MF.FLAG.DRV = 1;
 		  		  for(int i = 0; i < 3; i++){
 		  			  HAL_Delay(500);
 		  			  target_speed_l = 200;
@@ -320,7 +343,7 @@ int main(void)
 		  			  target_speed_l = 0;
 		  			  target_speed_r = 0;
 		  		  }
-		  		  while(1)drive_flag = 0;
+		  		  while(1)MF.FLAG.DRV = 0;
 		  		  break;
 
 		  	  case 5:
@@ -330,11 +353,17 @@ int main(void)
 		  			  get_wall_info();
 		  			  led_write(wall_info & 0x11, wall_info & 0x88, wall_info & 0x44);
 		  			  printf("ad_l : %d, ad_fl : %d, ad_fr : %d, ad_r : %d\n", ad_l, ad_fl, ad_fr, ad_r);
-		  			  //printf("dif_l : %d, dif_r : %d\n", dif_l, dif_r);
 		  			  HAL_Delay(333);
 					}
 					break;
 
+		  	  case 6:
+		  		while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_SET);
+
+		  		for(int i=0; i<pita; i++){
+		  			buzzer(pitagola[i][0], pitagola[i][1]);
+		  		}
+		  		break;
 		  }
 	  }
 
