@@ -329,6 +329,118 @@ void rotate_180(void){
 }
 
 
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//slalom_R90
+//aスラロームで左に90度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void slalom_R90(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 3000;
+	accel_r = 3000;
+	speed_max_l = 400;
+	speed_max_r = 400;
+
+	drive_start();											//走行開始
+	while(dist_l < 18.5 && dist_r < 18.5);
+	drive_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 4000;
+	omega_max = 550;
+	speed_G = 400;
+
+	drive_start();											//走行開始
+	while(degree_z > -38.087);
+	drive_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 0;
+
+	drive_start();											//走行開始
+	while(degree_z > -19);
+	drive_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -4000;
+
+	drive_start();											//走行開始
+	while(degree_z > -31.913);
+	drive_stop();
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 3000;
+	accel_r = 3000;
+	speed_max_l = 400;
+	speed_max_r = 400;
+	drive_start();											//走行開始
+	while(dist_l < 18.5 && dist_r < 18.5);
+	drive_stop();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//slalom_L90
+//aスラロームで右に90度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void slalom_L90(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 3000;
+	accel_r = 3000;
+	speed_max_l = 400;
+	speed_max_r = 400;
+
+	drive_start();											//走行開始
+	while(dist_l < 18.5 && dist_r < 18.5);
+	drive_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -4000;
+	omega_min = -550;
+	speed_G = 400;
+
+	drive_start();											//走行開始
+	while(degree_z < 38.087);
+	drive_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 0;
+
+	drive_start();											//走行開始
+	while(degree_z < 19);
+	drive_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 4000;
+
+	drive_start();											//走行開始
+	while(degree_z < 31.913);
+	drive_stop();
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 3000;
+	accel_r = 3000;
+	speed_max_l = 400;
+	speed_max_r = 400;
+	drive_start();											//走行開始
+	while(dist_l < 18.5 && dist_r < 18.5);
+	drive_stop();
+}
+
+
 /*----------------------------------------------------------
 		テスト関数
 ----------------------------------------------------------*/
@@ -377,7 +489,7 @@ void init_test(void){
 				case 1:
 					//----4区画等速走行----
 					printf("4 Section, Forward, Constant Speed.\n");
-					for(int i = 0; i < 4; i++){
+					for(int i = 0; i < 1; i++){
 						driveC(SEC_HALF*2);	//一区画のパルス分デフォルトインターバルで走行
 					}
 					break;
@@ -399,6 +511,100 @@ void init_test(void){
 					//----180度回転----
 					printf("Rotate 180.\n");
 					for(int i = 0; i < 8; i++){
+						rotate_180();				//8回右180度回転、つまり4周回転
+					}
+					break;
+				case 5:
+					//----4区画連続走行----
+					printf("4 Section, Forward, Continuous.\n");
+					half_sectionA();				//半区画のパルス分加速しながら走行
+					for(int i = 0; i < 4-1; i++){
+						one_sectionU();			//一区画のパルス分等速走行
+					}
+					half_sectionD();				//半区画のパルス分減速しながら走行。走行後は停止する
+					break;
+				case 6:
+					break;
+				case 7:
+					break;
+			}
+		}
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//slalom_test
+//aスラローム走行テスト
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void slalom_test(void){
+
+	int mode = 0;
+	printf("Test Slalom Run, Mode : %d\n", mode);
+
+	while(1){
+		led_write(mode & 0b001, mode & 0b010, mode & 0b100);
+		  if(dist_r >= 20){
+			  mode++;
+			  dist_r = 0;
+			  if(mode > 7){
+				  mode = 0;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(dist_r <= -20){
+			  mode--;
+			  dist_r = 0;
+			  if(mode < 0){
+				  mode = 7;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
+			  HAL_Delay(50);
+			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  switch(mode){
+				case 0:
+					//----a尻当て----
+					printf("Set Position.\n");
+					//set_position(0);
+					break;
+				case 1:
+					//----slalom右折----
+					printf("slalom turn right .\n");
+					for(int i = 0; i < 4; i++){
+						slalom_R90();	//一区画のパルス分デフォルトインターバルで走行
+					}
+					break;
+				case 2:
+					//----slalom左折----
+					printf("slalom turn left .\n");
+					for(int i = 0; i < 4	; i++){
+						slalom_L90();				//16回右90度回転、つまり4周回転
+					}
+					break;
+				case 3:
+					//----slalom右折----
+					printf("slalom turn right .\n");
+					for(int i = 0; i < 8; i++){
+						half_sectionA();
+						slalom_R90();	//一区画のパルス分デフォルトインターバルで走行
+						half_sectionD();
+					}
+					break;
+				case 4:
+					//----slalom左折----
+					printf("slalom turn left .\n");
+					for(int i = 0; i < 8; i++){
+						half_sectionA();
+						slalom_L90();				//16回右90度回転、つまり4周回転
+						half_sectionD();
 						rotate_180();				//8回右180度回転、つまり4周回転
 					}
 					break;
@@ -452,8 +658,11 @@ void test_select(void){
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
 			  switch(mode){
 				case 1:
-					//init test mode
 					init_test();
+					break;
+
+				case 2:
+					slalom_test();
 					break;
 			  }
 		  }
