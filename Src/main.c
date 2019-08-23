@@ -288,12 +288,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					dif_r = (int32_t) ad_r - base_r;
 
 					if(CTRL_BASE_L < dif_l){
-						dl_tmp += CTRL_CONT * dif_l;			//比例制御値を決�?
-						dr_tmp += -1 * CTRL_CONT * dif_l;		//比例制御値を決�?
+						dl_tmp += CTRL_CONT * dif_l;			//比例制御値を決?��?
+						dr_tmp += -1 * CTRL_CONT * dif_l;		//比例制御値を決?��?
 					}
 					else if(CTRL_BASE_R < dif_r){
-						dl_tmp += -1 * CTRL_CONT * dif_r;		//比例制御値を決�?
-						dr_tmp += CTRL_CONT * dif_r;			//比例制御値を決�?
+						dl_tmp += -1 * CTRL_CONT * dif_r;		//比例制御値を決?��?
+						dr_tmp += CTRL_CONT * dif_r;			//比例制御値を決?��?
 					}
 					dl = max(min(CTRL_MAX, dl_tmp), -1 * CTRL_MAX);
 					dr = max(min(CTRL_MAX, dr_tmp), -1 * CTRL_MAX);
@@ -302,6 +302,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					dl = dr = 0;
 				}
 				break;
+		}
+		if( HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {
+		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
+		} else {
+		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
 		}
 	}
 }
@@ -910,7 +915,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : PB12 */
   GPIO_InitStruct.Pin = GPIO_PIN_12;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PA11 */
