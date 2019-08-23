@@ -2,8 +2,8 @@
 #define INC_PARAMS_H_
 
 //machine params
-#define DIAMETER 23.5
-#define TREAD 60
+#define DIAMETER 24.2
+#define TREAD 66
 
 //PID params
 #define Kp 4
@@ -11,9 +11,13 @@
 #define Td 0
 
 //drive params
+#define SEC_HALF 90
 
 
-//===sensor params===
+//log params
+#define log_allay 200
+
+//sensor params
 #define sensor_wait 3000
 
 //----wall judge----

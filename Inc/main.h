@@ -58,6 +58,11 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+int __io_putchar(int);
+
+void buzzer(int, int);
+int get_adc_value(ADC_HandleTypeDef*, uint32_t);
+void led_write(uint8_t, uint8_t, uint8_t);
 
 /* USER CODE END EFP */
 

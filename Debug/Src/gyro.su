@@ -1,0 +1,4 @@
+gyro.c:7:6:gyro_init	16	static
+gyro.c:34:9:read_byte	24	static
+gyro.c:45:6:write_byte	24	static
+gyro.c:55:7:gyro_read_z	24	static

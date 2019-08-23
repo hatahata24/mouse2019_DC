@@ -7,21 +7,39 @@
 	/*グローバル変数の定義*/
 
 	//====物理量走行関連====
-	volatile float speedL, speedR;
-	volatile int16_t accel, speed_min, speed_max;
-	volatile float widthR, widthL;
+	volatile float cnt_l, cnt_r;
+	volatile float dist_l, dist_r;
+	volatile float accel_l, accel_r;
+	volatile float speed_l, speed_r, speed_G;
 
-	volatile uint16_t target, target_flag;			//スラローム走行時使用
-	volatile int16_t accel_hs, speed_max_hs;		//既知区間加速時使用
+	volatile float target_speed_l, target_speed_r;
+	volatile float speed_min_l, speed_max_l;
+	volatile float speed_min_r, speed_max_r;
+	volatile float target_dist;
+	volatile float pulse_l, pulse_r;
+
+	volatile float epsilon_l, epsilon_r;	//dif between target & current
+	volatile float epsilon_sum; 	//dif sum
+	volatile float old_epsilon; 	//
+	volatile float epsilon_dif;	//dif of dif
 #else												//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
 	//====物理量走行関連====
-	extern volatile float speedL, speedR;
-	extern volatile int16_t accel, speed_min, speed_max;
-	extern volatile float widthR, widthL;
+	extern volatile float cnt_l, cnt_r;
+	extern volatile float dist_l, dist_r;
+	extern volatile float accel_l, accel_r;
+	extern volatile float speed_l, speed_r, speed_G;
 
-	extern volatile uint16_t target, target_flag;	//スラローム走行時使用
-	extern volatile int16_t accel_hs, speed_max_hs;	//既知区間加速時使用
+	extern volatile float target_speed_l, target_speed_r;
+	extern volatile float speed_min_l, speed_max_l;
+	extern volatile float speed_min_r, speed_max_r;
+	extern volatile float target_dist;
+	extern volatile float pulse_l, pulse_r;
+
+	extern volatile float epsilon_l, epsilon_r;	//dif between target & current
+	extern volatile float epsilon_sum; 	//dif sum
+	extern volatile float old_epsilon; 	//
+	extern volatile float epsilon_dif;	//dif of dif
 #endif
 
 
@@ -32,6 +50,10 @@
 		関数プロトタイプ宣言
 ============================================================*/
 void drive_init(void);
+void drive_dir(uint8_t, uint8_t);
+
+
+
 void drive_enable_motor(void);
 void drive_disable_motor(void);
 void drive_start(void);
@@ -41,22 +63,12 @@ void drive_stop2(void);
 void drive_set_dir(uint8_t);	//進む方向の設定
 float dist_pulse(uint16_t);		//距離(mm)をパルス数に変換
 
-//====走行系====
-//----基幹関数----
-void driveA(uint16_t);			//加速走行
-void driveD(uint16_t);			//減速走行
+//====a走行系====
+//----a基幹関数----
+void driveA(uint16_t, uint16_t, uint16_t, uint16_t);		//加速走行
+void driveD(int16_t, uint16_t, uint16_t, uint16_t);		//減速走行
 void driveU(uint16_t);			//等速走行（前の速度を維持）
 void driveC(uint16_t);			//デフォルトインターバルで走行
-void slalomU1(uint16_t);
-void slalomR1(uint16_t);
-void slalomR2(uint16_t);
-void slalomR3(uint16_t);
-void slalomU2(uint16_t);
-
-void driveA2(uint16_t, uint16_t, uint16_t, uint16_t);		//加速走行
-void driveD2(int16_t, uint16_t, uint16_t, uint16_t);		//減速走行
-void driveU2(uint16_t);			//等速走行（前の速度を維持）
-void driveC2(uint16_t);			//デフォルトインターバルで走行
 void slalomU12(uint16_t);
 void slalomR12(uint16_t, uint16_t, uint16_t, uint16_t);
 void slalomR22(uint16_t);
@@ -64,7 +76,7 @@ void slalomR32(int32_t, uint16_t, uint16_t, uint16_t, uint16_t);
 void slalomU22(uint16_t);
 
 
-//----上位関数----
+//----a上位関数----
 void half_sectionA(void);		//加速半区画
 void half_sectionD(void);		//減速半区画
 void one_section(void);			//加減速一区画
@@ -77,22 +89,12 @@ void slalom_L90(void);			//スラローム左90回転
 void set_position(uint8_t);		//上下位置合わせ
 void set_positionX(uint8_t);	//上下左右位置合わせ
 
-void half_sectionA2(void);		//加速半区画
-void half_sectionD2(void);		//減速半区画
-void one_section2(void);		//加減速一区画
-void one_sectionA2(void);		//加速一区画　既知区間加速時の加速用
-void one_sectionD2(void);		//減速一区画　既知区間加速時の減速用
-void one_sectionU2(void);		//等速一区画
-void rotate_R902(void);			//右90回転
-void rotate_L902(void);			//左90回転
-void rotate_1802(void);			//180度回転
-void slalom_R902(void);			//スラローム右90回転	右旋回時に右輪が減速しない原因不明の事態に陥ったため物理量スラロームは不使用中
-void slalom_L902(void);			//スラローム左90回転　上記理由のため物理量スラロームは不使用中
-void set_position2(uint8_t);	//上下位置合わせ
-void set_positionX2(uint8_t);	//上下左右位置合わせ　初めのケツあて時のモータ音に違和感
 
+//----a走行関数----
+void test_select(void);			//aテスト走行選択
 
-//----走行関数----
+void init_test(void);			//a初期基幹関数走行テスト
+
 void defo_test(void);			//初期状態でのtableによるテスト走行
 void physic_test(void);			//物理量ベースによるテスト走行
 void accel_test(void);			//既知区間加速によるテスト走行
