@@ -169,6 +169,88 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			drive_dir(1, 2);
 		}
 
+		//gyro interrupt
+		degree_z += gyro_read_z() * 0.001;
+
+		if(MF.FLAG.ENKAI){
+			target_dist = TREAD*M_PI/360*(degree_z-target_degree_z);
+			if(target_dist > 0){
+				target_speed_l = sqrt(2*accel_l*target_dist);
+				target_speed_r = -1 * target_speed_l;
+			}else{
+				target_speed_l = sqrt(2*accel_l*target_dist*-1)*-1;
+				target_speed_r = -1 * target_speed_l;
+			}
+
+			epsilon_l = target_speed_l - speed_l;
+			pulse_l = Kp * epsilon_l;
+			if(pulse_l > 0){
+				drive_dir(0, 0);
+				ConfigOC.Pulse = pulse_l;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+			}
+			else if(pulse_l < 0){
+				drive_dir(0, 1);
+				ConfigOC.Pulse = -pulse_l;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+			}
+
+			epsilon_r = target_speed_r - speed_r;
+			pulse_r = Kp * epsilon_r;
+			if(pulse_r > 0){
+				drive_dir(1, 0);
+				ConfigOC.Pulse = pulse_r;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+			}
+			else if(pulse_r < 0){
+				drive_dir(1, 1);
+				ConfigOC.Pulse = -pulse_r;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+			}
+		}
+
+		if(MF.FLAG.GYRO){
+			target_omega_z += target_degaccel_z * 0.001;
+			target_omega_z = max(min(target_omega_z, omega_max), omega_min);
+			target_speed_l = speed_G + target_omega_z/180*M_PI*TREAD/2;
+			target_speed_r = speed_G - target_omega_z/180*M_PI*TREAD/2;
+
+			epsilon_l = target_speed_l - speed_l;
+			pulse_l = Kp * epsilon_l;
+			if(pulse_l > 0){
+				drive_dir(0, 0);
+				ConfigOC.Pulse = pulse_l;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+			}
+			else if(pulse_l < 0){
+				drive_dir(0, 1);
+				ConfigOC.Pulse = -pulse_l;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+			}
+
+			epsilon_r = target_speed_r - speed_r;
+			pulse_r = Kp * epsilon_r;
+			if(pulse_r > 0){
+				drive_dir(1, 0);
+				ConfigOC.Pulse = pulse_r;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+			}
+			else if(pulse_r < 0){
+				drive_dir(1, 1);
+				ConfigOC.Pulse = -pulse_r;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+			}
+		}
+
+
 		//===ADchange interrupt===
 		uint16_t delay = 0;
 		tp = (tp+1)%2;
@@ -267,6 +349,7 @@ int main(void)
   MX_SPI3_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  gyro_init();
 
   printf("*** Welcome to WMMC ! ***\n");
 
@@ -296,8 +379,8 @@ int main(void)
 			  mode = 0;
 		  }
 		  printf("Mode : %d\n", mode);
-		  buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
-		  buzzer(pitagola[2][0], pitagola[2][1]);
+		  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+		  //buzzer(pitagola[2][0], pitagola[2][1]);
 	  }
 	  if(dist_r <= -20){
 		  mode--;
@@ -306,8 +389,8 @@ int main(void)
 			  mode = 7;
 		  }
 		  printf("Mode : %d\n", mode);
-		  buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
-		  buzzer(pitagola[2][0], pitagola[2][1]);
+		  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+		  //buzzer(pitagola[2][0], pitagola[2][1]);
 	  }
 	  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 		  HAL_Delay(50);

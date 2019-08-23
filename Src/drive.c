@@ -1,5 +1,6 @@
 
 #include "global.h"
+#include "math.h"
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //drive_init
@@ -128,13 +129,11 @@ void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_
 		//----等速走行----
 		while((dist_l < c_dist) || (dist_r < c_dist));	//a左右のモータが等速分の距離以上進むまで待機
 	}
-	printf("c fin\n");
 	accel_l = accel_r = accel_p;
 	//dist_l = 0;
 	//dist_r = 0;
 	//----減速走行----
 	while((dist_l < dist) || (dist_r < dist));			//a左右のモータが減速分の距離以上進むまで待機
-	printf("d fin\n");
 
 	//MF.FLAG.STRT = 0;
 	drive_stop();											//走行停止
@@ -193,7 +192,7 @@ void half_sectionA(void){
 	MF.FLAG.GCTRL = 1;										//gyro制御を有効にする
 
 	target_omega_z = 0;
-	driveA(1000, 0, 400, SEC_HALF);					//半区画のパルス分加速しながら走行。走行後は停止しない
+	driveA(1000, 10, 400, SEC_HALF);					//半区画のパルス分加速しながら走行。走行後は停止しない
 	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 }
 
@@ -210,7 +209,123 @@ void half_sectionD(void){
 	MF.FLAG.GCTRL = 1;										//gyro制御を有効にする
 
 	target_omega_z = 0;
-	driveD(-1000, 0, 400, SEC_HALF);				//指定パルス分指定減速度で減速走行。走行後は停止する
+	driveD(-1000, 10, 400, SEC_HALF);				//指定パルス分指定減速度で減速走行。走行後は停止する
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//one_section
+//a1区画分進んで停止する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_section(void){
+
+	half_sectionA();										//半区画分加速走行
+	half_sectionD();										//半区画分減速走行のち停止
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//one_sectionU
+//a等速で1区画分進む
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_sectionU(void){
+
+	MF.FLAG.WCTRL = 1;										//wall制御を有効にする
+	MF.FLAG.GCTRL = 1;										//gyro制御を有効にする
+
+	driveU(SEC_HALF*2);										//半区画のパルス分等速走行。走行後は停止しない
+	get_wall_info();										//壁情報を取得
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//rotate_R90
+//a右に90度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void rotate_R90(void){
+	target_omega_z = 800;
+	accel_l = 3000;
+	accel_r = -3000;
+	speed_max_l = target_omega_z/180*M_PI * TREAD/2;
+	speed_min_r = -1*target_omega_z/180*M_PI * TREAD/2;
+
+	drive_start();											//走行開始
+	while(degree_z > -80);
+	drive_stop();
+
+	accel_l = 3000;
+	accel_r = -3000;
+	speed_max_l = 100;
+	speed_min_r = -100;
+
+	drive_start();											//走行開始
+	while(degree_z > -90+80);
+
+	drive_stop();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//rotate_L90
+//a左に90度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void rotate_L90(void){
+	target_omega_z = 800;
+	accel_l = -3000;
+	accel_r = 3000;
+	speed_min_l = -1*target_omega_z/180*M_PI * TREAD/2;
+	speed_max_r = target_omega_z/180*M_PI * TREAD/2;
+
+	drive_start();											//走行開始
+	while(degree_z < 80);
+	drive_stop();
+
+	accel_l = -3000;
+	accel_r = 3000;
+	speed_min_l = -100;
+	speed_max_r = 100;
+
+	drive_start();											//走行開始
+	while(degree_z < 90-80);
+
+	drive_stop();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//rotate_180
+//a180度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void rotate_180(void){
+	target_omega_z = 800;
+	accel_l = 3000;
+	accel_r = -3000;
+	speed_max_l = target_omega_z/180*M_PI * TREAD/2;
+	speed_min_r = -1*target_omega_z/180*M_PI * TREAD/2;
+
+	drive_start();											//走行開始
+	while(degree_z > -170);
+	drive_stop();
+
+	accel_l = 3000;
+	accel_r = -3000;
+	speed_max_l = 100;
+	speed_min_r = -100;
+
+	drive_start();											//走行開始
+	while(degree_z > -180+170);
+
+	drive_stop();
 }
 
 
@@ -237,8 +352,8 @@ void init_test(void){
 				  mode = 0;
 			  }
 			  printf("Mode : %d\n", mode);
-			  buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
-			  buzzer(pitagola[2][0], pitagola[2][1]);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
 		  }
 		  if(dist_r <= -20){
 			  mode--;
@@ -247,8 +362,8 @@ void init_test(void){
 				  mode = 7;
 			  }
 			  printf("Mode : %d\n", mode);
-			  buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
-			  buzzer(pitagola[2][0], pitagola[2][1]);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
 		  }
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
@@ -270,30 +385,30 @@ void init_test(void){
 					//----right90度回転----
 					printf("Rotate R90.\n");
 					for(int i = 0; i < 16; i++){
-						//rotate_R90();				//16回右90度回転、つまり4周回転
+						rotate_R90();				//16回右90度回転、つまり4周回転
 					}
 					break;
 				case 3:
 					//----left90度回転----
 					printf("Rotate L90.\n");
 					for(int i = 0; i < 16; i++){
-						//rotate_L90();				//16回左90度回転、つまり4周回転
+						rotate_L90();				//16回左90度回転、つまり4周回転
 					}
 					break;
 				case 4:
 					//----180度回転----
 					printf("Rotate 180.\n");
 					for(int i = 0; i < 8; i++){
-						//rotate_180();				//8回右180度回転、つまり4周回転
+						rotate_180();				//8回右180度回転、つまり4周回転
 					}
 					break;
 				case 5:
 					//----4区画連続走行----
 					printf("4 Section, Forward, Continuous.\n");
 					half_sectionA();				//半区画のパルス分加速しながら走行
-					/*for(int i = 0; i < 4-1; i++){
-						driveU(SEC_HALF*2);			//一区画のパルス分等速走行
-					}*/
+					for(int i = 0; i < 4-1; i++){
+						one_sectionU();			//一区画のパルス分等速走行
+					}
 					half_sectionD();				//半区画のパルス分減速しながら走行。走行後は停止する
 					break;
 				case 6:
@@ -319,8 +434,8 @@ void test_select(void){
 				  mode = 0;
 			  }
 			  printf("Mode : %d\n", mode);
-			  buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
-			  buzzer(pitagola[2][0], pitagola[2][1]);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
 		  }
 		  if(dist_r <= -20){
 			  mode--;
@@ -329,8 +444,8 @@ void test_select(void){
 				  mode = 7;
 			  }
 			  printf("Mode : %d\n", mode);
-			  buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
-			  buzzer(pitagola[2][0], pitagola[2][1]);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
 		  }
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
