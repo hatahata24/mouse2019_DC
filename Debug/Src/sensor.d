@@ -31,7 +31,7 @@ Src/sensor.o: ../Src/sensor.c ../Inc/global.h ../Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h ../Inc/params.h \
  ../Inc/sensor.h ../Inc/search.h ../Inc/buzzer.h ../Inc/drive.h \
- ../Inc/gyro.h
+ ../Inc/gyro.h ../Inc/eeprom.h
 
 ../Inc/global.h:
 
@@ -110,3 +110,5 @@ Src/sensor.o: ../Src/sensor.c ../Inc/global.h ../Inc/main.h \
 ../Inc/drive.h:
 
 ../Inc/gyro.h:
+
+../Inc/eeprom.h:

@@ -288,12 +288,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					dif_r = (int32_t) ad_r - base_r;
 
 					if(CTRL_BASE_L < dif_l){
-						dl_tmp += CTRL_CONT * dif_l;			//比例制御値を決?��?
-						dr_tmp += -1 * CTRL_CONT * dif_l;		//比例制御値を決?��?
+						dl_tmp += CTRL_CONT * dif_l;			//a比例制御値を決定
+						dr_tmp += -1 * CTRL_CONT * dif_l;		//a比例制御値を決定
 					}
 					else if(CTRL_BASE_R < dif_r){
-						dl_tmp += -1 * CTRL_CONT * dif_r;		//比例制御値を決?��?
-						dr_tmp += CTRL_CONT * dif_r;			//比例制御値を決?��?
+						dl_tmp += -1 * CTRL_CONT * dif_r;		//a比例制御値を決定
+						dr_tmp += CTRL_CONT * dif_r;			//a比例制御値を決定
 					}
 					dl = max(min(CTRL_MAX, dl_tmp), -1 * CTRL_MAX);
 					dr = max(min(CTRL_MAX, dr_tmp), -1 * CTRL_MAX);
@@ -303,6 +303,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				}
 				break;
 		}
+
+		//battery check
 		if( HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {
 		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
 		} else {
@@ -351,7 +353,10 @@ int main(void)
   MX_SPI3_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  drive_init();
   gyro_init();
+  search_init();
+  sensor_init();
 
   printf("*** Welcome to WMMC ! ***\n");
 
@@ -403,7 +408,24 @@ int main(void)
 		  		  HAL_Delay(5000);
 		  		  break;
 
+		  	  case 1:
+		  		  //----a超新地走行----
+		  		  printf("Simple Run.\n");
+		  		  simple_run();
+		  		  break;
+
+		  	  case 2:
+		  		  //----aスラローム走行----
+		  		  printf("slalom Run.\n");
+		  		  slalom_run();
+		  		  break;
+
+		  	  case 3:
+		  		  HAL_Delay(5000);
+		  		  break;
+
 		  	  case 4:
+		  		  //----aテストモード選択----
 		  		  test_select();
 		  		  break;
 

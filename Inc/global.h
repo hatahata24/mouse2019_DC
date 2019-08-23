@@ -10,6 +10,9 @@
 #include "buzzer.h"
 #include "drive.h"
 #include "gyro.h"
+#include "eeprom.h"
+#include <stdio.h>
+
 
 typedef union {					//
 	uint16_t FLAGS;

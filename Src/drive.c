@@ -267,6 +267,7 @@ void rotate_R90(void){
 	drive_start();											//走行開始
 	while(degree_z > -90+80);
 
+	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
 	drive_stop();
 }
 
@@ -296,6 +297,7 @@ void rotate_L90(void){
 	drive_start();											//走行開始
 	while(degree_z < 90-80);
 
+	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも左回転処理
 	drive_stop();
 }
 
@@ -325,6 +327,7 @@ void rotate_180(void){
 	drive_start();											//走行開始
 	while(degree_z > -180+170);
 
+	turn_dir(DIR_TURN_180);									//マイクロマウス内部位置情報でも180度回転処理
 	drive_stop();
 }
 
@@ -482,9 +485,6 @@ void init_test(void){
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
 			  switch(mode){
 				case 0:
-					//----a尻当て----
-					printf("Set Position.\n");
-					//set_position(0);
 					break;
 				case 1:
 					//----4区画等速走行----
@@ -577,9 +577,6 @@ void slalom_test(void){
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
 			  switch(mode){
 				case 0:
-					//----a尻当て----
-					printf("Set Position.\n");
-					//set_position(0);
 					break;
 				case 1:
 					//----slalom右折----
@@ -674,3 +671,270 @@ void test_select(void){
 		  }
 	}
 }
+
+
+/*----------------------------------------------------------
+		走行モード選択関数
+----------------------------------------------------------*/
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//simple_run
+//a超新地走行モード
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void simple_run(void){
+
+	int mode = 0;
+	printf("Simple Run, Mode : %d\n", mode);
+
+	while(1){
+
+		led_write(mode & 0b001, mode & 0b010, mode & 0b100);
+		  if(dist_r >= 20){
+			  mode++;
+			  dist_r = 0;
+			  if(mode > 7){
+				  mode = 0;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(dist_r <= -20){
+			  mode--;
+			  dist_r = 0;
+			  if(mode < 0){
+				  mode = 7;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
+			  HAL_Delay(50);
+			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  switch(mode){
+
+				case 0:
+					break;
+				case 1:
+					//----a一次探索走行----
+					printf("First Run.\n");
+
+					MF.FLAG.SCND = 0;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchA();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchA();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					break;
+
+				case 2:
+					//----a一次探索連続走行----
+					printf("First Run. (Continuous)\n");
+
+					MF.FLAG.SCND = 0;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchB();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchB();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					break;
+
+				case 3:
+					//----a二次探索走行----
+					printf("Second Run. (Continuous)\n");
+
+					MF.FLAG.SCND = 1;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchB();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchB();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					break;
+
+				case 4:
+					break;
+
+				case 5:
+					break;
+
+				case 6:
+					break;
+
+				case 7:
+					break;
+			}
+		}
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//slalom_run
+//aスラローム走行モード
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void slalom_run(void){
+
+	int mode = 0;
+	printf("Slalom Run, Mode : %d\n", mode);
+
+	while(1){
+		led_write(mode & 0b001, mode & 0b010, mode & 0b100);
+		  if(dist_r >= 20){
+			  mode++;
+			  dist_r = 0;
+			  if(mode > 7){
+				  mode = 0;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(dist_r <= -20){
+			  mode--;
+			  dist_r = 0;
+			  if(mode < 0){
+				  mode = 7;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
+			  HAL_Delay(50);
+			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  switch(mode){
+				case 0:
+					break;
+
+				case 1:
+					//----a一次探索スラローム走行----
+					printf("First Run. (Slalom)\n");
+
+					MF.FLAG.SCND = 0;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+					break;
+
+				case 2:
+					//---a二次探索スラローム走行----
+					printf("Second Run. (Slalom)\n");
+
+					MF.FLAG.SCND = 1;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+					break;
+
+				case 3:
+					//----a二次探索スラローム走行+既知区間加速----
+/*					printf("Second Run. (Slalom+accel)\n");
+
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					accel_hs = 3000;
+					speed_max_hs = 600;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+*/					break;
+
+				case 4:
+					//----a二次探索スラローム走行+既知区間加速----
+/*					printf("Second Run. (Slalom+accel)\n");
+
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					accel_hs = 3000;
+					speed_max_hs = 1000;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+*/					break;
+
+				case 5:
+					break;
+
+				case 6:
+					break;
+
+				case 7:
+					break;
+
+			}
+		}
+	}
+}
+
+
