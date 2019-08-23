@@ -283,13 +283,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		  case 2:
 				//
 				if(MF.FLAG.WCTRL){
-					//
 					int16_t dl_tmp = 0, dr_tmp = 0;
-					//
 					dif_l = (int32_t) ad_l - base_l;
 					dif_r = (int32_t) ad_r - base_r;
 
-					//
 					if(CTRL_BASE_L < dif_l){
 						dl_tmp += CTRL_CONT * dif_l;			//比例制御値を決�?
 						dr_tmp += -1 * CTRL_CONT * dif_l;		//比例制御値を決�?
@@ -398,21 +395,7 @@ int main(void)
 		  switch(mode){
 
 		  	  case 0:
-		  		  MF.FLAG.DRV = 1;
-		  		  for(int i = 0; i < 3; i++){
-		  			  HAL_Delay(500);
-		  			  target_speed_l = 200;
-		  			  target_speed_r = 200;
-		  			  while(dist_l < 300 && dist_r < 300);
-
-		  			  target_speed_l = -200;
-		  			  target_speed_r = -200;
-		  			  while(dist_l > 0 && dist_r > 0);
-
-		  			  target_speed_l = 0;
-		  			  target_speed_r = 0;
-		  		  }
-		  		  while(1)MF.FLAG.DRV = 0;
+		  		  HAL_Delay(5000);
 		  		  break;
 
 		  	  case 4:

@@ -526,6 +526,12 @@ void init_test(void){
 				case 6:
 					break;
 				case 7:
+					target_degree_z = degree_z;
+					accel_l = 5000;
+
+					MF.FLAG.ENKAI = 1;
+
+					while(1);
 					break;
 			}
 		}

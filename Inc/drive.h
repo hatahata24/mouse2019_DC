@@ -51,17 +51,8 @@
 ============================================================*/
 void drive_init(void);
 void drive_dir(uint8_t, uint8_t);
-
-
-
-void drive_enable_motor(void);
-void drive_disable_motor(void);
 void drive_start(void);
-void drive_start2(void);
 void drive_stop(void);
-void drive_stop2(void);
-void drive_set_dir(uint8_t);	//進む方向の設定
-float dist_pulse(uint16_t);		//距離(mm)をパルス数に変換
 
 //====a走行系====
 //----a基幹関数----

@@ -16,5 +16,5 @@ drive.c:309:6:rotate_180	16	static
 drive.c:338:6:slalom_R90	8	static
 drive.c:394:6:slalom_L90	8	static
 drive.c:453:6:init_test	32	static
-drive.c:542:6:slalom_test	32	static
-drive.c:630:6:test_select	16	static
+drive.c:548:6:slalom_test	32	static
+drive.c:636:6:test_select	16	static
