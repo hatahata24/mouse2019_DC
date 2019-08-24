@@ -9,15 +9,31 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++
 HAL_StatusTypeDef eeprom_enable_write(void){
   HAL_StatusTypeDef status;
+  //printf("eprom status %x \n", status);
   FLASH_EraseInitTypeDef EraseInitStruct;
   uint32_t PageError = 0;
+  //printf("eprom write 1 \n");
   EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+  //printf("eprom write 2 \n");
   //EraseInitStruct.Banks = FLASH_BANK_1;
+  //printf("eprom write 3 \n");
+
   EraseInitStruct.Sector = EEPROM_START_ADDRESS;
+  //printf("eprom write 4 \n");
   EraseInitStruct.NbSectors = 1;
+  //printf("eprom write 5 \n");
+
+  EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+  //printf("eprom write 6 \n");
+
   status = HAL_FLASH_Unlock();
+  //printf("eprom status %x \n", status);
+  //printf("eprom write 7 \n");
   if(status != HAL_OK) return status;
+  //printf("eprom write 8 \n");
+  //printf("eprom status %x \n", status);
   status = HAL_FLASHEx_Erase(&EraseInitStruct, &PageError);
+  //printf("eprom write 9 \n");
   return status;
 }
 

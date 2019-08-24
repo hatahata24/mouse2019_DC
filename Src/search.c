@@ -81,7 +81,6 @@ void searchA(){
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
 	}
-	printf("rom fin\n");
 }
 
 
@@ -617,7 +616,9 @@ void make_route(){
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void store_map_in_eeprom(void){
+	printf("eprom func start \n");
 	eeprom_enable_write();
+	printf("eprom enable_write fin \n");
 	int i;
 	for(i = 0; i < 16; i++){
 		int j;

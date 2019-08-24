@@ -421,7 +421,9 @@ int main(void)
 		  		  break;
 
 		  	  case 3:
-		  		  HAL_Delay(5000);
+		  		  printf("eprom start \n");
+		  		  store_map_in_eeprom();
+		  		  printf("eprom fin \n");
 		  		  break;
 
 		  	  case 4:
