@@ -7,7 +7,7 @@
 // 引数：なし
 // 戻り値：問題が起こらなければHAL_OKを返す
 //+++++++++++++++++++++++++++++++++++++++++++++++
-HAL_StatusTypeDef eeprom_enable_write(void){
+/*HAL_StatusTypeDef eeprom_enable_write(void){
   HAL_StatusTypeDef status;
   //printf("eprom status %x \n", status);
   FLASH_EraseInitTypeDef EraseInitStruct;
@@ -36,6 +36,31 @@ HAL_StatusTypeDef eeprom_enable_write(void){
   //printf("eprom write 9 \n");
   return status;
 }
+*/
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//eeprom_enable_write
+// eepromとして使うflashメモリ領域をeraseし，書き込みを有効にする
+// 引数：なし
+// 戻り値：問題が起こらなければHAL_OKを返す
+//+++++++++++++++++++++++++++++++++++++++++++++++
+HAL_StatusTypeDef eeprom_enable_write(void){
+  HAL_StatusTypeDef status;
+  FLASH_EraseInitTypeDef EraseInitStruct;
+  uint32_t PageError = 0;
+  EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+  //EraseInitStruct.Banks = FLASH_BANK_1;
+  //EraseInitStruct.Sector = EEPROM_START_ADDRESS;
+  EraseInitStruct.Sector = FLASH_SECTOR_11;
+  EraseInitStruct.NbSectors = 1;
+  EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+
+  status = HAL_FLASH_Unlock();
+  if(status != HAL_OK) return status;
+  status = HAL_FLASHEx_Erase(&EraseInitStruct, &PageError);
+  return status;
+}
+
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //eeprom_disable_write
@@ -46,6 +71,7 @@ HAL_StatusTypeDef eeprom_enable_write(void){
 HAL_StatusTypeDef eeprom_disable_write(void){
   return HAL_FLASH_Lock();
 }
+
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //eeprom_write_halfword
@@ -60,6 +86,7 @@ HAL_StatusTypeDef eeprom_write_halfword(uint32_t address, uint16_t data){
   return status;
 }
 
+
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //eeprom_write_word
 // eepromとして使うflashメモリ領域へ4バイトの値を書き込む
@@ -73,6 +100,7 @@ HAL_StatusTypeDef eeprom_write_word(uint32_t address, uint32_t data) {
   return status;
 }
 
+
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //eeprom_read_halfword
 // eepromとして使うflashメモリ領域から2バイトの値を読み込む
@@ -85,6 +113,7 @@ uint16_t eeprom_read_halfword(uint32_t address){
   val = *(__IO uint16_t *)address;
   return val;
 }
+
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //eeprom_read_word

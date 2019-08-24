@@ -95,9 +95,9 @@ void search_test(void);			//直線優先や全面探索のテスト走行
 
 void simple_run(void);			//a超新地走行
 void slalom_run(void);			//aスラローム走行
+void sample_course_run(void);	//a試験コース走行
 
 
-void sample_course_run(void);	//試験コース走行
 void perfect_run(void);			//本番用走行
 void perfect_slalom(void);		//本番用スラローム走行
 

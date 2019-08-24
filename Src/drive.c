@@ -94,6 +94,7 @@ void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16
 	speed_min_l = speed_min_r = speed_min_p;
 	speed_max_l = speed_max_r = speed_max_p;
 	accel_l = accel_r = accel_p;										//引数の各パラメータをグローバル変数化
+	target_speed_l = target_speed_r = speed_min_p;
 
 	//if(MF.FLAG.STRT == 0) speed_l = speed_r = 100;						//最初の加速の際だけspeedを定義
 	drive_start();											//走行開始
@@ -384,6 +385,7 @@ void slalom_R90(void){
 	speed_max_r = 400;
 	drive_start();											//走行開始
 	while(dist_l < 18.5 && dist_r < 18.5);
+	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
 	drive_stop();
 }
 
@@ -440,6 +442,7 @@ void slalom_L90(void){
 	speed_max_r = 400;
 	drive_start();											//走行開始
 	while(dist_l < 18.5 && dist_r < 18.5);
+	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも左回転処理
 	drive_stop();
 }
 
@@ -518,7 +521,7 @@ void init_test(void){
 					//----4区画連続走行----
 					printf("4 Section, Forward, Continuous.\n");
 					half_sectionA();				//半区画のパルス分加速しながら走行
-					for(int i = 0; i < 4-1; i++){
+					for(int i = 0; i < 2-1; i++){
 						one_sectionU();			//一区画のパルス分等速走行
 					}
 					half_sectionD();				//半区画のパルス分減速しながら走行。走行後は停止する
@@ -666,6 +669,10 @@ void test_select(void){
 
 				case 2:
 					slalom_test();
+					break;
+
+				case 3:
+					sample_course_run();
 					break;
 			  }
 		  }
@@ -899,6 +906,120 @@ void slalom_run(void){
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 */					break;
+
+				case 4:
+					//----a二次探索スラローム走行+既知区間加速----
+/*					printf("Second Run. (Slalom+accel)\n");
+
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					accel_hs = 3000;
+					speed_max_hs = 1000;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+*/					break;
+
+				case 5:
+					break;
+
+				case 6:
+					break;
+
+				case 7:
+					break;
+
+			}
+		}
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//sample_course_run
+//a試験走行モード
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void sample_course_run(void){
+
+	int mode = 0;
+	printf("Sample Course Run, Mode : %d\n", mode);
+
+	while(1){
+		led_write(mode & 0b001, mode & 0b010, mode & 0b100);
+		  if(dist_r >= 20){
+			  mode++;
+			  dist_r = 0;
+			  if(mode > 7){
+				  mode = 0;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(dist_r <= -20){
+			  mode--;
+			  dist_r = 0;
+			  if(mode < 0){
+				  mode = 7;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
+			  HAL_Delay(50);
+			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  switch(mode){
+				case 0:
+					break;
+
+				case 1:
+					//----aサンプルコース1　超信地----
+					half_sectionA();
+					half_sectionD();
+					rotate_R90();
+					HAL_Delay(1000);
+					half_sectionA();
+					half_sectionD();
+					rotate_R90();
+					HAL_Delay(1000);
+					half_sectionA();
+					half_sectionD();
+					break;
+
+				case 2:
+					//----aサンプルコース1　超信地----
+					half_sectionA();
+					half_sectionD();
+					rotate_L90();
+					HAL_Delay(1000);
+					half_sectionA();
+					half_sectionD();
+					rotate_L90();
+					HAL_Delay(1000);
+					half_sectionA();
+					half_sectionD();
+					break;
+
+				case 3:
+					//---aサンプルコース2　スラローム----
+					half_sectionA();
+					slalom_R90();
+					slalom_R90();
+					half_sectionD();
+					break;
 
 				case 4:
 					//----a二次探索スラローム走行+既知区間加速----

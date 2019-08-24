@@ -1,6 +1,6 @@
-eeprom.c:10:19:eeprom_enable_write	40	static
-eeprom.c:46:19:eeprom_disable_write	8	static
-eeprom.c:56:19:eeprom_write_halfword	32	static
-eeprom.c:69:19:eeprom_write_word	32	static
-eeprom.c:82:10:eeprom_read_halfword	24	static
-eeprom.c:95:10:eeprom_read_word	24	static
+eeprom.c:47:19:eeprom_enable_write	40	static
+eeprom.c:71:19:eeprom_disable_write	8	static
+eeprom.c:82:19:eeprom_write_halfword	32	static
+eeprom.c:96:19:eeprom_write_word	32	static
+eeprom.c:110:10:eeprom_read_halfword	24	static
+eeprom.c:124:10:eeprom_read_word	24	static
