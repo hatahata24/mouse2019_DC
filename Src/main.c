@@ -251,7 +251,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 
-		//===ADchange interrupt===
+		//ADchange interrupt
 		uint16_t delay = 0;
 		tp = (tp+1)%2;
 
@@ -298,14 +298,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					dl = max(min(CTRL_MAX, dl_tmp), -1 * CTRL_MAX);
 					dr = max(min(CTRL_MAX, dr_tmp), -1 * CTRL_MAX);
 				}else{
-					//制御フラグがなければ制御値0
+					//a制御フラグがなければ壁制御値0
 					dl = dr = 0;
 				}
 				break;
 		}
 
 		//battery check
-		if( HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {
+		if( HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {	//2.1V以下で赤ランプ点灯
 		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
 		} else {
 		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
@@ -365,11 +365,11 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim8,TIM_CHANNEL_ALL);
   HAL_TIM_Base_Start_IT(&htim6);
 
-  TIM_OC_InitTypeDef ConfigOC;
+/*  TIM_OC_InitTypeDef ConfigOC;
   ConfigOC.OCMode = TIM_OCMODE_PWM1;
   ConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   ConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-
+*/
   int mode = 0;
   printf("Mode : %d\n", mode);
   /* USER CODE END 2 */
@@ -421,6 +421,7 @@ int main(void)
 		  		  break;
 
 		  	  case 3:
+		  		  //----flash 動作確認----
 		  		  printf("eprom start \n");
 		  		  store_map_in_eeprom();
 		  		  printf("eprom fin \n");
@@ -443,12 +444,17 @@ int main(void)
 					break;
 
 		  	  case 6:
-		  		while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_SET);
+		  		  //----pitagola sound----
+		  		  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_SET);
+		  		  for(int i=0; i<pita; i++){
+		  			  buzzer(pitagola[i][0], pitagola[i][1]);
+		  		  }
+		  		  break;
 
-		  		for(int i=0; i<pita; i++){
-		  			buzzer(pitagola[i][0], pitagola[i][1]);
-		  		}
-		  		break;
+		  	  case 7:
+		  		  //----a本番走行用----
+		  		  perfect_run();
+		  		  break;
 		  }
 	  }
 

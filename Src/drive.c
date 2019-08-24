@@ -93,18 +93,18 @@ void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16
 
 	speed_min_l = speed_min_r = speed_min_p;
 	speed_max_l = speed_max_r = speed_max_p;
-	accel_l = accel_r = accel_p;										//引数の各パラメータをグローバル変数化
+	accel_l = accel_r = accel_p;							//a引数の各パラメータをグローバル変数化
 	target_speed_l = target_speed_r = speed_min_p;
 
-	//if(MF.FLAG.STRT == 0) speed_l = speed_r = 100;						//最初の加速の際だけspeedを定義
-	drive_start();											//走行開始
+	//if(MF.FLAG.STRT == 0) speed_l = speed_r = 100;		//a最初の加速の際だけspeedを定義
+	drive_start();											//a走行開始
 
 	//----a走行----
-	while((dist_l < dist) || (dist_r < dist));			//左右のモータが指定パルス以上進むまで待機
+	while((dist_l < dist) || (dist_r < dist));				//a左右のモータが指定距離以上進むまで待機
 
 	drive_stop();											//a走行停止
 	//MF.FLAG.STRT = 1;										//2回目以降の加速の際はspeedは既存のスピードを用いる
-	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	get_wall_info();										//a壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -224,6 +224,42 @@ void one_section(void){
 
 	half_sectionA();										//半区画分加速走行
 	half_sectionD();										//半区画分減速走行のち停止
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//one_sectionA
+//a1区画分加速する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_sectionA(void){
+
+	MF.FLAG.WCTRL = 1;										//wall制御を有効にする
+	MF.FLAG.GCTRL = 1;										//gyro制御を有効にする
+
+	target_omega_z = 0;
+
+	driveA(accel_hs, 400, speed_max_hs, SEC_HALF*2);			//1区画のパルス分加速走行。走行後は停止しない
+	get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//one_sectionD
+//a1区画分減速する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_sectionD(void){
+
+	MF.FLAG.WCTRL = 1;										//wall制御を有効にする
+	MF.FLAG.GCTRL = 1;										//gyro制御を有効にする
+
+	target_omega_z = 0;
+
+	driveD(-1*accel_hs, 400, speed_max_hs, SEC_HALF*2);		//1区画のパルス分減速走行。走行後は停止しない
+	get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -1059,3 +1095,304 @@ void sample_course_run(void){
 }
 
 
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//perfect_run
+//a本番用走行モード
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void perfect_run(void){
+
+	int mode = 0;
+	printf("Perfect Run, Mode : %d\n", mode);
+
+	while(1){
+		led_write(mode & 0b001, mode & 0b010, mode & 0b100);
+		  if(dist_r >= 20){
+			  mode++;
+			  dist_r = 0;
+			  if(mode > 7){
+				  mode = 0;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(dist_r <= -20){
+			  mode--;
+			  dist_r = 0;
+			  if(mode < 0){
+				  mode = 7;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
+			  HAL_Delay(50);
+			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  switch(mode){
+
+				case 0:
+					break;
+
+				case 1:
+					//----a一次探索連続走行----
+					printf("First Run. (Continuous)\n");
+
+					MF.FLAG.SCND = 0;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchB();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchB();
+
+					goal_x = 7;
+					goal_y = 7;
+
+					break;
+
+				case 2:
+					//----a二次探索走行----
+					printf("Second Run. (Continuous)\n");
+
+					MF.FLAG.SCND = 1;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchB();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchB();
+
+					goal_x = 7;
+					goal_y = 7;
+
+					break;
+
+				case 3:
+					//----a一次探索スラローム走行----
+					printf("First Run. (Slalom)\n");
+
+					MF.FLAG.SCND = 0;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = 7;
+					goal_y = 7;
+
+					break;
+
+				case 4:
+					//---a二次探索スラローム走行----
+					printf("Second Run. (Slalom)\n");
+
+					MF.FLAG.SCND = 1;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = 7;
+					goal_y = 7;
+
+					break;
+
+				case 5:
+					break;
+
+				case 6:
+					break;
+				case 7:
+					perfect_slalom();
+					break;
+			}
+		}
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//perfect_slalom
+//a本番用スラローム走行モード
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void perfect_slalom(void){
+
+	int mode = 0;
+	printf("Perfect Slalom, Mode : %d\n", mode);
+
+	while(1){
+		led_write(mode & 0b001, mode & 0b010, mode & 0b100);
+		  if(dist_r >= 20){
+			  mode++;
+			  dist_r = 0;
+			  if(mode > 7){
+				  mode = 0;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(dist_r <= -20){
+			  mode--;
+			  dist_r = 0;
+			  if(mode < 0){
+				  mode = 7;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
+			  HAL_Delay(50);
+			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  switch(mode){
+				case 0:
+					break;
+
+				case 1:
+					//----a一次探索スラローム走行----
+					printf("First Run.\n");
+					MF.FLAG.SCND = 0;
+					MF.FLAG.ACCL2 = 0;
+
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = 7;
+					goal_y = 7;
+					break;
+
+				case 2:
+					//----a二次探索スラローム+既知区間加速走行 speed1----
+					printf("First Run. (Continuous)\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+
+					accel_hs = 3000;
+					speed_max_hs = 600;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchC2();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC2();
+
+					goal_x = 7;
+					goal_y = 7;
+					break;
+
+				case 3:
+					//----a二次探索スラローム+既知区間加速走行 speed2----
+					printf("Second Run. (Continuous)\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+
+					accel_hs = 3000;
+					speed_max_hs = 800;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchC2();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC2();
+
+					goal_x = 7;
+					goal_y = 7;
+					break;
+
+				case 4:
+					//----a二次探索スラローム+既知区間加速走行 speed3----
+					printf("First Run. (Slalom)\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+
+					accel_hs = 3000;
+					speed_max_hs = 1000;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchC2();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC2();
+
+					goal_x = 7;
+					goal_y = 7;
+					break;
+
+				case 5:
+					//----a二次探索スラローム+既知区間加速走行 speed4----
+					printf("Second Run. (Slalom)\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+
+					accel_hs = 3000;
+					speed_max_hs = 1100;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchC2();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC2();
+
+					goal_x = 7;
+					goal_y = 7;
+					break;
+
+				case 6:
+					break;
+
+				case 7:
+					break;
+			}
+		}
+	}
+}

@@ -35,6 +35,7 @@ struct coordinate_and_direction{
 	uint8_t route[256];									//a最短経路格納配列
 	uint8_t r_cnt;										//a経路カウンタ
 
+	uint8_t H_accel_flag;
 	uint8_t run_dir;
 
 	uint16_t m_step;
@@ -48,6 +49,7 @@ struct coordinate_and_direction{
 	extern uint8_t route[256];							//a最短経路格納配列
 	extern uint8_t r_cnt;								//a経路カウンタ
 
+	extern uint8_t H_accel_flag;
 	extern uint8_t run_dir;
 
 	extern uint16_t m_step;
@@ -64,6 +66,7 @@ void search_init(void);
 void searchA();											//1区画停止型探索走行
 void searchB();											//a連続探索走行
 void searchC();											//aスラローム探索走行
+void searchC2();											//aスラローム+既知区間加速探索走行
 void searchD();											//a全面探索走行
 
 void adv_pos();											//aマウスの位置情報を前進

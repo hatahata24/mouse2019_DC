@@ -22,6 +22,7 @@
 	volatile float epsilon_sum; 	//dif sum
 	volatile float old_epsilon; 	//
 	volatile float epsilon_dif;	//dif of dif
+	volatile int16_t accel_hs, speed_max_hs;		//既知区間加速時使用
 #else												//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
 	//====物理量走行関連====
@@ -40,6 +41,7 @@
 	extern volatile float epsilon_sum; 	//dif sum
 	extern volatile float old_epsilon; 	//
 	extern volatile float epsilon_dif;	//dif of dif
+	extern volatile int16_t accel_hs, speed_max_hs;	//既知区間加速時使用
 #endif
 
 
@@ -71,6 +73,8 @@ void slalomU22(uint16_t);
 void half_sectionA(void);		//加速半区画
 void half_sectionD(void);		//減速半区画
 void one_section(void);			//加減速一区画
+void one_sectionA(void);			//加減速一区画
+void one_sectionD(void);			//加減速一区画
 void one_sectionU(void);		//等速一区画
 void rotate_R90(void);			//右90回転
 void rotate_L90(void);			//左90回転
@@ -98,7 +102,7 @@ void slalom_run(void);			//aスラローム走行
 void sample_course_run(void);	//a試験コース走行
 
 
-void perfect_run(void);			//本番用走行
+void perfect_run(void);			//a本番用走行
 void perfect_slalom(void);		//本番用スラローム走行
 
 #endif /* DRIVE_H_ */

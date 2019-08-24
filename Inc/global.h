@@ -25,7 +25,7 @@ typedef union {					//
 		uint16_t LOG:1;			//log flag(B5)
 		uint16_t ENKAI:1;		//enkaigei flag(B6)
 		uint16_t GYRO:1;		//gyro flag(B7)
-		uint16_t RSV8:1;		//旧走行モードフラグ(B8)
+		uint16_t ACCL2:1;		//accel ++ flag(B8)
 		uint16_t RSV9:1;		//走行開始時加速判断フラグ(B9)
 		uint16_t RSV10:1;		//既知区間加速フラグ(B10)
 		uint16_t RSV11:1;		//直線優先フラグ(B11)

@@ -234,6 +234,91 @@ void searchC(){
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
+//searchC2
+//aスラローム走行+既知区間加速でgoal座標に進む
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchC2(void){
+
+	if(MF.FLAG.SCND){
+		load_map_from_eeprom();
+	}
+
+	//====aスタート位置壁情報取得====
+	get_wall_info();										//a壁情報の初期化, 後壁はなくなる
+	wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
+	write_map();											//a壁情報を地図に記入
+
+	//====a前に壁が無い想定で問答無用で前進====
+	half_sectionA();
+	adv_pos();
+
+	//====a歩数マップ・経路作成====
+	write_map();											//a壁情報を地図に記入
+	r_cnt = 0;												//a経路カウンタの初期化
+	make_smap();											//a歩数マップ作成
+	make_route();											//a最短経路探索（route配列に動作が格納される）
+
+	H_accel_flag = 0;
+
+	//====a探索走行====
+	do{
+		//----a進行----
+		switch(route[r_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
+			//----a前進----
+			case 0x88:
+				if(MF.FLAG.SCND == 1 && MF.FLAG.ACCL2 == 1){
+					if(((route[r_cnt-1] & route[r_cnt]) == 0x88) && (route[r_cnt] != 0xff)){
+						one_sectionA();
+						H_accel_flag = 1;
+					}
+					else if((route[r_cnt] & 0x55) && (H_accel_flag == 1)){
+						one_sectionD();
+						H_accel_flag = 0;
+					}else{
+						one_sectionU();
+					}
+				}else{
+					one_sectionU();
+				}
+				break;
+			//----a右折スラローム----
+			case 0x44:
+				slalom_R90();
+
+				break;
+			//----180回転----
+			case 0x22:
+				half_sectionD();
+				rotate_180();
+/*				if(wall_info & 0x88){
+					set_position2(0);
+				}
+*/				half_sectionA();
+				break;
+			//----a左折スラローム----
+			case 0x11:
+				slalom_L90();
+				break;
+		}
+		adv_pos();
+		conf_route();
+
+	}while((mouse.x != goal_x) || (mouse.y != goal_y));
+
+	half_sectionD();
+
+	HAL_Delay(2000);
+	rotate_180();											//180度回転
+
+	if(!MF.FLAG.SCND){
+		store_map_in_eeprom();
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
 //adv_pos
 //aマイクロマウス内部位置情報で前進させる
 //a引数：なし
@@ -395,7 +480,7 @@ void make_smap(void){
 	}
 
 	//====aゴール座標を0にする====
-	m_step = 0;										//a歩数カウンタを0にする
+	m_step = 0;												//a歩数カウンタを0にする
 	smap[goal_y][goal_x] = 0;
 
 	//====a歩数カウンタの重みづけ====
