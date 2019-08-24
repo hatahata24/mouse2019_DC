@@ -127,7 +127,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			target_speed_l = max(min(target_speed_l, speed_max_l), speed_min_l);
 			epsilon_l = target_speed_l - speed_l;
 			pulse_l = Kp * epsilon_l;
-			if(pulse_l > 0){
+/*			if(pulse_l > 0){
 				drive_dir(0, 0);
 				ConfigOC.Pulse = pulse_l;
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
@@ -139,12 +139,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
 			}
-
+*/
 			target_speed_r += accel_r * 0.001;
 			target_speed_r = max(min(target_speed_r, speed_max_r), speed_min_r);
 			epsilon_r = target_speed_r - speed_r;
 			pulse_r = Kp * epsilon_r;
-			if(pulse_r > 0){
+/*			if(pulse_r > 0){
 				drive_dir(1, 0);
 				ConfigOC.Pulse = pulse_r;
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
@@ -156,6 +156,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
 			}
+*/
 			if(cnt >= 5 && MF.FLAG.LOG){
 				cnt = 0;
 				if(get_cnt < log_allay){
@@ -184,7 +185,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 			epsilon_l = target_speed_l - speed_l;
 			pulse_l = Kp * epsilon_l;
-			if(pulse_l > 0){
+/*			if(pulse_l > 0){
 				drive_dir(0, 0);
 				ConfigOC.Pulse = pulse_l;
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
@@ -196,10 +197,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
 			}
-
+*/
 			epsilon_r = target_speed_r - speed_r;
 			pulse_r = Kp * epsilon_r;
-			if(pulse_r > 0){
+/*			if(pulse_r > 0){
 				drive_dir(1, 0);
 				ConfigOC.Pulse = pulse_r;
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
@@ -211,6 +212,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
 			}
+*/
 		}
 
 		if(MF.FLAG.GYRO){
@@ -221,7 +223,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 			epsilon_l = target_speed_l - speed_l;
 			pulse_l = Kp * epsilon_l;
-			if(pulse_l > 0){
+/*			if(pulse_l > 0){
 				drive_dir(0, 0);
 				ConfigOC.Pulse = pulse_l;
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
@@ -233,10 +235,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
 			}
-
+*/
 			epsilon_r = target_speed_r - speed_r;
 			pulse_r = Kp * epsilon_r;
-			if(pulse_r > 0){
+/*			if(pulse_r > 0){
 				drive_dir(1, 0);
 				ConfigOC.Pulse = pulse_r;
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
@@ -248,11 +250,30 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
 			}
+*/
 		}
 
 
+		if(MF.FLAG.GCTRL){
+			int16_t dg_tmp = 0;
+			dif_g = (int32_t) gyro_read_z() - target_omega_z;
+
+			if(CTRL_BASE_G < dif_g){					//a角速度変化量が基準よりも大きい時(左回転が発生時)
+				dg_tmp += CTRL_CONT_G * dif_g;			//a比例制御値を決定
+			}
+			else if(-1*CTRL_BASE_G > dif_g){			//a角速度変化量が負の基準よりも小さい時(右回転が発生時)
+				dg_tmp += CTRL_CONT_G * dif_g;			//a比例制御値を決定
+			}
+			dg = max(min(CTRL_MAX_G, dg_tmp), -1 * CTRL_MAX_G);
+			dgl = dg;
+			dgr = -1*dg;
+		}else{
+			//a制御フラグがなければ壁制御値0
+			dgl = dgr = 0;
+		}
+
 		//ADchange interrupt
-		uint16_t delay = 0;
+		uint16_t delay;
 		tp = (tp+1)%2;
 
 		switch(tp){
@@ -283,26 +304,66 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		  case 2:
 				//
 				if(MF.FLAG.WCTRL){
-					int16_t dl_tmp = 0, dr_tmp = 0;
+					int16_t dwl_tmp = 0, dwr_tmp = 0;
 					dif_l = (int32_t) ad_l - base_l;
 					dif_r = (int32_t) ad_r - base_r;
 
-					if(CTRL_BASE_L < dif_l){
-						dl_tmp += CTRL_CONT * dif_l;			//a比例制御値を決定
-						dr_tmp += -1 * CTRL_CONT * dif_l;		//a比例制御値を決定
+					if(CTRL_BASE_L < dif_l || CTRL_BASE_R < dif_r){
+						if(CTRL_BASE_L < dif_l){
+							dwl_tmp += CTRL_CONT_W * dif_l;				//a比例制御値を決定
+							dwr_tmp += -1 * CTRL_CONT_W * dif_l;		//a比例制御値を決定
+						}
+						else if(CTRL_BASE_R < dif_r){
+							dwl_tmp += -1 * CTRL_CONT_W * dif_r;		//a比例制御値を決定
+							dwr_tmp += CTRL_CONT_W * dif_r;				//a比例制御値を決定
+						}
+						W_G_flag = 1;
+					}else{
+						W_G_flag = 0;
 					}
-					else if(CTRL_BASE_R < dif_r){
-						dl_tmp += -1 * CTRL_CONT * dif_r;		//a比例制御値を決定
-						dr_tmp += CTRL_CONT * dif_r;			//a比例制御値を決定
-					}
-					dl = max(min(CTRL_MAX, dl_tmp), -1 * CTRL_MAX);
-					dr = max(min(CTRL_MAX, dr_tmp), -1 * CTRL_MAX);
+					dwl = max(min(CTRL_MAX_W, dwl_tmp), -1 * CTRL_MAX_W);
+					dwr = max(min(CTRL_MAX_W, dwr_tmp), -1 * CTRL_MAX_W);
 				}else{
 					//a制御フラグがなければ壁制御値0
-					dl = dr = 0;
+					dwl = dwr = 0;
 				}
 				break;
 		}
+
+		if(W_G_flag == 0){
+			pulse_l = pulse_l + dgl + dwl;
+			pulse_r = pulse_r + dgr + dwr;
+		}else{
+			pulse_l = pulse_l + dwl;
+			pulse_r = pulse_r + dwr;
+		}
+
+		if(pulse_l > 0){
+			drive_dir(0, 0);
+			ConfigOC.Pulse = pulse_l;
+			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
+			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+		}
+		else if(pulse_l <= 0){
+			drive_dir(0, 1);
+			ConfigOC.Pulse = -pulse_l;
+			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
+			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+		}
+
+		if(pulse_r > 0){
+			drive_dir(1, 0);
+			ConfigOC.Pulse = pulse_r;
+			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
+			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+		}
+		else if(pulse_r <= 0){
+			drive_dir(1, 1);
+			ConfigOC.Pulse = -pulse_r;
+			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
+			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+		}
+
 
 		//battery check
 		if( HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {	//2.1V以下で赤ランプ点灯

@@ -11,6 +11,8 @@
 	volatile float target_omega_z;
 	volatile float target_degree_z;
 	volatile float omega_min, omega_max;
+	volatile int16_t dg, dgl, dgr;								//a比例制御量
+	int16_t dif_g;									//a基準値とAD変換値の偏差
 #else												//main.c以外からこのファイルが呼ばれている場合
 	/*aグローバル変数の宣言*/
 
@@ -19,6 +21,8 @@
 	extern volatile float target_omega_z;
 	extern volatile float target_degree_z;
 	extern volatile float omega_min, omega_max;
+	extern 	volatile int16_t dg, dgl, dgr;								//a比例制御量
+	extern int16_t dif_g;
 #endif
 
 

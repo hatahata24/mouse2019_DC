@@ -22,6 +22,7 @@ void drive_init(void){
 void drive_start(void){
 	dist_l = dist_r = 0;		//a走行距離の初期化
 	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
 }
 
@@ -36,6 +37,7 @@ void drive_start(void){
 void drive_stop(void){
 	dist_l = dist_r = 0;		//a走行距離の初期化
 	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 0;
 }
 

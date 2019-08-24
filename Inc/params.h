@@ -17,6 +17,12 @@
 //log params
 #define log_allay 200
 
+//gyro controll params
+#define CTRL_BASE_G		5				//G
+#define CTRL_MAX_G		3500			//control value max
+#define CTRL_CONT_G		0.4F			//Proportional C
+
+
 //sensor params
 #define sensor_wait 3000
 
@@ -29,11 +35,11 @@
 //----wall control judge----
 #define CTRL_BASE_L		50				//R
 #define CTRL_BASE_R		50				//L
-#define CTRL_MAX		3500			//control value max
-#define CTRL_CONT		0.4F			//Proportional C
+#define CTRL_MAX_W		3500			//control value max
+#define CTRL_CONT_W		0.1F			//Proportional C
 
 
-//===music params===
+//music params
 #define DO 1046
 #define LE 1174
 #define MI 1318
