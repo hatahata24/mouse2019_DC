@@ -63,8 +63,8 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 int cnt = 0;
 int get_cnt = 0;
-int get_speed_l[log_allay];
-int get_speed_r[log_allay];
+//int get_speed_l[log_allay];
+//int get_speed_r[log_allay];
 
 /* USER CODE END PV */
 
@@ -122,7 +122,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		TIM4 -> CNT = 0;
 		TIM8 -> CNT = 0;
 
-		if(MF.FLAG.DRV){
+		if(MF.FLAG.SPD){
 			target_speed_l += accel_l * 0.001;
 			target_speed_l = max(min(target_speed_l, speed_max_l), speed_min_l);
 			epsilon_l = target_speed_l - speed_l;
@@ -157,17 +157,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
 			}
 */
-			if(cnt >= 5 && MF.FLAG.LOG){
-				cnt = 0;
-				if(get_cnt < log_allay){
-					get_speed_l[get_cnt] = speed_l;
-					get_speed_r[get_cnt] = speed_r;
-					get_cnt++;
-				}
+		}/*else{
+			drive_dir(0, 1);
+			drive_dir(1, 1);
+		}*/
+
+		cnt ++;
+
+		if(cnt >= 5 && MF.FLAG.LOG){
+			cnt = 0;
+			if(get_cnt < log_allay){
+				get_speed_l[get_cnt] = speed_l;
+				get_speed_r[get_cnt] = speed_r;
+				get_cnt++;
 			}
-		}else{
-			drive_dir(0, 2);
-			drive_dir(1, 2);
 		}
 
 		//gyro interrupt
@@ -330,43 +333,55 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				break;
 		}
 
-		if(W_G_flag == 0){
-			pulse_l = pulse_l + dgl + dwl;
-			pulse_r = pulse_r + dgr + dwr;
+		if(MF.FLAG.DRV){
+			if(W_G_flag == 0){
+				pulse_l = pulse_l + dgl + dwl;
+				pulse_r = pulse_r + dgr + dwr;
+			}else{
+				pulse_l = pulse_l + dwl;
+				pulse_r = pulse_r + dwr;
+			}
+
+			if(pulse_l > 0){
+				drive_dir(0, 0);
+				ConfigOC.Pulse = pulse_l;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+			}
+			else if(pulse_l < 0){
+				drive_dir(0, 1);
+				ConfigOC.Pulse = -pulse_l;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+			}
+
+			if(pulse_r > 0){
+				drive_dir(1, 0);
+				ConfigOC.Pulse = pulse_r;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+			}
+			else if(pulse_r < 0){
+				drive_dir(1, 1);
+				ConfigOC.Pulse = -pulse_r;
+				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
+				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+			}
 		}else{
-			pulse_l = pulse_l + dwl;
-			pulse_r = pulse_r + dwr;
-		}
-
-		if(pulse_l > 0){
-			drive_dir(0, 0);
-			ConfigOC.Pulse = pulse_l;
+/*			ConfigOC.Pulse = 0;
 			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
 			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-		}
-		else if(pulse_l <= 0){
-			drive_dir(0, 1);
-			ConfigOC.Pulse = -pulse_l;
-			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
-			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+			ConfigOC.Pulse = 0;
+			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
+			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+*/			drive_dir(0, 2);
+			drive_dir(1, 2);
 		}
 
-		if(pulse_r > 0){
-			drive_dir(1, 0);
-			ConfigOC.Pulse = pulse_r;
-			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
-			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-		}
-		else if(pulse_r <= 0){
-			drive_dir(1, 1);
-			ConfigOC.Pulse = -pulse_r;
-			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
-			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-		}
 
 
 		//battery check
-		if( HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {	//2.1V以下で赤ランプ点灯
+		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {	//2.1V以下で赤ランプ点灯
 		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
 		} else {
 		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);

@@ -81,4 +81,6 @@ void make_route();										//a最短経路検索
 void store_map_in_eeprom(void);
 void load_map_from_eeprom(void);
 
+
+
 #endif /* SEARCH_H_ */

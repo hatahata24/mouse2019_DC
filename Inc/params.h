@@ -2,11 +2,11 @@
 #define INC_PARAMS_H_
 
 //machine params
-#define DIAMETER 24.2
+#define DIAMETER 24
 #define TREAD 66
 
 //PID params
-#define Kp 4
+#define Kp 2.5
 #define Ti 1000
 #define Td 0
 
@@ -50,7 +50,7 @@
 #define DOO 2093
 
 //----goal point---
-#define GOAL_X 1	//7
-#define GOAL_Y 0	//7
+#define GOAL_X 3	//7
+#define GOAL_Y 3	//7
 
 #endif /* INC_PARAMS_H_ */

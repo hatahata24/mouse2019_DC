@@ -23,6 +23,9 @@
 	volatile float old_epsilon; 	//
 	volatile float epsilon_dif;	//dif of dif
 	volatile int16_t accel_hs, speed_max_hs;		//既知区間加速時使用
+
+	volatile int get_speed_l[log_allay];
+	volatile int get_speed_r[log_allay];
 #else												//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
 	//====物理量走行関連====
@@ -42,6 +45,9 @@
 	extern volatile float old_epsilon; 	//
 	extern volatile float epsilon_dif;	//dif of dif
 	extern volatile int16_t accel_hs, speed_max_hs;	//既知区間加速時使用
+
+	extern volatile int get_speed_l[log_allay];
+	extern volatile int get_speed_r[log_allay];
 #endif
 
 
@@ -55,6 +61,9 @@ void drive_init(void);
 void drive_dir(uint8_t, uint8_t);
 void drive_start(void);
 void drive_stop(void);
+void control_start(void);
+void control_stop(void);
+
 
 //====a走行系====
 //----a基幹関数----
