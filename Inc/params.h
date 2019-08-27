@@ -52,6 +52,6 @@
 
 //----goal point---
 #define GOAL_X 6	//7
-#define GOAL_Y 4	//7
+#define GOAL_Y 3	//7
 
 #endif /* INC_PARAMS_H_ */
