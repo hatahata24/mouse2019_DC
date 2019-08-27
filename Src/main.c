@@ -127,40 +127,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			target_speed_l = max(min(target_speed_l, speed_max_l), speed_min_l);
 			epsilon_l = target_speed_l - speed_l;
 			pulse_l = Kp * epsilon_l;
-/*			if(pulse_l > 0){
-				drive_dir(0, 0);
-				ConfigOC.Pulse = pulse_l;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-			}
-			else if(pulse_l < 0){
-				drive_dir(0, 1);
-				ConfigOC.Pulse = -pulse_l;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-			}
-*/
+
 			target_speed_r += accel_r * 0.001;
 			target_speed_r = max(min(target_speed_r, speed_max_r), speed_min_r);
 			epsilon_r = target_speed_r - speed_r;
 			pulse_r = Kp * epsilon_r;
-/*			if(pulse_r > 0){
-				drive_dir(1, 0);
-				ConfigOC.Pulse = pulse_r;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-			}
-			else if(pulse_r < 0){
-				drive_dir(1, 1);
-				ConfigOC.Pulse = -pulse_r;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-			}
-*/
-		}/*else{
-			drive_dir(0, 1);
-			drive_dir(1, 1);
-		}*/
+		}
 
 		cnt ++;
 
@@ -188,34 +160,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 			epsilon_l = target_speed_l - speed_l;
 			pulse_l = Kp * epsilon_l;
-/*			if(pulse_l > 0){
-				drive_dir(0, 0);
-				ConfigOC.Pulse = pulse_l;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-			}
-			else if(pulse_l < 0){
-				drive_dir(0, 1);
-				ConfigOC.Pulse = -pulse_l;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-			}
-*/
 			epsilon_r = target_speed_r - speed_r;
 			pulse_r = Kp * epsilon_r;
-/*			if(pulse_r > 0){
-				drive_dir(1, 0);
-				ConfigOC.Pulse = pulse_r;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-			}
-			else if(pulse_r < 0){
-				drive_dir(1, 1);
-				ConfigOC.Pulse = -pulse_r;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-			}
-*/
 		}
 
 		if(MF.FLAG.GYRO){
@@ -226,34 +172,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 			epsilon_l = target_speed_l - speed_l;
 			pulse_l = Kp * epsilon_l;
-/*			if(pulse_l > 0){
-				drive_dir(0, 0);
-				ConfigOC.Pulse = pulse_l;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-			}
-			else if(pulse_l < 0){
-				drive_dir(0, 1);
-				ConfigOC.Pulse = -pulse_l;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-			}
-*/
 			epsilon_r = target_speed_r - speed_r;
 			pulse_r = Kp * epsilon_r;
-/*			if(pulse_r > 0){
-				drive_dir(1, 0);
-				ConfigOC.Pulse = pulse_r;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-			}
-			else if(pulse_r < 0){
-				drive_dir(1, 1);
-				ConfigOC.Pulse = -pulse_r;
-				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
-				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-			}
-*/
 		}
 
 
@@ -277,7 +197,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		//ADchange interrupt
 		uint16_t delay;
-		tp = (tp+1)%2;
+		tp = (tp+1)%3;
 
 		switch(tp){
 		  case 0:
@@ -368,13 +288,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
 			}
 		}else{
-/*			ConfigOC.Pulse = 0;
-			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_1);
-			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-			ConfigOC.Pulse = 0;
-			HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
-			HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-*/			drive_dir(0, 2);
+			drive_dir(0, 2);
 			drive_dir(1, 2);
 		}
 

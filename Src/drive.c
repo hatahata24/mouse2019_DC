@@ -235,7 +235,7 @@ void driveC(uint16_t dist){
 void half_sectionA(void){
 
 	control_start();
-	driveA(1000, 100, 400, SEC_HALF);					//半区画のパルス分加速しながら走行。走行後は停止しない
+	driveA(4000, 100, 400, SEC_HALF);					//半区画のパルス分加速しながら走行。走行後は停止しない
 	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 }
 
@@ -249,7 +249,7 @@ void half_sectionA(void){
 void half_sectionD(void){
 
 	control_start();
-	driveD(-1000, 100, 400, SEC_HALF);				//指定パルス分指定減速度で減速走行。走行後は停止する
+	driveD(-4000, 100, 400, SEC_HALF-20);				//指定パルス分指定減速度で減速走行。走行後は停止する
 }
 
 
@@ -439,7 +439,7 @@ void slalom_R90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z > -19);
+	while(degree_z > -21);
 
 	MF.FLAG.GYRO = 1;
 
@@ -448,7 +448,7 @@ void slalom_R90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z > -31.913);
+	while(degree_z > -30);
 
 	MF.FLAG.GYRO = 0;
 
@@ -460,6 +460,7 @@ void slalom_R90(void){
 	control_start();
 	while(dist_l < 18.5 && dist_r < 18.5);
 	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
+	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 	drive_stop();
 }
 
@@ -503,7 +504,7 @@ void slalom_L90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z < 19);
+	while(degree_z < 21);
 	drive_stop();
 
 	MF.FLAG.GYRO = 1;
@@ -513,7 +514,7 @@ void slalom_L90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z < 31.913);
+	while(degree_z < 30);
 	drive_stop();
 
 	MF.FLAG.GYRO = 0;
@@ -526,6 +527,7 @@ void slalom_L90(void){
 	control_start();
 	while(dist_l < 18.5 && dist_r < 18.5);
 	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも左回転処理
+	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 	drive_stop();
 }
 
@@ -669,16 +671,22 @@ void slalom_test(void){
 				case 1:
 					//----slalom右折----
 					printf("slalom turn right .\n");
-					for(int i = 0; i < 4; i++){
+					half_sectionA();
+					for(int i = 0; i < 8; i++){
 						slalom_R90();	//一区画のパルス分デフォルトインターバルで走行
+						one_sectionU();
 					}
+					half_sectionD();
 					break;
 				case 2:
 					//----slalom左折----
 					printf("slalom turn left .\n");
-					for(int i = 0; i < 4	; i++){
+					half_sectionA();
+					for(int i = 0; i < 8; i++){
 						slalom_L90();				//16回右90度回転、つまり4周回転
+						one_sectionU();
 					}
+					half_sectionD();
 					break;
 				case 3:
 					//----slalom右折----
