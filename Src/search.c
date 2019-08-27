@@ -181,7 +181,7 @@ void searchC(){
 	write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
-	half_sectionA();
+	start_sectionA();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====
@@ -239,7 +239,7 @@ void searchC(){
 //a引数：なし
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void searchC2(void){
+void searchC2(){
 
 	if(MF.FLAG.SCND){
 		load_map_from_eeprom();
@@ -251,7 +251,7 @@ void searchC2(void){
 	write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
-	half_sectionA();
+	start_sectionA();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====

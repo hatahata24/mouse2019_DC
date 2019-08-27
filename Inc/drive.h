@@ -5,7 +5,6 @@
 //====変数====
 #ifdef MAIN_C_										//main.cからこのファイルが呼ばれている場合
 	/*グローバル変数の定義*/
-
 	//====物理量走行関連====
 	volatile float cnt_l, cnt_r;
 	volatile float dist_l, dist_r;
@@ -23,6 +22,8 @@
 	volatile float old_epsilon; 	//
 	volatile float epsilon_dif;	//dif of dif
 	volatile int16_t accel_hs, speed_max_hs;		//既知区間加速時使用
+
+	volatile uint8_t start_flag;
 
 	volatile int get_speed_l[log_allay];
 	volatile int get_speed_r[log_allay];
@@ -45,6 +46,8 @@
 	extern volatile float old_epsilon; 	//
 	extern volatile float epsilon_dif;	//dif of dif
 	extern volatile int16_t accel_hs, speed_max_hs;	//既知区間加速時使用
+
+	extern volatile uint8_t start_flag;
 
 	extern volatile int get_speed_l[log_allay];
 	extern volatile int get_speed_r[log_allay];
@@ -79,6 +82,7 @@ void slalomU22(uint16_t);
 
 
 //----a上位関数----
+void start_sectionA(void);		//加速スタート区画
 void half_sectionA(void);		//加速半区画
 void half_sectionD(void);		//減速半区画
 void one_section(void);			//加減速一区画

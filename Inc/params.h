@@ -12,6 +12,7 @@
 
 //drive params
 #define SEC_HALF 90
+#define SEC_START 125
 
 
 //log params
@@ -33,8 +34,8 @@
 #define WALL_BASE_L 	40	     		//L
 
 //----wall control judge----
-#define CTRL_BASE_L		50				//R
-#define CTRL_BASE_R		50				//L
+#define CTRL_BASE_L		30				//R
+#define CTRL_BASE_R		30				//L
 #define CTRL_MAX_W		3500			//control value max
 #define CTRL_CONT_W		0.4F			//Proportional C
 

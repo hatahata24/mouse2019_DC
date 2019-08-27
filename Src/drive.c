@@ -227,6 +227,25 @@ void driveC(uint16_t dist){
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
+//start_sectionA
+// aスタート区画分加速しながら走行する
+// a引数：なし
+// a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void start_sectionA(void){
+
+	control_start();
+	if(start_flag == 0){
+		driveA(4000, 100, 400, SEC_START);					//半区画のパルス分加速しながら走行。走行後は停止しない
+	}else{
+		driveA(4000, 100, 400, SEC_HALF);					//半区画のパルス分加速しながら走行。走行後は停止しない
+	}
+	start_flag = 1;
+	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
 //half_sectionA
 // a半区画分加速しながら走行する
 // a引数：なし
@@ -249,7 +268,7 @@ void half_sectionA(void){
 void half_sectionD(void){
 
 	control_start();
-	driveD(-4000, 100, 400, SEC_HALF-20);				//指定パルス分指定減速度で減速走行。走行後は停止する
+	driveD(-4000, 100, 400, SEC_HALF);				//指定パルス分指定減速度で減速走行。走行後は停止する
 }
 
 
@@ -942,6 +961,7 @@ void slalom_run(void){
 					printf("First Run. (Slalom)\n");
 
 					MF.FLAG.SCND = 0;
+					start_flag = 0;
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 
@@ -962,6 +982,7 @@ void slalom_run(void){
 					printf("Second Run. (Slalom)\n");
 
 					MF.FLAG.SCND = 1;
+					start_flag = 0;
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 
@@ -979,10 +1000,11 @@ void slalom_run(void){
 
 				case 3:
 					//----a二次探索スラローム走行+既知区間加速----
-/*					printf("Second Run. (Slalom+accel)\n");
+					printf("Second Run. (Slalom+accel)\n");
 
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
+					start_flag = 0;
 					accel_hs = 3000;
 					speed_max_hs = 600;
 					goal_x = GOAL_X;
@@ -990,19 +1012,19 @@ void slalom_run(void){
 
 					get_base();
 
-					searchC();
+					searchC2();
 					HAL_Delay(500);
 
 					goal_x = goal_y = 0;
-					searchC();
+					searchC2();
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
-*/					break;
+					break;
 
 				case 4:
 					//----a二次探索スラローム走行+既知区間加速----
-/*					printf("Second Run. (Slalom+accel)\n");
+					printf("Second Run. (Slalom+accel)\n");
 
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
@@ -1013,17 +1035,37 @@ void slalom_run(void){
 
 					get_base();
 
-					searchC();
+					searchC2();
 					HAL_Delay(500);
 
 					goal_x = goal_y = 0;
-					searchC();
+					searchC2();
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
-*/					break;
+					break;
 
 				case 5:
+					//----a二次探索スラローム走行+既知区間加速----
+					printf("Second Run. (Slalom+accel)\n");
+
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					accel_hs = 6000;
+					speed_max_hs = 1500;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchC2();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC2();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 
 				case 6:
