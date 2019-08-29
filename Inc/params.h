@@ -13,6 +13,8 @@
 //drive params
 #define SEC_HALF 90
 #define SEC_START 125
+#define SPEED_RUN 600
+#define SPEED_MIN 100
 
 
 //log params
@@ -20,8 +22,8 @@
 
 //gyro controll params
 #define CTRL_BASE_G		1				//G
-#define CTRL_MAX_G		3500			//control value max
-#define CTRL_CONT_G		0.4F			//Proportional C
+#define CTRL_MAX_G		350//3500				//control value max
+#define CTRL_CONT_G		400//4000			//Proportional C
 
 
 //sensor params
@@ -36,7 +38,7 @@
 //----wall control judge----
 #define CTRL_BASE_L		30				//R
 #define CTRL_BASE_R		30				//L
-#define CTRL_MAX_W		3500			//control value max
+#define CTRL_MAX_W		350				//control value max
 #define CTRL_CONT_W		0.4F			//Proportional C
 
 
@@ -52,6 +54,6 @@
 
 //----goal point---
 #define GOAL_X 6	//7
-#define GOAL_Y 3	//7
+#define GOAL_Y 1	//7
 
 #endif /* INC_PARAMS_H_ */

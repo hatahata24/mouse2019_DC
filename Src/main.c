@@ -179,7 +179,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		if(MF.FLAG.GCTRL){
 			int16_t dg_tmp = 0;
-			dif_g = (int32_t) gyro_read_z() - target_omega_z;
+/*			dif_g = (int32_t) gyro_read_z() - target_omega_z;		//a角速度閾値越え制御
 
 			if(CTRL_BASE_G < dif_g){					//a角速度変化量が基準よりも大きい時(左回転が発生時)
 				dg_tmp += CTRL_CONT_G * dif_g;			//a比例制御値を決定
@@ -194,6 +194,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			//a制御フラグがなければ壁制御値0
 			dgl = dgr = 0;
 		}
+*/
+//			dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
+			dg = CTRL_CONT_G * degree_z;				//a角度制御
+			dg = max(min(CTRL_MAX_G, dg_tmp), -1 * CTRL_MAX_G);
+			dgl = dg;
+			dgr = -1*dg;
+		}else{
+			//a制御フラグがなければ壁制御値0
+			dgl = dgr = 0;
+		}
+
 
 		//ADchange interrupt
 		uint16_t delay;
