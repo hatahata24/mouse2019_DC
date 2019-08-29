@@ -39,6 +39,9 @@ struct coordinate_and_direction{
 	uint8_t run_dir;
 
 	uint16_t m_step;
+	uint16_t m_step2;
+	uint8_t pregoal_x, pregoal_y;
+	uint8_t allmap_comp_flag;
 #else													//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
 	extern uint8_t map[16][16];							//aマップ格納配列
@@ -53,6 +56,9 @@ struct coordinate_and_direction{
 	extern uint8_t run_dir;
 
 	extern uint16_t m_step;
+	extern uint16_t m_step2;
+	extern uint8_t pregoal_x, pregoal_y;
+	extern uint8_t allmap_comp_flag;
 #endif
 
 
@@ -65,9 +71,11 @@ void search_init(void);
 
 void searchA();											//1区画停止型探索走行
 void searchB();											//a連続探索走行
-void searchC();											//aスラローム探索走行
-void searchC2();											//aスラローム+既知区間加速探索走行
-void searchD();											//a全面探索走行
+void searchC();											//aスラローム走行
+void searchC2();										//aスラロームHighSpeed走行
+void searchD();											//aスラローム+既知区間加速探索走行
+void searchD2();										//aスラロームHighSpeed+既知区間加速探索走行
+void searchE();											//aスラローム全面探索走行
 
 void adv_pos();											//aマウスの位置情報を前進
 void conf_route();										//a次ルートの確認
@@ -77,6 +85,8 @@ void turn_dir(uint8_t);									//a自機方向情報変更
 void make_smap();										//a歩数マップ作成
 void make_route();										//a最短経路検索
 
+void find_pregoal();									//a仮goalの検索
+void make_smap2();										//a仮goalまでの歩数マップ作成
 
 void store_map_in_eeprom(void);
 void load_map_from_eeprom(void);

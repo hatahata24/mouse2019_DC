@@ -83,8 +83,11 @@ void slalomU22(uint16_t);
 
 //----a上位関数----
 void start_sectionA(void);		//加速スタート区画
+void start_sectionA2(void);		//加速スタート区画
 void half_sectionA(void);		//加速半区画
+void half_sectionA2(void);		//加速半区画
 void half_sectionD(void);		//減速半区画
+void half_sectionD2(void);		//減速半区画
 void one_section(void);			//加減速一区画
 void one_sectionA(void);			//加減速一区画
 void one_sectionD(void);			//加減速一区画

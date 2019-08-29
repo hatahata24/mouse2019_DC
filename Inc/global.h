@@ -27,7 +27,7 @@ typedef union {					//
 		uint16_t ENKAI:1;		//enkaigei flag(B7)
 		uint16_t GYRO:1;		//gyro flag(B8)
 		uint16_t ACCL2:1;		//accel ++ flag(B9)
-		uint16_t RSV10:1;		//既知区間加速フラグ(B10)
+		uint16_t STRAIGHT:1;	//straight flag(B10)
 		uint16_t RSV11:1;		//直線優先フラグ(B11)
 		uint16_t RSV12:1;		//予備ビット(B12)
 		uint16_t RSV13:1;		//予備ビット(B13)
