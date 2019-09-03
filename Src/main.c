@@ -145,6 +145,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 		//gyro interrupt
+//		degree_x += accel_read_x() * 0.001;
+//		degree_y += accel_read_y() * 0.001;
+//		degree_z += accel_read_z() * 0.001;
 		degree_x += gyro_read_x() * 0.001;
 		degree_y += gyro_read_y() * 0.001;
 		degree_z += gyro_read_z() * 0.001;
@@ -273,6 +276,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				pulse_l = pulse_l + dwl;
 				pulse_r = pulse_r + dwr;
 			}
+			pulse_l = min(max(pulse_l, -1000), 1000);
+			pulse_r = min(max(pulse_r, -1000), 1000);
 
 			if(pulse_l > 0){
 				drive_dir(0, 0);
@@ -305,6 +310,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 
+		//wall check
+		//----look right----
+		if(ad_r > WALL_BASE_R){
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
+		}else{
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
+		}
+		//----look left----
+		if(ad_l > WALL_BASE_L){
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_SET);
+		}else{
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
+		}
+
+
 		//battery check
 		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {	//2.1V以下で赤ランプ点灯=>LiPoが約7Vを下回るとランプ点灯
 		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
@@ -314,8 +334,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		//fail safe
-		if(accel_read_y() >= 5) {										//5G以上の進行方向逆向き加速度発生でFail Safe
-		   while(1){
+		if(accel_read_y() >= 15 || degree_z >= 360 || degree_z <= -360) {	//15G以上加速度, 360度以上回転発生でFail Safe
+			while(1){
 			   drive_dir(0, 2);
 			   drive_dir(1, 2);
 		   }

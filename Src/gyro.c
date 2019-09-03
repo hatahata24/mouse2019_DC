@@ -83,7 +83,7 @@ float accel_read_z(void){
   // H:8bit shift, Link h and l
   accel_z = (int16_t)((int16_t)(read_byte(ACCEL_ZOUT_H) << 8) | read_byte(ACCEL_ZOUT_L));
 
-  accel = (float)(accel_z / ACCEL_FACTOR); // dps to accel
+  accel = (float)(accel_z / ACCEL_FACTOR-7); // dps to accel
   return accel;
 }
 
@@ -95,7 +95,7 @@ float gyro_read_x(void){
   // H:8bit shift, Link h and l
   gyro_x = (int16_t)((int16_t)(read_byte(GYRO_XOUT_H) << 8) | read_byte(GYRO_XOUT_L));
 
-  omega = (float)(gyro_x / GYRO_FACTOR); // dps to deg/sec
+  omega = (float)(gyro_x / GYRO_FACTOR+1.4); // dps to deg/sec
   return omega;
 }
 
@@ -107,7 +107,7 @@ float gyro_read_y(void){
   // H:8bit shift, Link h and l
   gyro_y = (int16_t)((int16_t)(read_byte(GYRO_YOUT_H) << 8) | read_byte(GYRO_YOUT_L));
 
-  omega = (float)(gyro_y / GYRO_FACTOR); // dps to deg/sec
+  omega = (float)(gyro_y / GYRO_FACTOR-0.75); // dps to deg/sec
   return omega;
 }
 
