@@ -27,4 +27,10 @@ void sensor_init(void);
 uint8_t get_base();					//a両壁基準値取得
 void get_wall_info();				//a壁情報を迷路マップに書き込み
 
+void led_write(uint8_t, uint8_t, uint8_t);
+void full_led_write(uint8_t);
+
+
+void sensor_test();					//a壁センサーとジャイロセンサーの値確認
+
 #endif /* SENSOR_H_ */

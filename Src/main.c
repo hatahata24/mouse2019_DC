@@ -83,7 +83,6 @@ static void MX_USART1_UART_Init(void);
 
 void buzzer(int, int);
 int get_adc_value(ADC_HandleTypeDef*, uint32_t);
-void led_write(uint8_t, uint8_t, uint8_t);
 
 /* USER CODE END PFP */
 
@@ -146,6 +145,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 		//gyro interrupt
+		degree_x += gyro_read_x() * 0.001;
+		degree_y += gyro_read_y() * 0.001;
 		degree_z += gyro_read_z() * 0.001;
 
 		if(MF.FLAG.ENKAI){
@@ -304,12 +305,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 
-
 		//battery check
-		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {	//2.1V以下で赤ランプ点灯
+		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) {	//2.1V以下で赤ランプ点灯=>LiPoが約7Vを下回るとランプ点灯
 		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
 		} else {
 		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
+		}
+
+
+		//fail safe
+		if(accel_read_y() >= 5) {										//5G以上の進行方向逆向き加速度発生でFail Safe
+		   while(1){
+			   drive_dir(0, 2);
+			   drive_dir(1, 2);
+		   }
 		}
 	}
 }
@@ -436,13 +445,8 @@ int main(void)
 		  	  case 5:
 		  		  //----sensor check----
 		  		  printf("Sensor Check.\n");
-		  		  while(1){
-		  			  get_wall_info();
-		  			  led_write(wall_info & 0x11, wall_info & 0x88, wall_info & 0x44);
-		  			  printf("ad_l : %d, ad_fl : %d, ad_fr : %d, ad_r : %d\n", ad_l, ad_fl, ad_fr, ad_r);
-		  			  HAL_Delay(333);
-					}
-					break;
+		  		  sensor_test();
+		  		  break;
 
 		  	  case 6:
 		  		  //----pitagola sound----
@@ -980,6 +984,7 @@ void buzzer(int sound, int length){
 	HAL_Delay(length);
 }
 
+
 int get_adc_value(ADC_HandleTypeDef *hadc, uint32_t channel){
 
   ADC_ChannelConfTypeDef sConfig = {0};
@@ -996,14 +1001,7 @@ int get_adc_value(ADC_HandleTypeDef *hadc, uint32_t channel){
   return HAL_ADC_GetValue(hadc);          //
 }
 
-void led_write(uint8_t led1, uint8_t led2, uint8_t led3){
-	if(led1) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-	else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-	if(led2) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
-	else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
-	if(led3) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-	else HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-}
+
 
 /* USER CODE END 4 */
 

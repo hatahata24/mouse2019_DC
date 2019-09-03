@@ -62,7 +62,6 @@ int __io_putchar(int);
 
 void buzzer(int, int);
 int get_adc_value(ADC_HandleTypeDef*, uint32_t);
-void led_write(uint8_t, uint8_t, uint8_t);
 
 /* USER CODE END EFP */
 

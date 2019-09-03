@@ -6,7 +6,7 @@
 #ifdef MAIN_C_										//main.cからこのファイルが呼ばれている場合
 	/*aグローバル変数の定義*/
 
-	volatile float degree_z;
+	volatile float degree_x, degree_y, degree_z;
 	volatile float target_degaccel_z;
 	volatile float target_omega_z;
 	volatile float target_degree_z;
@@ -16,7 +16,7 @@
 #else												//main.c以外からこのファイルが呼ばれている場合
 	/*aグローバル変数の宣言*/
 
-	extern volatile float degree_z;
+	extern volatile float degree_x, degree_y, degree_z;
 	extern volatile float target_degaccel_z;
 	extern volatile float target_omega_z;
 	extern volatile float target_degree_z;
@@ -30,8 +30,21 @@
 #define PWR_MGMT_1 0x6B
 #define CONFIG 0x1A
 #define GYRO_CONFIG 0x1B
+
+#define ACCEL_XOUT_H 0x3B
+#define ACCEL_XOUT_L 0x3C
+#define ACCEL_YOUT_H 0x3D
+#define ACCEL_YOUT_L 0x3E
+#define ACCEL_ZOUT_H 0x3F
+#define ACCEL_ZOUT_L 0x40
+#define GYRO_XOUT_H 0x43
+#define GYRO_XOUT_L 0x44
+#define GYRO_YOUT_H 0x45
+#define GYRO_YOUT_L 0x46
 #define GYRO_ZOUT_H 0x47
 #define GYRO_ZOUT_L 0x48
+
+#define ACCEL_FACTOR 2048
 #define GYRO_FACTOR 16.4
 
 
@@ -41,6 +54,11 @@
 void gyro_init(void);
 uint8_t read_byte(uint8_t reg);
 void write_byte(uint8_t reg, uint8_t val);
+float accel_read_x(void);
+float accel_read_y(void);
+float accel_read_z(void);
+float gyro_read_x(void);
+float gyro_read_y(void);
 float gyro_read_z(void);
 
 //====a走行系====

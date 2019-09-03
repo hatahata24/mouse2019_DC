@@ -1,3 +1,6 @@
 sensor.c:5:6:sensor_init	4	static
-sensor.c:13:9:get_base	16	static
-sensor.c:23:6:get_wall_info	4	static
+sensor.c:12:9:get_base	16	static
+sensor.c:22:6:get_wall_info	4	static
+sensor.c:47:6:led_write	16	static
+sensor.c:65:6:full_led_write	16	static
+sensor.c:115:6:sensor_test	48	static
