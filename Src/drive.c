@@ -185,7 +185,14 @@ void driveU(uint16_t dist){
 	drive_start();											//走行開始
 
 	//----走行----
-	while((dist_l < dist) || (dist_r < dist));			//左右のモータが指定パルス以上進むまで待機
+	while((dist_l < dist) || (dist_r < dist)){				//左右のモータが指定パルス以上進むまで待機
+		if(MF.FLAG.WEDGE == 1){
+			if(ad_l < WALL_BASE_L-30 || ad_r < WALL_BASE_R-10){
+				while((dist_l < W_DIST) || (dist_r < W_DIST));	//左右のモータが壁切れ用指定パルス以上進むまで待機
+			break;
+			}
+		}
+	}
 
 	drive_stop();											//走行停止
 	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
@@ -201,7 +208,7 @@ void driveU(uint16_t dist){
 void driveC(uint16_t dist){
 
 	speed_min_l = speed_min_r = 150;
-	speed_max_l = speed_max_r = 300;
+	speed_max_l = speed_max_r = 150;
 	accel_l = accel_r = 0;												//等速走行のため加速度は0
 
 	drive_start();											//走行開始
@@ -223,6 +230,53 @@ void driveC(uint16_t dist){
 		HAL_Delay(5);
 	}
 */
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//driveC2
+// 指定パルス分デフォルト速度で走行して停止する
+// 引数1：dist …… 走行するパルス
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void driveC2(uint16_t dist){
+
+	speed_min_l = speed_min_r = -150;
+	speed_max_l = speed_max_r = -150;
+	accel_l = accel_r = 0;												//等速走行のため加速度は0
+
+	drive_start();											//走行開始
+//	MF.FLAG.LOG = 1;
+	//====回転====
+	while((dist_l > (-1*dist)) || (dist_r > (-1*dist)));			//左右のモータが定速分のパルス以上進むまで待機
+
+	drive_stop();											//走行停止
+//	MF.FLAG.LOG = 0;
+
+/*	while(ad_l <= 100);
+
+	for(int i=0; i<log_allay; i++){
+		printf("l:	%d\n", get_speed_l[i]);
+		HAL_Delay(5);
+	}
+	for(int i=0; i<log_allay; i++){
+		printf("r:	%d\n", get_speed_r[i]);
+		HAL_Delay(5);
+	}
+*/
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//set_position
+// 機体の尻を壁に当てて場所を区画中央に合わせる
+// 引数：sw …… 0以外ならget_base()する
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void set_position(){
+
+  driveC2(SETPOS_BACK);          //尻を当てる程度に後退。回転後に停止する
+  driveC(SETPOS_SET);           //デフォルトインターバルで指定パルス分回転。回転後に停止する
 }
 
 
@@ -298,7 +352,7 @@ void start_sectionA2(void){
 // a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void half_sectionA2(void){
-
+	full_led_write(1);
 	control_start();
 	driveA(8000, SPEED_MIN, SPEED_HIGH, SEC_HALF);				//半区画のパルス分加速しながら走行。走行後は停止しない
 	get_wall_info();											//壁情報を取得，片壁制御の有効・無効の判断
@@ -312,7 +366,7 @@ void half_sectionA2(void){
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void half_sectionD2(void){
-
+	full_led_write(3);
 	control_start();
 	driveD(-8000, SPEED_MIN, SPEED_HIGH, SEC_HALF);				//指定パルス分指定減速度で減速走行。走行後は停止する
 }
@@ -338,7 +392,7 @@ void one_section(void){
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void one_sectionA(void){
-
+	full_led_write(4);
 	control_start();
 	driveA(accel_hs, SPEED_RUN, speed_max_hs, SEC_HALF*2);			//1区画のパルス分加速走行。走行後は停止しない
 	get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
@@ -352,7 +406,7 @@ void one_sectionA(void){
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void one_sectionD(void){
-
+	full_led_write(2);
 	control_start();
 	driveD(-1*accel_hs, SPEED_RUN, speed_max_hs, SEC_HALF*2);		//1区画のパルス分減速走行。走行後は停止しない
 	get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
@@ -366,10 +420,10 @@ void one_sectionD(void){
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void one_sectionU(void){
-
+	full_led_write(7);
 	control_start();
 	driveU(SEC_HALF*2);										//半区画のパルス分等速走行。走行後は停止しない
-	get_wall_info();										//壁情報を取得
+	get_wall_info();											//壁情報を取得
 }
 
 
@@ -473,8 +527,7 @@ void rotate_180(void){
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void slalom_R90(void){
-	MF.FLAG.LOG = 1;
-
+	full_led_write(5);
 	MF.FLAG.GYRO = 0;
 
 	accel_l = 3000;
@@ -539,6 +592,7 @@ void slalom_R90(void){
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void slalom_L90(void){
+	full_led_write(6);
 	MF.FLAG.GYRO = 0;
 
 	accel_l = 3000;
@@ -571,7 +625,7 @@ void slalom_L90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z < 20);
+	while(degree_z < 21);
 	drive_stop();
 
 	MF.FLAG.GYRO = 1;
@@ -639,7 +693,7 @@ void slalom_R902(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z > -37);
+	while(degree_z > -32);
 
 	MF.FLAG.GYRO = 1;
 
@@ -704,7 +758,7 @@ void slalom_L902(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z < 37);
+	while(degree_z < 34);
 	drive_stop();
 
 	MF.FLAG.GYRO = 1;
@@ -813,6 +867,7 @@ void init_test(void){
 					half_sectionD();				//半区画のパルス分減速しながら走行。走行後は停止する
 					break;
 				case 6:
+					set_position();
 					break;
 				case 7:
 					target_degree_z = degree_z;
@@ -915,7 +970,6 @@ void slalom_test(void){
 						half_sectionA();
 						slalom_L90();				//16回右90度回転、つまり4周回転
 						half_sectionD();
-						rotate_180();				//8回右180度回転、つまり4周回転
 					}
 					break;
 				case 5:
@@ -1326,6 +1380,26 @@ void slalom_run(void){
 					break;
 
 				case 6:
+					//----a二次走行+直線優先----
+					printf("High Speed Run. (Slalom)\n");
+
+					MF.FLAG.SCND = 1;
+//					MF.FLAG.STRAIGHT = 1;
+					start_flag = 0;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					HAL_Delay(5000);
+					searchC2();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchC2();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 
 				case 7:

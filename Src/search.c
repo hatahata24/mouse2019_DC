@@ -55,10 +55,10 @@ void searchA(){
 			//----180回転----
 			case 0x22:
 				rotate_180();								//180度回転
-/*				if(wall_info & 0x88){
-					set_position(0);
+				if(wall_info & 0x88){
+					set_position();
 				}
-*/				break;
+				break;
 			//----a左折----
 			case 0x11:
 				rotate_L90();								//a左回転
@@ -132,10 +132,10 @@ void searchB(){
 			case 0x22:
 				half_sectionD();
 				rotate_180();
-/*				if(wall_info & 0x88){
-					set_position(0);
+				if(wall_info & 0x88){
+					set_position();
 				}
-*/				half_sectionA();
+				half_sectionA();
 				break;
 			//----a左折----
 			case 0x11:
@@ -207,10 +207,10 @@ void searchC(){
 			case 0x22:
 				half_sectionD();
 				rotate_180();
-/*				if(wall_info & 0x88){
-					set_position(0);
+				if(wall_info & 0x88){
+					set_position();
 				}
-*/				half_sectionA();
+				half_sectionA();
 				break;
 			//----a左折スラローム----
 			case 0x11:
@@ -277,10 +277,10 @@ void searchC2(){
 			case 0x22:
 				half_sectionD2();
 				rotate_180();
-/*				if(wall_info & 0x88){
-					set_position(0);
+				if(wall_info & 0x88){
+					set_position();
 				}
-*/				half_sectionA2();
+				half_sectionA2();
 				break;
 			//----a左折スラローム----
 			case 0x11:

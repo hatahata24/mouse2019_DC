@@ -148,8 +148,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //		degree_x += accel_read_x() * 0.001;
 //		degree_y += accel_read_y() * 0.001;
 //		degree_z += accel_read_z() * 0.001;
-		degree_x += gyro_read_x() * 0.001;
-		degree_y += gyro_read_y() * 0.001;
+//		degree_x += gyro_read_x() * 0.001;
+//		degree_y += gyro_read_y() * 0.001;
 		degree_z += gyro_read_z() * 0.001;
 
 		if(MF.FLAG.ENKAI){
@@ -181,7 +181,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 
-		if(MF.FLAG.GCTRL){
+/*		if(MF.FLAG.GCTRL){
 			int16_t dg_tmp = 0;
 /*			dif_g = (int32_t) gyro_read_z() - target_omega_z;		//a角速度閾値越え制御
 
@@ -200,7 +200,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 */
 //			dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
-			dg = CTRL_CONT_G * degree_z;				//a角度制御
+/*			dg = CTRL_CONT_G * degree_z;				//a角度制御
 			dg = max(min(CTRL_MAX_G, dg_tmp), -1 * CTRL_MAX_G);
 			dgl = dg;
 			dgr = -1*dg;
@@ -208,7 +208,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			//a制御フラグがなければ壁制御値0
 			dgl = dgr = 0;
 		}
-
+*/
 
 		//ADchange interrupt
 		uint16_t delay;
@@ -265,6 +265,35 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					//a制御フラグがなければ壁制御値0
 					dwl = dwr = 0;
 				}
+
+				if(MF.FLAG.GCTRL){
+					int16_t dg_tmp = 0;
+		/*			dif_g = (int32_t) gyro_read_z() - target_omega_z;		//a角速度閾値越え制御
+
+					if(CTRL_BASE_G < dif_g){					//a角速度変化量が基準よりも大きい時(左回転が発生時)
+						dg_tmp += CTRL_CONT_G * dif_g;			//a比例制御値を決定
+					}
+					else if(-1*CTRL_BASE_G > dif_g){			//a角速度変化量が負の基準よりも小さい時(右回転が発生時)
+						dg_tmp += CTRL_CONT_G * dif_g;			//a比例制御値を決定
+					}
+					dg = max(min(CTRL_MAX_G, dg_tmp), -1 * CTRL_MAX_G);
+					dgl = dg;
+					dgr = -1*dg;
+				}else{
+					//a制御フラグがなければ壁制御値0
+					dgl = dgr = 0;
+				}
+		*/
+		//			dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
+					dg = CTRL_CONT_G * degree_z;				//a角度制御
+					dg = max(min(CTRL_MAX_G, dg_tmp), -1 * CTRL_MAX_G);
+					dgl = dg;
+					dgr = -1*dg;
+				}else{
+					//a制御フラグがなければ壁制御値0
+					dgl = dgr = 0;
+				}
+
 				break;
 		}
 
@@ -334,7 +363,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		//fail safe
-		if(accel_read_y() >= 15 || degree_z >= 360 || degree_z <= -360) {	//15G以上加速度, 360度以上回転発生でFail Safe
+		if(degree_z >= 360 || degree_z <= -360) {	//360度以上回転発生でFail Safe
 			while(1){
 			   drive_dir(0, 2);
 			   drive_dir(1, 2);
@@ -441,12 +470,14 @@ int main(void)
 		  	  case 1:
 		  		  //----a超新地走行----
 		  		  printf("Simple Run.\n");
+		  		  //MF.FLAG.WEDGE = 1;
 		  		  simple_run();
 		  		  break;
 
 		  	  case 2:
 		  		  //----aスラローム走行----
 		  		  printf("slalom Run.\n");
+		  		  //MF.FLAG.WEDGE = 1;
 		  		  slalom_run();
 		  		  break;
 
@@ -478,6 +509,7 @@ int main(void)
 
 		  	  case 7:
 		  		  //----a本番走行用----
+		  		  //MF.FLAG.WEDGE = 1;
 		  		  perfect_run();
 		  		  break;
 		  }

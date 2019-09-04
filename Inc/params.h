@@ -17,13 +17,18 @@
 #define SPEED_MIN 100
 #define SPEED_HIGH 800
 
+#define SETPOS_BACK 60
+#define SETPOS_SET 35
+
+#define W_DIST 70
+
 //log params
 #define log_allay 200
 
 //gyro controll params
 #define CTRL_BASE_G		1				//G
-#define CTRL_MAX_G		4000//3500				//control value max
-#define CTRL_CONT_G		400//4000			//Proportional C
+#define CTRL_MAX_G		2000//3500				//control value max
+#define CTRL_CONT_G		1000//4000			//Proportional C
 
 
 //sensor params
@@ -31,15 +36,15 @@
 
 //----wall judge----
 #define WALL_BASE_FR 	40				//FR
-#define WALL_BASE_FL 	150				//FL
-#define WALL_BASE_R		30				//R
+#define WALL_BASE_FL 	80				//FL
+#define WALL_BASE_R		50				//R
 #define WALL_BASE_L 	50	     		//L
 
 //----wall control judge----
-#define CTRL_BASE_L		20				//R
-#define CTRL_BASE_R		20				//L
-#define CTRL_MAX_W		350				//control value max
-#define CTRL_CONT_W		0.8F			//Proportional C
+#define CTRL_BASE_L		10				//R
+#define CTRL_BASE_R		10				//L
+#define CTRL_MAX_W		2000			//control value max
+#define CTRL_CONT_W		0.5F//0.1F//3//1//0.8F			//Proportional C
 
 
 //music params

@@ -74,6 +74,7 @@ void driveA(uint16_t, uint16_t, uint16_t, uint16_t);		//a加速走行
 void driveD(int16_t, uint16_t, uint16_t, uint16_t);			//a減速走行
 void driveU(uint16_t);			//a等速走行（前の速度を維持）
 void driveC(uint16_t);			//aデフォルトインターバルで走行
+void driveC2(uint16_t);			//aデフォルトインターバルで逆方向走行
 void slalomU12(uint16_t);
 void slalomR12(uint16_t, uint16_t, uint16_t, uint16_t);
 void slalomR22(uint16_t);
@@ -99,7 +100,7 @@ void slalom_R90(void);			//aスラローム右90回転
 void slalom_L90(void);			//aスラローム左90回転
 void slalom_R902(void);			//aスラローム右90回転
 void slalom_L902(void);			//aスラローム左90回転
-void set_position(uint8_t);		//a上下位置合わせ
+void set_position(void);		//a上下位置合わせ
 void set_positionX(uint8_t);	//a上下左右位置合わせ
 
 
