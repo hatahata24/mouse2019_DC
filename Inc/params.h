@@ -13,7 +13,7 @@
 //drive params
 #define SEC_HALF 90
 #define SEC_START 125
-#define SPEED_RUN 400
+#define SPEED_RUN 600
 #define SPEED_MIN 100
 #define SPEED_HIGH 800
 

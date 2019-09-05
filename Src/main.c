@@ -363,10 +363,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		//fail safe
-		if(degree_z >= 360 || degree_z <= -360) {	//360度以上回転発生でFail Safe
+		if(degree_z >= 360 || degree_z <= -360 || dist_r >= 360 || dist_l >= 360) {	//360度以上回転発生でFail Safe
 			while(1){
 			   drive_dir(0, 2);
 			   drive_dir(1, 2);
+			   full_led_write(1);
 		   }
 		}
 	}

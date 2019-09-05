@@ -83,6 +83,8 @@ void slalomU22(uint16_t);
 
 
 //----a上位関数----
+void set_position(void);		//a上下位置合わせ
+void set_positionX(uint8_t);	//a上下左右位置合わせ
 void start_sectionA(void);		//a加速スタート区画
 void start_sectionA2(void);		//a加速スタート区画
 void half_sectionA(void);		//a加速半区画
@@ -100,21 +102,21 @@ void slalom_R90(void);			//aスラローム右90回転
 void slalom_L90(void);			//aスラローム左90回転
 void slalom_R902(void);			//aスラローム右90回転
 void slalom_L902(void);			//aスラローム左90回転
-void set_position(void);		//a上下位置合わせ
-void set_positionX(uint8_t);	//a上下左右位置合わせ
+
+void v_R45(void);				//V45右
+void v_L45(void);				//V45左
+void v_R90(void);				//V90右
+void v_L90(void);				//V90左
+void v_R135(void);				//V135右
+void v_L135(void);				//V135左
 
 
 //----a走行関数----
 void test_select(void);			//aテスト走行選択
 
 void init_test(void);			//a初期基幹関数走行テスト
-
-void defo_test(void);			//a初期状態でのtableによるテスト走行
-void physic_test(void);			//a物理量ベースによるテスト走行
-void accel_test(void);			//a既知区間加速によるテスト走行
 void slalom_test(void);			//aスラロームによるテスト走行
-void search_test(void);			//a直線優先や全面探索のテスト走行
-
+void v_test(void);			//a直線優先や全面探索のテスト走行
 
 void simple_run(void);			//a超信地走行
 void slalom_run(void);			//aスラローム走行

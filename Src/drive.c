@@ -786,6 +786,432 @@ void slalom_L902(void){
 }
 
 
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//v_R45
+//a区画中心から左に45度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void v_R45(void){
+	//MF.FLAG.LOG = 1;
+
+	full_led_write(2);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+
+	drive_start();											//走行開始
+//	control_start();
+	while(dist_l < 25 && dist_r < 25);
+	drive_stop();
+	control_stop();
+
+	full_led_write(3);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 6000;
+	omega_max = 300;
+	speed_G = 600;
+
+	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > -7.5);
+
+	full_led_write(4);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 0;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > -37.5);
+
+	full_led_write(5);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -6000;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > -45);
+
+	full_led_write(6);
+	MF.FLAG.GYRO = 0;
+
+/*	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 800;
+	speed_max_r = 800;
+	drive_start();											//走行開始
+	control_start();
+	while(dist_l < 34 && dist_r < 34);
+	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
+	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+*/	drive_stop();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//v_L45
+//a区画中心から右に45度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void v_L45(void){
+	//MF.FLAG.LOG = 1;
+
+	full_led_write(2);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+
+	drive_start();											//走行開始
+//	control_start();
+	while(dist_l < 25 && dist_r < 25);
+	drive_stop();
+	control_stop();
+
+	full_led_write(3);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -6000;
+	omega_max = -300;
+	speed_G = 600;
+
+	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z < 7.5);
+
+	full_led_write(4);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 0;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z < 37.5);
+
+	full_led_write(5);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 6000;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > 45);
+
+	full_led_write(6);
+	MF.FLAG.GYRO = 0;
+
+/*	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 800;
+	speed_max_r = 800;
+	drive_start();											//走行開始
+	control_start();
+	while(dist_l < 34 && dist_r < 34);
+	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
+	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+*/	drive_stop();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//v_R90
+//a柱中心から左に90度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void v_R90(void){
+	//MF.FLAG.LOG = 1;
+
+	full_led_write(2);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+
+	drive_start();											//走行開始
+//	control_start();
+	while(dist_l < 10 && dist_r < 10);
+	drive_stop();
+	control_stop();
+
+	full_led_write(3);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 4000;
+	omega_max = 400;
+	speed_G = 600;
+
+	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > -20);
+
+	full_led_write(4);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 0;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > -73);
+
+	full_led_write(5);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -6000;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > -90);
+
+	full_led_write(6);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+	drive_start();											//走行開始
+	control_start();
+	while(dist_l < 10 && dist_r < 10);
+//	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
+//	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	drive_stop();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//v_L90
+//a柱中心から右に90度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void v_L90(void){
+	//MF.FLAG.LOG = 1;
+
+	full_led_write(2);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+
+	drive_start();											//走行開始
+//	control_start();
+	while(dist_l < 10 && dist_r < 10);
+	drive_stop();
+	control_stop();
+
+	full_led_write(3);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -4000;
+	omega_max = -400;
+	speed_G = 600;
+
+	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z < 20);
+
+	full_led_write(4);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 0;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z < 73);
+
+	full_led_write(5);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -6000;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z < 90);
+
+	full_led_write(6);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+	drive_start();											//走行開始
+	control_start();
+	while(dist_l < 10 && dist_r < 10);
+//	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
+//	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	drive_stop();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//v_R135
+//a区画中心から左に135度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void v_R135(void){
+	//MF.FLAG.LOG = 1;
+
+	full_led_write(2);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+
+	drive_start();											//走行開始
+//	control_start();
+	while(dist_l < 50 && dist_r < 50);
+	drive_stop();
+	control_stop();
+
+	full_led_write(3);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 10000;
+	omega_max = 400;
+	speed_G = 600;
+
+	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > -8);
+
+	full_led_write(4);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 0;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > -130);
+
+	full_led_write(5);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -10000;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z > -135);
+
+	full_led_write(6);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+	drive_start();											//走行開始
+	control_start();
+	while(dist_l < 35 && dist_r < 35);
+//	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
+//	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	drive_stop();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//v_L135
+//a区画中心から右に135度回転する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void v_L135(void){
+	//MF.FLAG.LOG = 1;
+
+	full_led_write(2);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+
+	drive_start();											//走行開始
+//	control_start();
+	while(dist_l < 50 && dist_r < 50);
+	drive_stop();
+	control_stop();
+
+	full_led_write(3);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -10000;
+	omega_max = -400;
+	speed_G = 600;
+
+	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z < 8);
+
+	full_led_write(4);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 0;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z < 130);
+
+	full_led_write(5);
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 10000;
+
+//	degree_z = 0;				//a機体角度の初期化
+	pulse_l = pulse_r = 0;		//aモータ出力の初期化
+	MF.FLAG.DRV = 1;
+	while(degree_z < 135);
+
+	full_led_write(6);
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 5000;
+	accel_r = 5000;
+	speed_max_l = 600;
+	speed_max_r = 600;
+	drive_start();											//走行開始
+	control_start();
+	while(dist_l < 35 && dist_r < 35);
+//	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
+//	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	drive_stop();
+}
+
+
 /*----------------------------------------------------------
 		テスト関数
 ----------------------------------------------------------*/
@@ -1015,19 +1441,90 @@ void slalom_test(void){
 					printf("slalom turn left .\n");
 					half_sectionA();
 					for(int i = 0; i < 8; i++){
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
-					    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+						full_led_write(1);
 						slalom_L902();				//16回右90度回転、つまり4周回転
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-					    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+						full_led_write(2);
 						one_sectionU();
 					}
-				    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-				    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-				    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+					full_led_write(3);
 					half_sectionD();
+					break;
+			}
+		}
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//v_test
+//aスラローム走行テスト
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void v_test(void){
+
+	int mode = 0;
+	printf("Test V Run, Mode : %d\n", mode);
+
+	while(1){
+		led_write(mode & 0b001, mode & 0b010, mode & 0b100);
+		  if(dist_r >= 20){
+			  mode++;
+			  dist_r = 0;
+			  if(mode > 7){
+				  mode = 0;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(dist_r <= -20){
+			  mode--;
+			  dist_r = 0;
+			  if(mode < 0){
+				  mode = 7;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
+			  HAL_Delay(50);
+			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  while(ad_fl <= WALL_BASE_FL){
+				  led_write(1, 1, 1);
+				  HAL_Delay(200);
+				  led_write(0, 0, 0);
+				  HAL_Delay(200);
+			  }
+
+			  switch(mode){
+				case 0:
+					get_base();
+					break;
+				case 1:
+					//----V左45----
+					printf("V 45 right .\n");
+					full_led_write(7);
+					half_sectionA();
+					for(int i = 0; i < 1; i++){
+						v_R45();
+						v_R45();
+					}
+					full_led_write(7);
+					half_sectionD();
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					break;
+				case 7:
 					break;
 			}
 		}
@@ -1076,6 +1573,8 @@ void test_select(void){
 				case 3:
 					sample_course_run();
 					break;
+				case 4:
+					v_test();
 			  }
 		  }
 	}
