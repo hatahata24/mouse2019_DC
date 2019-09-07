@@ -173,9 +173,9 @@ void sensor_test(){
 			  			  deg_y = degree_y;
 			  			  deg_z = degree_z;
 
-			  			  printf("Accel x: %3d, y: %3d, z: %3d\n", accel_x, accel_y, accel_z);
-			  			  //printf("Gyro  x: %3d, y: %3d, z: %3d\n", gyro_x, gyro_y, gyro_z);
-			  			  //printf("Deg   x: %3d, y: %3d, z: %3d\n", deg_x, deg_y, deg_z);
+			  			  //printf("Accel x: %3d, y: %3d, z: %3d\n", accel_x, accel_y, accel_z);
+			  			  printf("Gyro  x: %3d, y: %3d, z: %3d\n", gyro_x, gyro_y, gyro_z);
+			  			  printf("Deg   x: %3d, y: %3d, z: %3d\n", deg_x, deg_y, deg_z);
 			  			  HAL_Delay(111);
 						}
 					break;

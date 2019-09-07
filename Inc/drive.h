@@ -93,7 +93,9 @@ void half_sectionD(void);		//a減速半区画
 void half_sectionD2(void);		//a減速半区画
 void one_section(void);			//a加減速一区画
 void one_sectionA(void);		//a加減速一区画
+void one_sectionA2(void);		//a加減速一区画
 void one_sectionD(void);		//a加減速一区画
+void one_sectionD2(void);		//a加減速一区画
 void one_sectionU(void);		//a等速一区画
 void rotate_R90(void);			//a右90回転
 void rotate_L90(void);			//a左90回転

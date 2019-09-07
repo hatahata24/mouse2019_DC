@@ -176,16 +176,16 @@ void searchC(){
 	}
 
 	//====aスタート位置壁情報取得====
-	get_wall_info();										//a壁情報の初期化, 後壁はなくなる
-	wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
-	write_map();											//a壁情報を地図に記入
+	if(MF.FLAG.SCND == 0)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
+	if(MF.FLAG.SCND == 0)wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
+	if(MF.FLAG.SCND == 0)write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====
-	write_map();											//a壁情報を地図に記入
+	if(MF.FLAG.SCND == 0)write_map();											//a壁情報を地図に記入
 	r_cnt = 0;												//a経路カウンタの初期化
 	make_smap();											//a歩数マップ作成
 	make_route();											//a最短経路探索（route配列に動作が格納される）
@@ -207,7 +207,7 @@ void searchC(){
 			case 0x22:
 				half_sectionD();
 				rotate_180();
-				if(wall_info & 0x88){
+				if(wall_info & 0x88 && MF.FLAG.SCND == 0){
 					set_position();
 				}
 				half_sectionA();
@@ -218,7 +218,7 @@ void searchC(){
 				break;
 		}
 		adv_pos();
-		conf_route();
+		if(MF.FLAG.SCND == 0)conf_route();
 
 	}while((mouse.x != goal_x) || (mouse.y != goal_y));
 
@@ -246,16 +246,16 @@ void searchC2(){
 	}
 
 	//====aスタート位置壁情報取得====
-	get_wall_info();										//a壁情報の初期化, 後壁はなくなる
-	wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
-	write_map();											//a壁情報を地図に記入
+	if(MF.FLAG.SCND == 0)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
+	if(MF.FLAG.SCND == 0)wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
+	if(MF.FLAG.SCND == 0)write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA2();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====
-	write_map();											//a壁情報を地図に記入
+	if(MF.FLAG.SCND == 0)write_map();											//a壁情報を地図に記入
 	r_cnt = 0;												//a経路カウンタの初期化
 	make_smap();											//a歩数マップ作成
 	make_route();											//a最短経路探索（route配列に動作が格納される）
@@ -288,7 +288,7 @@ void searchC2(){
 				break;
 		}
 		adv_pos();
-		conf_route();
+		if(MF.FLAG.SCND == 0)conf_route();
 
 	}while((mouse.x != goal_x) || (mouse.y != goal_y));
 
@@ -319,16 +319,16 @@ void searchD(){
 	}
 
 	//====aスタート位置壁情報取得====
-	get_wall_info();										//a壁情報の初期化, 後壁はなくなる
-	wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
-	write_map();											//a壁情報を地図に記入
+	if(MF.FLAG.SCND == 0)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
+	if(MF.FLAG.SCND == 0)wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
+	if(MF.FLAG.SCND == 0)write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====
-	write_map();											//a壁情報を地図に記入
+	if(MF.FLAG.SCND == 0)write_map();											//a壁情報を地図に記入
 	r_cnt = 0;												//a経路カウンタの初期化
 	make_smap();											//a歩数マップ作成
 	make_route();											//a最短経路探索（route配列に動作が格納される）
@@ -376,7 +376,7 @@ void searchD(){
 				break;
 		}
 		adv_pos();
-		conf_route();
+		if(MF.FLAG.SCND == 0)conf_route();
 
 	}while((mouse.x != goal_x) || (mouse.y != goal_y));
 
@@ -404,16 +404,16 @@ void searchD2(){
 	}
 
 	//====aスタート位置壁情報取得====
-	get_wall_info();										//a壁情報の初期化, 後壁はなくなる
-	wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
-	write_map();											//a壁情報を地図に記入
+	if(MF.FLAG.SCND == 0)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
+	if(MF.FLAG.SCND == 0)wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
+	if(MF.FLAG.SCND == 0)write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
-	start_sectionA();
+	start_sectionA2();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====
-	write_map();											//a壁情報を地図に記入
+	if(MF.FLAG.SCND == 0)write_map();											//a壁情報を地図に記入
 	r_cnt = 0;												//a経路カウンタの初期化
 	make_smap();											//a歩数マップ作成
 	make_route();											//a最短経路探索（route配列に動作が格納される）
@@ -443,29 +443,29 @@ void searchD2(){
 				break;
 			//----a右折スラローム----
 			case 0x44:
-				slalom_R90();
+				slalom_R902();
 
 				break;
 			//----180回転----
 			case 0x22:
-				half_sectionD();
+				half_sectionD2();
 				rotate_180();
 /*				if(wall_info & 0x88){
 					set_position2(0);
 				}
-*/				half_sectionA();
+*/				half_sectionA2();
 				break;
 			//----a左折スラローム----
 			case 0x11:
-				slalom_L90();
+				slalom_L902();
 				break;
 		}
 		adv_pos();
-		conf_route();
+		if(MF.FLAG.SCND == 0)conf_route();
 
 	}while((mouse.x != goal_x) || (mouse.y != goal_y));
 
-	half_sectionD();
+	half_sectionD2();
 
 	HAL_Delay(2000);
 	rotate_180();											//180度回転

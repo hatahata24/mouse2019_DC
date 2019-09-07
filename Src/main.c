@@ -502,15 +502,41 @@ int main(void)
 
 		  	  case 6:
 		  		  //----pitagola sound----
-		  		  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_SET);
-		  		  for(int i=0; i<pita; i++){
+				  while(ad_fl <= WALL_BASE_FL){
+					  led_write(1, 1, 1);
+					  HAL_Delay(200);
+					  led_write(0, 0, 0);
+					  HAL_Delay(200);
+				  }
+				  HAL_Delay(200);
+/*		  		  for(int i=0; i<pita; i++){
 		  			  buzzer(pitagola[i][0], pitagola[i][1]);
+		  		  }
+		  		  for(int i=0; i<m_start; i++){
+		  			  buzzer(mario_start[i][0], mario_start[i][1]);
+		  		  }
+		  		  for(int i=0; i<m_coin; i++){
+		  			  buzzer(mario_coin[i][0], mario_coin[i][1]);
+		  		  }
+		  		  for(int i=0; i<m_select; i++){
+		  			  buzzer(mario_select[i][0], mario_select[i][1]);
+		  		  }
+				  HAL_Delay(2000);
+				  for(int i=0; i<m_ok; i++){
+		  			  buzzer(mario_ok[i][0], mario_ok[i][1]);
+		  		  }
+*/				  HAL_Delay(2000);
+				  for(int i=0; i<m_goal; i++){
+		  			  buzzer(mario_goal[i][0], mario_goal[i][1]);
 		  		  }
 		  		  break;
 
 		  	  case 7:
 		  		  //----a本番走行用----
 		  		  //MF.FLAG.WEDGE = 1;
+		  		  for(int i=0; i<m_select; i++){
+		  			  buzzer(mario_select[i][0], mario_select[i][1]);
+		  		  }
 		  		  perfect_run();
 		  		  break;
 		  }

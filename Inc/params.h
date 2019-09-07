@@ -13,7 +13,7 @@
 //drive params
 #define SEC_HALF 90
 #define SEC_START 125
-#define SPEED_RUN 600
+#define SPEED_RUN 400
 #define SPEED_MIN 100
 #define SPEED_HIGH 800
 
@@ -44,7 +44,7 @@
 #define CTRL_BASE_L		10				//R
 #define CTRL_BASE_R		10				//L
 #define CTRL_MAX_W		2000			//control value max
-#define CTRL_CONT_W		0.5F//0.1F//3//1//0.8F			//Proportional C
+#define CTRL_CONT_W		0.3F//0.1F//3//1//0.8F			//Proportional C
 
 
 //music params
@@ -58,7 +58,7 @@
 #define DOO 2093
 
 //----goal point---
-#define GOAL_X 9	//7
+#define GOAL_X 3	//7
 #define GOAL_Y 6	//7
 
 #endif /* INC_PARAMS_H_ */

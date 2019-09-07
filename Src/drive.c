@@ -136,7 +136,7 @@ void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16
 
 	drive_stop();											//a走行停止
 	//MF.FLAG.STRT = 1;										//2回目以降の加速の際はspeedは既存のスピードを用いる
-	get_wall_info();										//a壁情報を取得，片壁制御の有効・無効の判断
+	//get_wall_info();										//a壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -195,7 +195,7 @@ void driveU(uint16_t dist){
 	}
 
 	drive_stop();											//走行停止
-	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+//	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -295,7 +295,7 @@ void start_sectionA(void){
 		driveA(4000, SPEED_MIN, SPEED_RUN, SEC_HALF);					//半区画のパルス分加速しながら走行。走行後は停止しない
 	}
 	start_flag = 1;
-	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -309,7 +309,7 @@ void half_sectionA(void){
 
 	control_start();
 	driveA(4000, SPEED_MIN, SPEED_RUN, SEC_HALF);					//半区画のパルス分加速しながら走行。走行後は停止しない
-	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -341,7 +341,7 @@ void start_sectionA2(void){
 		driveA(8000, SPEED_MIN, SPEED_HIGH, SEC_HALF);					//半区画のパルス分加速しながら走行。走行後は停止しない
 	}
 	start_flag = 1;
-	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -355,7 +355,7 @@ void half_sectionA2(void){
 	full_led_write(1);
 	control_start();
 	driveA(8000, SPEED_MIN, SPEED_HIGH, SEC_HALF);				//半区画のパルス分加速しながら走行。走行後は停止しない
-	get_wall_info();											//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();											//壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -395,7 +395,7 @@ void one_sectionA(void){
 	full_led_write(4);
 	control_start();
 	driveA(accel_hs, SPEED_RUN, speed_max_hs, SEC_HALF*2);			//1区画のパルス分加速走行。走行後は停止しない
-	get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -409,7 +409,35 @@ void one_sectionD(void){
 	full_led_write(2);
 	control_start();
 	driveD(-1*accel_hs, SPEED_RUN, speed_max_hs, SEC_HALF*2);		//1区画のパルス分減速走行。走行後は停止しない
-	get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//one_sectionA2
+//a1区画分加速する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_sectionA2(void){
+	full_led_write(4);
+	control_start();
+	driveA(accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF*2);			//1区画のパルス分加速走行。走行後は停止しない
+	if(MF.FLAG.SCND == 0)get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//one_sectionD2
+//a1区画分減速する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_sectionD2(void){
+	full_led_write(2);
+	control_start();
+	driveD(-1*accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF*2);		//1区画のパルス分減速走行。走行後は停止しない
+	if(MF.FLAG.SCND == 0)get_wall_info();												//壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -423,7 +451,7 @@ void one_sectionU(void){
 	full_led_write(7);
 	control_start();
 	driveU(SEC_HALF*2);										//半区画のパルス分等速走行。走行後は停止しない
-	get_wall_info();											//壁情報を取得
+	if(MF.FLAG.SCND == 0)get_wall_info();											//壁情報を取得
 }
 
 
@@ -442,7 +470,7 @@ void rotate_R90(void){
 
 	drive_start();											//走行開始
 	control_stop();
-	while(degree_z > -80);
+	while(degree_z > -80.3);
 	drive_stop();
 
 	accel_l = 3000;
@@ -473,7 +501,7 @@ void rotate_L90(void){
 
 	drive_start();											//走行開始
 	control_stop();
-	while(degree_z < 80);
+	while(degree_z < 80.3);
 	drive_stop();
 
 	accel_l = -3000;
@@ -504,7 +532,7 @@ void rotate_180(void){
 
 	drive_start();											//走行開始
 	control_stop();
-	while(degree_z > -170);
+	while(degree_z > -170.6);
 	drive_stop();
 
 	accel_l = 3000;
@@ -530,10 +558,10 @@ void slalom_R90(void){
 	full_led_write(5);
 	MF.FLAG.GYRO = 0;
 
-	accel_l = 3000;
-	accel_r = 3000;
-	speed_max_l = 400;
-	speed_max_r = 400;
+	accel_l = -10000;
+	accel_r = -10000;
+	speed_min_l = 400;
+	speed_min_r = 400;
 
 	drive_start();											//走行開始
 	control_start();
@@ -559,7 +587,7 @@ void slalom_R90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z > -20);
+	while(degree_z > -24);
 
 	MF.FLAG.GYRO = 1;
 
@@ -568,19 +596,19 @@ void slalom_R90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z > -30);
+	while(degree_z > -28);
 
 	MF.FLAG.GYRO = 0;
 
-	accel_l = 3000;
-	accel_r = 3000;
-	speed_max_l = 400;
-	speed_max_r = 400;
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = SPEED_RUN;
+	speed_max_r = SPEED_RUN;
 	drive_start();											//走行開始
 	control_start();
 	while(dist_l < 18 && dist_r < 18);
 	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
-	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 	drive_stop();
 }
 
@@ -625,7 +653,7 @@ void slalom_L90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z < 21);
+	while(degree_z < 22);
 	drive_stop();
 
 	MF.FLAG.GYRO = 1;
@@ -635,7 +663,7 @@ void slalom_L90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z < 30);
+	while(degree_z < 28);
 	drive_stop();
 
 	MF.FLAG.GYRO = 0;
@@ -648,7 +676,7 @@ void slalom_L90(void){
 	control_start();
 	while(dist_l < 18 && dist_r < 18);
 	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも左回転処理
-	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 	drive_stop();
 }
 
@@ -693,7 +721,7 @@ void slalom_R902(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z > -32);
+	while(degree_z > -36);
 
 	MF.FLAG.GYRO = 1;
 
@@ -714,7 +742,7 @@ void slalom_R902(void){
 	control_start();
 	while(dist_l < 34 && dist_r < 34);
 	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理
-	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 	drive_stop();
 }
 
@@ -758,7 +786,7 @@ void slalom_L902(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z < 34);
+	while(degree_z < 36);
 	drive_stop();
 
 	MF.FLAG.GYRO = 1;
@@ -781,7 +809,7 @@ void slalom_L902(void){
 	control_start();
 	while(dist_l < 34 && dist_r < 34);
 	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも左回転処理
-	get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+	if(MF.FLAG.SCND == 0)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 	drive_stop();
 }
 
@@ -1265,21 +1293,21 @@ void init_test(void){
 				case 2:
 					//----right90度回転----
 					printf("Rotate R90.\n");
-					for(int i = 0; i < 16; i++){
+					for(int i = 0; i < 32; i++){
 						rotate_R90();				//16回右90度回転、つまり4周回転
 					}
 					break;
 				case 3:
 					//----left90度回転----
 					printf("Rotate L90.\n");
-					for(int i = 0; i < 16; i++){
+					for(int i = 0; i < 32; i++){
 						rotate_L90();				//16回左90度回転、つまり4周回転
 					}
 					break;
 				case 4:
 					//----180度回転----
 					printf("Rotate 180.\n");
-					for(int i = 0; i < 8; i++){
+					for(int i = 0; i < 16; i++){
 						rotate_180();				//8回右180度回転、つまり4周回転
 					}
 					break;
@@ -1287,7 +1315,7 @@ void init_test(void){
 					//----4区画連続走行----
 					printf("4 Section, Forward, Continuous.\n");
 					half_sectionA();				//半区画のパルス分加速しながら走行
-					for(int i = 0; i < 2-1; i++){
+					for(int i = 0; i < 6-1; i++){
 						one_sectionU();			//一区画のパルス分等速走行
 					}
 					half_sectionD();				//半区画のパルス分減速しながら走行。走行後は停止する
@@ -1345,6 +1373,14 @@ void slalom_test(void){
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  while(ad_fl <= WALL_BASE_FL){
+				  led_write(1, 1, 1);
+				  HAL_Delay(200);
+				  led_write(0, 0, 0);
+				  HAL_Delay(200);
+			  }
+			  HAL_Delay(2000);
+
 			  switch(mode){
 				case 0:
 					get_base();
@@ -1353,7 +1389,7 @@ void slalom_test(void){
 					//----slalom右折----
 					printf("slalom turn right .\n");
 					half_sectionA();
-					for(int i = 0; i < 8; i++){
+					for(int i = 0; i < 32; i++){
 						slalom_R90();	//一区画のパルス分デフォルトインターバルで走行
 						one_sectionU();
 					}
@@ -1363,7 +1399,7 @@ void slalom_test(void){
 					//----slalom左折----
 					printf("slalom turn left .\n");
 					half_sectionA();
-					for(int i = 0; i < 8; i++){
+					for(int i = 0; i < 32; i++){
 						slalom_L90();				//16回右90度回転、つまり4周回転
 						one_sectionU();
 					}
@@ -1401,53 +1437,41 @@ void slalom_test(void){
 				case 5:
 					//----slalom2右折----
 					printf("slalom turn right .\n");
-					half_sectionA();
-					for(int i = 0; i < 8; i++){
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
-					    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+					half_sectionA2();
+					for(int i = 0; i < 1; i++){
+						full_led_write(1);
 						slalom_R902();	//一区画のパルス分デフォルトインターバルで走行
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-					    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+						full_led_write(2);
 						one_sectionU();
 					}
-				    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-				    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-				    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-					half_sectionD();
+					full_led_write(3);
+					half_sectionD2();
 					break;
 				case 6:
 					//----slalom2右折----
 					printf("slalom turn right .\n");
-					half_sectionA();
-					for(int i = 0; i < 1; i++){
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
-					    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+					half_sectionA2();
+					for(int i = 0; i < 16; i++){
+						full_led_write(1);
 						slalom_R902();	//一区画のパルス分デフォルトインターバルで走行
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-					    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-					    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+						full_led_write(2);
 						one_sectionU();
 					}
-				    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-				    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-				    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-					half_sectionD();
+					full_led_write(3);
+					half_sectionD2();
 					break;
 				case 7:
 					//----slalom2左折----
 					printf("slalom turn left .\n");
-					half_sectionA();
-					for(int i = 0; i < 8; i++){
+					half_sectionA2();
+					for(int i = 0; i < 16; i++){
 						full_led_write(1);
 						slalom_L902();				//16回右90度回転、つまり4周回転
 						full_led_write(2);
 						one_sectionU();
 					}
 					full_led_write(3);
-					half_sectionD();
+					half_sectionD2();
 					break;
 			}
 		}
@@ -2029,6 +2053,25 @@ void sample_course_run(void){
 					break;
 
 				case 6:
+					//----aスラローム走行&全面探索スラローム走行----
+					printf("Slalom Run & All Map Run.\n");
+
+					MF.FLAG.SCND = 0;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchE();
+
+					searchC();
+					goal_x = 7;
+					goal_y = 7;
+
 					break;
 
 				case 7:
@@ -2171,6 +2214,9 @@ void perfect_run(void){
 				case 6:
 					break;
 				case 7:
+			  		  for(int i=0; i<m_select; i++){
+			  			  buzzer(mario_select[i][0], mario_select[i][1]);
+			  		  }
 					perfect_slalom();
 					break;
 			}
@@ -2199,8 +2245,9 @@ void perfect_slalom(void){
 				  mode = 0;
 			  }
 			  printf("Mode : %d\n", mode);
-			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
-			  //buzzer(pitagola[2][0], pitagola[2][1]);
+	  		  for(int i=0; i<m_select; i++){
+	  			  buzzer(mario_select[i][0], mario_select[i][1]);
+	  		  }
 		  }
 		  if(dist_r <= -20){
 			  mode--;
@@ -2209,12 +2256,28 @@ void perfect_slalom(void){
 				  mode = 7;
 			  }
 			  printf("Mode : %d\n", mode);
-			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
-			  //buzzer(pitagola[2][0], pitagola[2][1]);
+	  		  for(int i=0; i<m_select; i++){
+	  			  buzzer(mario_select[i][0], mario_select[i][1]);
+	  		  }
 		  }
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  for(int i=0; i<m_ok; i++){
+	  			  buzzer(mario_ok[i][0], mario_ok[i][1]);
+	  		  }
+
+			  while(ad_fl <= WALL_BASE_FL){
+				  led_write(1, 1, 1);
+				  HAL_Delay(200);
+				  led_write(0, 0, 0);
+				  HAL_Delay(200);
+			  }
+	  		  for(int i=0; i<m_start; i++){
+	  			  buzzer(mario_start[i][0], mario_start[i][1]);
+	  			  full_led_write(1);
+	  		  }
+
 			  switch(mode){
 				case 0:
 					break;
@@ -2241,10 +2304,11 @@ void perfect_slalom(void){
 					break;
 
 				case 2:
-					//----a二次探索スラローム+既知区間加速走行 speed1----
+					//----a二次走行スラローム+既知区間加速走行 speed1----
 					printf("First Run. (Continuous)\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
 
 					accel_hs = 3000;
 					speed_max_hs = 600;
@@ -2253,11 +2317,11 @@ void perfect_slalom(void){
 
 					get_base();
 
-					searchC2();
+					searchD();
 					HAL_Delay(500);
 
 					goal_x = goal_y = 0;
-					searchC2();
+					searchD();
 
 					goal_x = 7;
 					goal_y = 7;
@@ -2268,19 +2332,20 @@ void perfect_slalom(void){
 					printf("Second Run. (Continuous)\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
 
 					accel_hs = 3000;
-					speed_max_hs = 800;
+					speed_max_hs = 1000;
 					goal_x = 7;
 					goal_y = 7;
 
 					get_base();
 
-					searchC2();
+					searchD();
 					HAL_Delay(500);
 
 					goal_x = goal_y = 0;
-					searchC2();
+					searchD();
 
 					goal_x = 7;
 					goal_y = 7;
@@ -2291,32 +2356,32 @@ void perfect_slalom(void){
 					printf("First Run. (Slalom)\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
 
 					accel_hs = 3000;
-					speed_max_hs = 1000;
+					speed_max_hs = 1200;
 					goal_x = 7;
 					goal_y = 7;
 
 					get_base();
 
-					searchC2();
+					searchD();
 					HAL_Delay(500);
 
 					goal_x = goal_y = 0;
-					searchC2();
+					searchD();
 
 					goal_x = 7;
 					goal_y = 7;
 					break;
 
 				case 5:
-					//----a二次探索スラローム+既知区間加速走行 speed4----
+					//----a二次探索スラロームHigh Speed----
 					printf("Second Run. (Slalom)\n");
 					MF.FLAG.SCND = 1;
-					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.ACCL2 = 0;
+					MF.FLAG.STRAIGHT = 1;
 
-					accel_hs = 3000;
-					speed_max_hs = 1100;
 					goal_x = 7;
 					goal_y = 7;
 
@@ -2333,9 +2398,51 @@ void perfect_slalom(void){
 					break;
 
 				case 6:
+					//----a二次探索スラロームHigh Speed----
+					printf("Second Run. (Slalom)\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+
+					accel_hs = 3000;
+					speed_max_hs = 1200;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchD2();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchD2();
+
+					goal_x = 7;
+					goal_y = 7;
 					break;
 
 				case 7:
+					//----a二次探索スラロームHigh Speed + 既知区間加速----
+					printf("Second Run. (Slalom)\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+
+					accel_hs = 3000;
+					speed_max_hs = 1600;
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchD2();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchD2();
+
+					goal_x = 7;
+					goal_y = 7;
 					break;
 			}
 		}
