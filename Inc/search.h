@@ -20,8 +20,8 @@ struct coordinate_and_direction{
 #endif
 
 //---direction change constant
-#define DIR_TURN_R90	0x01	//right 90度回転
-#define DIR_TURN_L90	0xff	//left 90度回転
+#define DIR_TURN_R90	0x01	//右90度回転
+#define DIR_TURN_L90	0xff	//左90度回転
 #define DIR_TURN_180	0x02	//180度回転
 
 //====変数====

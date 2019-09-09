@@ -700,13 +700,16 @@ void write_map(){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //turn_dir
 //aマウスの方向を変更する
-//a引数1：t_pat …… 回転方向(drive.hでマクロ定義)
+//a引数1：t_pat …… 回転方向(search.hでマクロ定義)
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void turn_dir(uint8_t t_pat){
 
 	//====a方向を変更====
 	mouse.dir = (mouse.dir + t_pat) & 0x03;					//a指定された分mouse.dirを回転させる
+	if(t_pat == 0x01) target_degree_z -= 90.5;				//目標角度+右90度
+	if(t_pat == 0xff) target_degree_z += 90.5;				//目標角度+左90度
+	if(t_pat == 0x02) target_degree_z -= 181;				//目標角度+右180度
 }
 
 

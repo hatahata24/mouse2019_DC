@@ -166,6 +166,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				full_led_write(4);
 			}
 			degree_z = 0;
+			target_degree_z = 0;
 		}
 
 
@@ -255,8 +256,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				}
 
 				if(MF.FLAG.GCTRL){
-					int16_t dg_tmp = 0;
-		/*			dif_g = (int32_t) gyro_read_z() - target_omega_z;		//a角速度閾値越え制御
+/*					int16_t dg_tmp = 0;
+					dif_g = (int32_t) gyro_read_z() - target_omega_z;		//a角速度閾値越え制御
 
 					if(CTRL_BASE_G < dif_g){					//a角速度変化量が基準よりも大きい時(左回転が発生時)
 						dg_tmp += CTRL_CONT_G * dif_g;			//a比例制御値を決定
@@ -271,9 +272,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					//a制御フラグがなければ壁制御値0
 					dgl = dgr = 0;
 				}
-		*/
-		//			dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
+
+					dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
 					dg = CTRL_CONT_G * degree_z;				//a角度制御
+*/
+					dg = CTRL_CONT_G * (degree_z - target_degree_z);		//角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
+
 					dg = max(min(CTRL_MAX_G, dg), -1 * CTRL_MAX_G);
 					dgl = dg;
 					dgr = -1*dg;
@@ -352,11 +356,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		//fail safe
-		if(degree_z >= 360 || degree_z <= -360 || dist_r >= 360 || dist_l >= 360){	//360度以上回転発生でFail Safe
+		if(degree_z >= target_degree_z+360 || degree_z <= target_degree_z-360 || dist_r >= 360 || dist_l >= 360){	//360度以上回転発生でFail Safe
 			while(1){
 			   drive_dir(0, 2);
 			   drive_dir(1, 2);
-			   full_led_write(4);
+			   full_led_write(1);
 		   }
 		}
 	}
