@@ -35,16 +35,16 @@
 #define sensor_wait 3000
 
 //----wall judge----
-#define WALL_BASE_FR 	40				//FR
-#define WALL_BASE_FL 	80				//FL
-#define WALL_BASE_R		50				//R
-#define WALL_BASE_L 	50	     		//L
+#define WALL_BASE_FR 	30				//FR
+#define WALL_BASE_FL 	70				//FL
+#define WALL_BASE_R		40				//R
+#define WALL_BASE_L 	40	     		//L
 
 //----wall control judge----
 #define CTRL_BASE_L		10				//R
 #define CTRL_BASE_R		10				//L
 #define CTRL_MAX_W		2000			//control value max
-#define CTRL_CONT_W		0.3F//0.1F//3//1//0.8F			//Proportional C
+#define CTRL_CONT_W		0.5F//.8F//0.1F//3//1//0.8F			//Proportional C
 
 
 //music params

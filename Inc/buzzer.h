@@ -44,7 +44,7 @@
 #define A7 3520
 #define B7 3951
 #define C8 4186		//DO
-#define RST 10
+#define RST 0
 
 #define pita 11
 #define pita2 8

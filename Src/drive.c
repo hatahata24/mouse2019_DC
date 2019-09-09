@@ -241,8 +241,8 @@ void driveC(uint16_t dist){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void driveC2(uint16_t dist){
 
-	speed_min_l = speed_min_r = -150;
-	speed_max_l = speed_max_r = -150;
+	speed_min_l = speed_min_r = -250;
+	speed_max_l = speed_max_r = -250;
 	accel_l = accel_r = 0;												//等速走行のため加速度は0
 
 	drive_start();											//走行開始
@@ -587,7 +587,7 @@ void slalom_R90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z > -24);
+	while(degree_z > -22);
 
 	MF.FLAG.GYRO = 1;
 
@@ -721,7 +721,7 @@ void slalom_R902(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z > -36);
+	while(degree_z > -34);
 
 	MF.FLAG.GYRO = 1;
 
@@ -786,7 +786,7 @@ void slalom_L902(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z < 36);
+	while(degree_z < 34.3);
 	drive_stop();
 
 	MF.FLAG.GYRO = 1;
