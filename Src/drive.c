@@ -4,9 +4,9 @@
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //drive_init
-//a走行系の変数の初期化
-//a引数：なし
-//a戻り値：なし
+// 走行系の変数の初期化
+// 引数：なし
+// 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void drive_init(void){
 	MF.FLAGS = 0;
@@ -15,9 +15,9 @@ void drive_init(void){
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //drive_ready
-//a走行前のLED点滅&ジャイロのドリフト計算
-//a引数：なし
-//a戻り値：なし
+// 走行前のLED点滅&ジャイロのドリフト計算
+// 引数：なし
+// 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void drive_ready(void){
 	  while(ad_fl <= WALL_BASE_FL){
@@ -34,14 +34,13 @@ void drive_ready(void){
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //drive_start
-//a走行開始前に走行距離と機体角度を初期化
-//a引数：なし
-//a戻り値：なし
+// 走行開始前に走行距離と機体角度を初期化
+// 引数：なし
+// 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void drive_start(void){
 	dist_l = dist_r = 0;		//走行距離の初期化
-//	degree_z = 0;				//機体角度の初期化
-	if(H_accel_flag == 0) /*pulse_l = pulse_r = */target_speed_l = target_speed_r = 0;		//モータ出力の初期化
+	if(H_accel_flag == 0) target_speed_l = target_speed_r = 0;		//モータ出力の初期化
 	MF.FLAG.DRV = 1;
 	MF.FLAG.SPD = 1;
 }
@@ -49,14 +48,12 @@ void drive_start(void){
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //drive_stop
-//a走行を終了する
-//a（タイマを止めてタイマカウント値を0にリセットする）
-//a引数1：なし
-//a戻り値：なし
+// 走行を終了する
+// 引数：なし
+// 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void drive_stop(void){
 	dist_l = dist_r = 0;		//a走行距離の初期化
-//	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 0;
 	MF.FLAG.SPD = 0;
@@ -66,36 +63,32 @@ void drive_stop(void){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //control_start
 // wallとgyroの姿勢制御を開始する
-//a引数：なし
-//a戻り値：なし
+// 引数：なし
+// 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void control_start(){
 	MF.FLAG.WCTRL = 1;										//wall制御を有効にする
 	MF.FLAG.GCTRL = 1;										//gyro制御を有効にする
-
-	target_omega_z = 0;
 }
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //control_stop
 // wallとgyroの姿勢制御を停止する
-//a引数：なし
-//a戻り値：なし
+// 引数：なし
+// 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void control_stop(){
 	MF.FLAG.WCTRL = 0;										//wall制御を無効にする
 	MF.FLAG.GCTRL = 0;										//gyro制御を無効にする
-
-	target_omega_z = 0;
 }
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //drive_dir
 // wheel turn dir for each wheel
-//a引数:1車輪選択(0=>L, 1=>R), 2回転方向選択(0=>CW, 1=>CWW, 2=>ShortBrake, 3=>free)
-//a戻り値: nothing
+// 引数:1車輪選択(0=>L, 1=>R), 2回転方向選択(0=>CW, 1=>CWW, 2=>ShortBrake, 3=>free)
+// 戻り値: なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void drive_dir(uint8_t wheel, uint8_t dir){
 	if(wheel == 0){
@@ -136,9 +129,9 @@ void drive_dir(uint8_t wheel, uint8_t dir){
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //driveA
-// a指定距離、指定加速度で加速走行する
-// a引数1：accel_p 加速度, 引数2：speed_min_p 最低速度, 引数3：speed_max_p 最高速度, 引数4：dist 走行距離
-// a戻り値：なし
+// 指定距離、指定加速度で加速走行する
+// 引数1：accel_p 加速度, 引数2：speed_min_p 最低速度, 引数3：speed_max_p 最高速度, 引数4：dist 走行距離
+// 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_t dist){
 
@@ -149,18 +142,16 @@ void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16
 
 	drive_start();											//走行開始
 
-	//----a走行----
+	//----走行----
 	while((dist_l < dist) || (dist_r < dist));				//左右のモータが指定距離以上進むまで待機
-
-//	drive_stop();											//走行停止
 }
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //driveD
-//a指定距離、指定減速度で減速走行する
-//a引数1：accel_p 加速度, 引数2：speed_min_p 最低速度, 引数3：speed_max_p 最高速度, 引数4：dist 走行距離
-//a戻り値：なし
+// 指定距離、指定減速度で減速走行する
+// 引数1：accel_p 加速度, 引数2：speed_min_p 最低速度, 引数3：speed_max_p 最高速度, 引数4：dist 走行距離
+// 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_t dist){
 
@@ -168,8 +159,6 @@ void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_
 	speed_min_l = speed_min_r = speed_min_p;
 	speed_max_l = speed_max_r = speed_max_p;
 	accel_l = accel_r = accel_p;							//引数の各パラメータをグローバル変数化
-
-//	drive_start();											//走行開始
 
 	int16_t c_dist = dist - (speed_min_l*speed_min_l  - speed_0*speed_0)/(2*accel_l);			//等速走行距離 = 総距離 - 減速に必要な距離
 
@@ -195,7 +184,6 @@ void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_
 void driveU(uint16_t dist){
 
 	accel_l = accel_r = 0;									//等速走行のため加速度は0
-//	drive_start();											//走行開始
 
 	//----走行----
 	while((dist_l < dist) || (dist_r < dist)){				//左右のモータが指定パルス以上進むまで待機
@@ -206,8 +194,6 @@ void driveU(uint16_t dist){
 			}
 		}
 	}
-
-//	drive_stop();											//走行停止
 }
 
 
@@ -478,21 +464,17 @@ void rotate_R90(void){
 	accel_l = 3000;
 	accel_r = -3000;
 	speed_max_l = target_omega_z/180*M_PI * TREAD/2;
-	speed_min_l = 0;
-	speed_max_r = 0;
 	speed_min_r = -1*target_omega_z/180*M_PI * TREAD/2;
 
 	drive_start();											//走行開始
 	control_stop();
 	while(degree_z > target_degree_z-80);
-//	drive_stop();
 
 	accel_l = -30000;
 	accel_r = 30000;
 	speed_min_l = 100;
 	speed_max_r = -100;
 
-//	drive_start();											//走行開始
 	while(degree_z > target_degree_z-90);
 
 	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
@@ -510,22 +492,18 @@ void rotate_L90(void){
 	target_omega_z = 800;
 	accel_l = -3000;
 	accel_r = 3000;
-	speed_max_l = 0;
 	speed_min_l = -1*target_omega_z/180*M_PI * TREAD/2;
 	speed_max_r = target_omega_z/180*M_PI * TREAD/2;
-	speed_min_r = 0;
 
 	drive_start();											//走行開始
 	control_stop();
 	while(degree_z < target_degree_z+80);
-//	drive_stop();
 
 	accel_l = 30000;
 	accel_r = -30000;
 	speed_max_l = -100;
 	speed_min_r = 100;
 
-//	drive_start();											//走行開始
 	while(degree_z < target_degree_z+90);
 
 	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも右回転処理&目標角度右90度
@@ -544,21 +522,17 @@ void rotate_180(void){
 	accel_l = 3000;
 	accel_r = -3000;
 	speed_max_l = target_omega_z/180*M_PI * TREAD/2;
-	speed_min_l = 0;
-	speed_max_r = 0;
 	speed_min_r = -1*target_omega_z/180*M_PI * TREAD/2;
 
 	drive_start();											//走行開始
 	control_stop();
 	while(degree_z > target_degree_z-170);
-//	drive_stop();
 
 	accel_l = -30000;
 	accel_r = 30000;
 	speed_min_l = 100;
 	speed_max_r = -100;
 
-//	drive_start();											//走行開始
 	while(degree_z > target_degree_z-180);
 
 	turn_dir(DIR_TURN_180);									//マイクロマウス内部位置情報でも180度回転処理&目標角度左180度
@@ -581,7 +555,6 @@ void slalom_R90(void){
 	speed_min_l = 400;
 	speed_min_r = 400;
 
-//	drive_start();											//走行開始
 	control_start();
 	while(dist_l < 18 && dist_r < 18);
 	drive_stop();
@@ -593,28 +566,15 @@ void slalom_R90(void){
 	omega_max = 550;
 	speed_G = 400;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
 	MF.FLAG.DRV = 1;
 	while(degree_z > target_degree_z-38);
 
-//	MF.FLAG.GYRO = 1;
-
 	target_degaccel_z = 0;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
-//	MF.FLAG.DRV = 1;
 	while(degree_z > target_degree_z-65);
-
-//	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = -4000;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
-//	MF.FLAG.DRV = 1;
-	full_led_write(6);
 	while(degree_z > target_degree_z-90);
 	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
 
@@ -624,15 +584,12 @@ void slalom_R90(void){
 	accel_r = 10000;
 	speed_max_l = SPEED_RUN;
 	speed_max_r = SPEED_RUN;
-//	drive_start();											//走行開始
 	dist_l = dist_r = 0;		//走行距離の初期化
 	MF.FLAG.SPD = 1;
 
 	control_start();
-	full_led_write(4);
 	while(dist_l < 18 && dist_r < 18);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
-//	drive_stop();
 }
 
 
@@ -651,7 +608,6 @@ void slalom_L90(void){
 	speed_min_l = 400;
 	speed_min_r = 400;
 
-//	drive_start();											//走行開始
 	control_start();
 	while(dist_l < 18 && dist_r < 18);
 	drive_stop();
@@ -663,31 +619,16 @@ void slalom_L90(void){
 	omega_min = -550;
 	speed_G = 400;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
 	MF.FLAG.DRV = 1;
 	while(degree_z < target_degree_z+38);
-//	drive_stop();
-
-	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = 0;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
-	MF.FLAG.DRV = 1;
 	while(degree_z < target_degree_z+65);
-//	drive_stop();
-
-	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = 4000;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
-	MF.FLAG.DRV = 1;
 	while(degree_z < target_degree_z+90);
-//	drive_stop();
 	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
 
 	MF.FLAG.GYRO = 0;
@@ -696,13 +637,11 @@ void slalom_L90(void){
 	accel_r = 10000;
 	speed_max_l = SPEED_RUN;
 	speed_max_r = SPEED_RUN;
-//	drive_start();											//走行開始
 	dist_l = dist_r = 0;		//走行距離の初期化
 	MF.FLAG.SPD = 1;
 	control_start();
 	while(dist_l < 18 && dist_r < 18);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
-//	drive_stop();
 }
 
 
@@ -722,7 +661,6 @@ void slalom_R902(void){
 	speed_max_l = 800;
 	speed_max_r = 800;
 
-//	drive_start();											//走行開始
 //	control_start();
 //	while(dist_l < 10 && dist_r < 10);
 	drive_stop();
@@ -734,27 +672,15 @@ void slalom_R902(void){
 	omega_max = 800;
 	speed_G = 800;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
 	MF.FLAG.DRV = 1;
 	while(degree_z > target_degree_z-32);
 
-	MF.FLAG.GYRO = 1;
-
 	target_degaccel_z = 0;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
-	MF.FLAG.DRV = 1;
 	while(degree_z > target_degree_z-66);
-
-	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = -20000;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
-	MF.FLAG.DRV = 1;
 	while(degree_z > target_degree_z-80);
 	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
 
@@ -764,13 +690,11 @@ void slalom_R902(void){
 	accel_r = 10000;
 	speed_max_l = SPEED_HIGH;
 	speed_max_r = SPEED_HIGH;
-//	drive_start();											//走行開始
 	dist_l = dist_r = 0;
 	MF.FLAG.SPD = 1;
 	control_start();
 	while(dist_l < 34 && dist_r < 34);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
-//	drive_stop();
 }
 
 
@@ -788,7 +712,6 @@ void slalom_L902(void){
 	speed_max_l = 800;
 	speed_max_r = 800;
 
-//	drive_start();											//走行開始
 //	control_start();
 //	while(dist_l < 18.5 && dist_r < 18.5);
 	drive_stop();
@@ -800,31 +723,16 @@ void slalom_L902(void){
 	omega_min = -800;
 	speed_G = 800;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
 	MF.FLAG.DRV = 1;
 	while(degree_z < target_degree_z+32);
-//	drive_stop();
-
-	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = 0;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
-	MF.FLAG.DRV = 1;
 	while(degree_z < target_degree_z+66.3);
-//	drive_stop();
-
-	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = 20000;
 
-//	degree_z = 0;				//機体角度の初期化
-//	pulse_l = pulse_r = 0;		//モータ出力の初期化
-	MF.FLAG.DRV = 1;
 	while(degree_z < target_degree_z+80);
-//	drive_stop();
 	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
 
 	MF.FLAG.GYRO = 0;
@@ -833,13 +741,11 @@ void slalom_L902(void){
 	accel_r = 10000;
 	speed_max_l = SPEED_HIGH;
 	speed_max_r = SPEED_HIGH;
-//	drive_start();											//走行開始
 	dist_l = dist_r = 0;
 	MF.FLAG.SPD = 1;
 	control_start();
 	while(dist_l < 34 && dist_r < 34);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
-//	drive_stop();
 }
 
 
