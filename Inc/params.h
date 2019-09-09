@@ -28,7 +28,7 @@
 //gyro controll params
 #define CTRL_BASE_G		1				//G
 #define CTRL_MAX_G		2000//3500				//control value max
-#define CTRL_CONT_G		1000//4000			//Proportional C
+#define CTRL_CONT_G		1//4000			//Proportional C
 
 
 //sensor params

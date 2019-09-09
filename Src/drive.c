@@ -14,6 +14,25 @@ void drive_init(void){
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
+//drive_ready
+//a走行前のLED点滅&ジャイロのドリフト計算
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void drive_ready(void){
+	  while(ad_fl <= WALL_BASE_FL){
+		  led_write(1, 1, 1);
+		  HAL_Delay(200);
+		  led_write(0, 0, 0);
+		  HAL_Delay(200);
+	  }
+	  gyro_drift_flag = 1;
+	  HAL_Delay(2000);
+	  degree_z = 0;
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
 //drive_start
 //a走行開始前に走行距離と機体角度を初期化
 //a引数：なし
@@ -578,7 +597,7 @@ void slalom_R90(void){
 	degree_z = 0;				//a機体角度の初期化
 	pulse_l = pulse_r = 0;		//aモータ出力の初期化
 	MF.FLAG.DRV = 1;
-	while(degree_z > -38.087);
+	while(degree_z > -38);
 
 	MF.FLAG.GYRO = 1;
 
@@ -1279,6 +1298,8 @@ void init_test(void){
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  drive_ready();
+
 			  switch(mode){
 				case 0:
 					get_base();
@@ -1373,13 +1394,7 @@ void slalom_test(void){
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
-			  while(ad_fl <= WALL_BASE_FL){
-				  led_write(1, 1, 1);
-				  HAL_Delay(200);
-				  led_write(0, 0, 0);
-				  HAL_Delay(200);
-			  }
-			  HAL_Delay(2000);
+			  drive_ready();
 
 			  switch(mode){
 				case 0:
@@ -1515,12 +1530,7 @@ void v_test(void){
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
-			  while(ad_fl <= WALL_BASE_FL){
-				  led_write(1, 1, 1);
-				  HAL_Delay(200);
-				  led_write(0, 0, 0);
-				  HAL_Delay(200);
-			  }
+			  drive_ready();
 
 			  switch(mode){
 				case 0:
@@ -1645,6 +1655,8 @@ void simple_run(void){
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  drive_ready();
+
 			  switch(mode){
 
 				case 0:
@@ -1765,6 +1777,8 @@ void slalom_run(void){
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  drive_ready();
+
 			  switch(mode){
 
 			  case 0:
@@ -1970,6 +1984,8 @@ void sample_course_run(void){
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  drive_ready();
+
 			  switch(mode){
 				case 0:
 					get_base();
@@ -2267,12 +2283,7 @@ void perfect_slalom(void){
 	  			  buzzer(mario_ok[i][0], mario_ok[i][1]);
 	  		  }
 
-			  while(ad_fl <= WALL_BASE_FL){
-				  led_write(1, 1, 1);
-				  HAL_Delay(200);
-				  led_write(0, 0, 0);
-				  HAL_Delay(200);
-			  }
+			  drive_ready();
 	  		  for(int i=0; i<m_start; i++){
 	  			  buzzer(mario_start[i][0], mario_start[i][1]);
 	  			  full_led_write(1);

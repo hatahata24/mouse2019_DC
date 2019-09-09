@@ -61,6 +61,7 @@
 		関数プロトタイプ宣言
 ============================================================*/
 void drive_init(void);
+void drive_ready(void);
 void drive_dir(uint8_t, uint8_t);
 void drive_start(void);
 void drive_stop(void);

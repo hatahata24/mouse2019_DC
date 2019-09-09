@@ -61,7 +61,8 @@ TIM_HandleTypeDef htim8;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-int cnt = 0;
+int log_cnt = 0;
+int gyro_cnt = 0;
 int get_cnt = 0;
 //int get_speed_l[log_allay];
 //int get_speed_r[log_allay];
@@ -133,10 +134,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			pulse_r = Kp * epsilon_r;
 		}
 
-		cnt ++;
+		log_cnt ++;
 
-		if(cnt >= 5 && MF.FLAG.LOG){
-			cnt = 0;
+		if(log_cnt >= 5 && MF.FLAG.LOG){
+			log_cnt = 0;
 			if(get_cnt < log_allay){
 				get_speed_l[get_cnt] = speed_l;
 				get_speed_r[get_cnt] = speed_r;
@@ -151,6 +152,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //		degree_x += gyro_read_x() * 0.001;
 //		degree_y += gyro_read_y() * 0.001;
 		degree_z += gyro_read_z() * 0.001;
+
+		//gyro ドリフト量計算
+		if(gyro_drift_flag == 1){
+			gyro_cnt ++;
+			if(gyro_cnt >= 2)dif_omega_z += old_omega_z - gyro_read_z();
+			old_omega_z = gyro_read_z();
+			full_led_write(6);
+			if(gyro_cnt >= 1001) {
+				gyro_drift_flag = 0;
+				gyro_drift_value = dif_omega_z / gyro_cnt-1;
+				gyro_cnt = 0;
+				full_led_write(4);
+			}
+			degree_z = 0;
+		}
+
 
 		if(MF.FLAG.ENKAI){
 			target_dist = TREAD*M_PI/360*(degree_z-target_degree_z);
@@ -180,35 +197,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			pulse_r = Kp * epsilon_r;
 		}
 
-
-/*		if(MF.FLAG.GCTRL){
-			int16_t dg_tmp = 0;
-/*			dif_g = (int32_t) gyro_read_z() - target_omega_z;		//a角速度閾値越え制御
-
-			if(CTRL_BASE_G < dif_g){					//a角速度変化量が基準よりも大きい時(左回転が発生時)
-				dg_tmp += CTRL_CONT_G * dif_g;			//a比例制御値を決定
-			}
-			else if(-1*CTRL_BASE_G > dif_g){			//a角速度変化量が負の基準よりも小さい時(右回転が発生時)
-				dg_tmp += CTRL_CONT_G * dif_g;			//a比例制御値を決定
-			}
-			dg = max(min(CTRL_MAX_G, dg_tmp), -1 * CTRL_MAX_G);
-			dgl = dg;
-			dgr = -1*dg;
-		}else{
-			//a制御フラグがなければ壁制御値0
-			dgl = dgr = 0;
-		}
-*/
-//			dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
-/*			dg = CTRL_CONT_G * degree_z;				//a角度制御
-			dg = max(min(CTRL_MAX_G, dg_tmp), -1 * CTRL_MAX_G);
-			dgl = dg;
-			dgr = -1*dg;
-		}else{
-			//a制御フラグがなければ壁制御値0
-			dgl = dgr = 0;
-		}
-*/
 
 		//ADchange interrupt
 		uint16_t delay;
@@ -286,7 +274,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		*/
 		//			dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
 					dg = CTRL_CONT_G * degree_z;				//a角度制御
-					dg = max(min(CTRL_MAX_G, dg_tmp), -1 * CTRL_MAX_G);
+					dg = max(min(CTRL_MAX_G, dg), -1 * CTRL_MAX_G);
 					dgl = dg;
 					dgr = -1*dg;
 				}else{
@@ -296,6 +284,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 				break;
 		}
+
 
 		if(MF.FLAG.DRV){
 			if(W_G_flag == 0){
@@ -363,11 +352,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		//fail safe
-		if(degree_z >= 360 || degree_z <= -360 || dist_r >= 360 || dist_l >= 360) {	//360度以上回転発生でFail Safe
+		if(degree_z >= 360 || degree_z <= -360 || dist_r >= 360 || dist_l >= 360){	//360度以上回転発生でFail Safe
 			while(1){
 			   drive_dir(0, 2);
 			   drive_dir(1, 2);
-			   full_led_write(1);
+			   full_led_write(4);
 		   }
 		}
 	}
@@ -425,11 +414,6 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim8,TIM_CHANNEL_ALL);
   HAL_TIM_Base_Start_IT(&htim6);
 
-/*  TIM_OC_InitTypeDef ConfigOC;
-  ConfigOC.OCMode = TIM_OCMODE_PWM1;
-  ConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  ConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-*/
   int mode = 0;
   printf("Mode : %d\n", mode);
   /* USER CODE END 2 */
@@ -1056,11 +1040,12 @@ void buzzer(int sound, int length){
 
 	hz = 1000000 / sound;
 	TIM3 -> ARR = hz;
-    ConfigOC.Pulse = hz / 2;
+    ConfigOC.Pulse = hz / 10;
     HAL_TIM_PWM_ConfigChannel(&htim3, &ConfigOC, TIM_CHANNEL_2);
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 
 	HAL_Delay(length);
+    HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_2);
 }
 
 

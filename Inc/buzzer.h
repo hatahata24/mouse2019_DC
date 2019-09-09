@@ -44,15 +44,15 @@
 #define A7 3520
 #define B7 3951
 #define C8 4186		//DO
-#define RST 0
+#define RST 5
 
-#define pita 11
-#define pita2 8
-#define m_start 8
-#define m_coin 3
-#define m_select 3
-#define m_ok 8
-#define m_goal 16
+#define pita 10
+#define pita2 7
+#define m_start 7
+#define m_coin 2
+#define m_select 2
+#define m_ok 7
+#define m_goal 15
 
 #ifdef MAIN_C_              //main.cからこのファイルが呼ばれている場合
 
@@ -66,38 +66,32 @@
 			  {C7, 200},
 			  {B6, 200},
 			  {RST, 200},
-			  {G6, 250},
-			  {RST, 100}};
+			  {G6, 250}};
 	  volatile int pitagola2[pita][2] = {{D6, 200},
 			  {E6, 200},
 			  {D6, 200},
 			  {E6, 200},
 			  {C7, 200},
 			  {B6, 200},
-			  {G6, 250},
-			  {RST, 100}};
+			  {G6, 250}};
 	  volatile int mario_start[m_start][2] = {{A5, 500},
 			  {RST, 500},
 			  {A5, 500},
 			  {RST, 500},
 			  {A5, 500},
 			  {RST, 500},
-			  {A6, 1000},
-			  {RST, 500}};
+			  {A6, 1000}};
 	  volatile int mario_coin[m_coin][2] = {{A6, 80},
-			  {C7, 250},
-			  {RST, 500}};
+			  {C7, 250}};
 	  volatile int mario_select[m_select][2] = {{F5, 80},
-			  {F6, 250},
-			  {RST, 500}};
+			  {F6, 250}};
 	  volatile int mario_ok[m_ok][2] = {{D6, 120},
 			  {E6, 120},
 			  {F6, 120},
 			  {G6, 120},
 			  {A6, 120},
 			  {B6, 120},
-			  {C7, 320},
-			  {RST, 500}};
+			  {C7, 320}};
 	  volatile int mario_goal[m_goal][2] = {{E6, 250},
 			  {RST, 120},
 			  {E6, 150},
@@ -112,8 +106,7 @@
 			  {G6, 150},
 			  {A6, 150},
 			  {RST, 150},
-			  {B6, 500},
-			  {RST, 500}};
+			  {B6, 500}};
 
 
 #else                       //main.c以外からこのファイルが呼ばれている場合

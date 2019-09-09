@@ -59,7 +59,7 @@ void led_write(uint8_t led1, uint8_t led2, uint8_t led3){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //full_led_write
 //aフルカラーLEDの色選択
-//a引数：fulled(0=>OFF, 1=>赤, 2=>緑, 3=>青, 4=>黄, 5=>紫, 6=>青緑, 7=>白)
+//a引数：fulled(0=>OFF, 1=>赤, 2=>緑, 3=>青, 4=>青緑, 5=>紫, 6=>黄, 7=>白)
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void full_led_write(uint8_t fulled){
@@ -142,6 +142,9 @@ void sensor_test(){
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+
+			  drive_ready();
+
 			  switch(mode){
 				case 0:
 					get_base();

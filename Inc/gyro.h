@@ -12,7 +12,8 @@
 	volatile float target_degree_z;
 	volatile float omega_min, omega_max;
 	volatile int16_t dg, dgl, dgr;								//a比例制御量
-	int16_t dif_g;									//a基準値とAD変換値の偏差
+	volatile float dif_omega_z, old_omega_z, gyro_drift_value;	//a偏差と積分
+	volatile uint8_t gyro_drift_flag;							//ジャイロドリフト計算開始フラグ
 #else												//main.c以外からこのファイルが呼ばれている場合
 	/*aグローバル変数の宣言*/
 
@@ -21,8 +22,10 @@
 	extern volatile float target_omega_z;
 	extern volatile float target_degree_z;
 	extern volatile float omega_min, omega_max;
-	extern 	volatile int16_t dg, dgl, dgr;								//a比例制御量
+	extern volatile int16_t dg, dgl, dgr;							//a比例制御量
 	extern int16_t dif_g;
+	extern volatile float dif_omega_z, old_omega_z, gyro_drift_value;	//a偏差と積分
+	extern volatile uint8_t gyro_drift_flag;						//ジャイロドリフト計算開始フラグ
 #endif
 
 
@@ -54,6 +57,7 @@
 void gyro_init(void);
 uint8_t read_byte(uint8_t reg);
 void write_byte(uint8_t reg, uint8_t val);
+
 float accel_read_x(void);
 float accel_read_y(void);
 float accel_read_z(void);

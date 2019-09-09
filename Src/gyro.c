@@ -119,7 +119,8 @@ float gyro_read_z(void){
   // H:8bit shift, Link h and l
   gyro_z = (int16_t)((int16_t)(read_byte(GYRO_ZOUT_H) << 8) | read_byte(GYRO_ZOUT_L));
 
-  omega = (float)(gyro_z / GYRO_FACTOR+1.15); // dps to deg/sec
+//  omega = (float)(gyro_z / GYRO_FACTOR+1.15); // dps to deg/sec
+  omega = (float)(gyro_z / GYRO_FACTOR-gyro_drift_value); // dps to deg/sec
   return omega;
 }
 
