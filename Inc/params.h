@@ -58,7 +58,7 @@
 #define DOO 2093
 
 //----goal point---
-#define GOAL_X 3	//7
+#define GOAL_X 9	//7
 #define GOAL_Y 6	//7
 
 #endif /* INC_PARAMS_H_ */

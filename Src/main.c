@@ -109,9 +109,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim == &htim6){
 		cnt_l = TIM4 -> CNT;
 		cnt_r = TIM8 -> CNT;
-		if(cnt_l > 40000) cnt_l = cnt_l - 65535;
-		if(cnt_r > 40000) cnt_r = cnt_r - 65535;
-		cnt_r = cnt_r * -1;
+		if(cnt_l > 40000) cnt_l = cnt_l - 65535;		//0=>65505の値飛び検出用
+		if(cnt_r > 40000) cnt_r = cnt_r - 65535;		//0=>65505の値飛び検出用
+		cnt_r = cnt_r * -1;								//回転方向合わせ
 
 		dist_l = dist_l + cnt_l * (DIAMETER * M_PI * 11 / 40 / 4096 / 4);
 		dist_r = dist_r + cnt_r * (DIAMETER * M_PI * 11 / 40 / 4096 / 4);
@@ -356,7 +356,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		//fail safe
-		if(degree_z >= target_degree_z+360 || degree_z <= target_degree_z-360 || dist_r >= 360 || dist_l >= 360){	//360度以上回転発生でFail Safe
+		if(/*degree_z >= target_degree_z+360 || degree_z <= target_degree_z-360 || */dist_r >= 360 || dist_l >= 360){	//360度以上回転発生でFail Safe
 			while(1){
 			   drive_dir(0, 2);
 			   drive_dir(1, 2);

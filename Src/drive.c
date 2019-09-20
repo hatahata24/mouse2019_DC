@@ -163,6 +163,7 @@ void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_
 	int16_t c_dist = dist - (speed_min_l*speed_min_l  - speed_0*speed_0)/(2*accel_l);			//等速走行距離 = 総距離 - 減速に必要な距離
 
 	accel_l = accel_r = 0;
+	dist_l = dist_r = 0;
 	if(c_dist > 0){
 		//----等速走行----
 		while((dist_l < c_dist) || (dist_r < c_dist));	//a左右のモータが等速分の距離以上進むまで待機
@@ -184,6 +185,7 @@ void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_
 void driveU(uint16_t dist){
 
 	accel_l = accel_r = 0;									//等速走行のため加速度は0
+	dist_l = dist_r = 0;
 
 	//----走行----
 	while((dist_l < dist) || (dist_r < dist)){				//左右のモータが指定パルス以上進むまで待機
@@ -556,6 +558,7 @@ void slalom_R90(void){
 	speed_min_r = 400;
 
 	control_start();
+	dist_l = dist_r = 0;
 	while(dist_l < 18 && dist_r < 18);
 	drive_stop();
 	control_stop();
@@ -563,6 +566,7 @@ void slalom_R90(void){
 	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = 4000;
+	target_omega_z = 0;
 	omega_max = 550;
 	speed_G = 400;
 
@@ -609,6 +613,7 @@ void slalom_L90(void){
 	speed_min_r = 400;
 
 	control_start();
+	dist_l = dist_r = 0;
 	while(dist_l < 18 && dist_r < 18);
 	drive_stop();
 	control_stop();
@@ -616,6 +621,7 @@ void slalom_L90(void){
 	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = -4000;
+	target_omega_z = 0;
 	omega_min = -550;
 	speed_G = 400;
 
@@ -669,6 +675,7 @@ void slalom_R902(void){
 	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = 20000;
+	target_omega_z = 0;
 	omega_max = 800;
 	speed_G = 800;
 
@@ -720,6 +727,7 @@ void slalom_L902(void){
 	MF.FLAG.GYRO = 1;
 
 	target_degaccel_z = -20000;
+	target_omega_z = 0;
 	omega_min = -800;
 	speed_G = 800;
 
@@ -1399,31 +1407,20 @@ void slalom_test(void){
 				case 3:
 					//----slalom右折----
 					printf("slalom turn right .\n");
-					for(int i = 0; i < 1; i++){
-						half_sectionA();
+					half_sectionA();
+					for(int i = 0; i < 8; i++){
 						slalom_R90();	//一区画のパルス分デフォルトインターバルで走行
-						half_sectionD();
 					}
-				//log print
-					while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_SET);
-
-					for(int i=0; i<log_allay; i++){
-						printf("l:	%d\n", get_speed_l[i]);
-						HAL_Delay(5);
-					}
-					for(int i=0; i<log_allay; i++){
-						printf("r:	%d\n", get_speed_r[i]);
-						HAL_Delay(5);
-					}
+					half_sectionD();
 					break;
 				case 4:
 					//----slalom左折----
 					printf("slalom turn left .\n");
+					half_sectionA();
 					for(int i = 0; i < 8; i++){
-						half_sectionA();
 						slalom_L90();				//16回右90度回転、つまり4周回転
-						half_sectionD();
 					}
+					half_sectionD();
 					break;
 				case 5:
 					//----slalom2右折----
