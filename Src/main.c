@@ -326,6 +326,37 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
 			}
+/*			//wall check
+			//----look right----
+			if(ad_r > WALL_BASE_R){
+				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
+			}else{
+				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
+			}
+			//----look left----
+			if(ad_l > WALL_BASE_L){
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_SET);
+			}else{
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
+			}
+*/			//----look forward----
+			if(ad_fr > WALL_BASE_FR || ad_fl > WALL_BASE_FL){
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+			}else{
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+			}
+			//----look forwardL----
+			if(ad_fl > WALL_BASE_FL){
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+			}else{
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+			}
+			//----look forward-R---
+			if(ad_fr > WALL_BASE_FR){
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+			}else{
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+			}
 		}else{
 			drive_dir(0, 2);
 			drive_dir(1, 2);
@@ -356,7 +387,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		//fail safe
-		if(/*degree_z >= target_degree_z+360 || degree_z <= target_degree_z-360 || */dist_r >= 360 || dist_l >= 360){	//360度以上回転発生でFail Safe
+		if(degree_z >= target_degree_z+360 || degree_z <= target_degree_z-360 || dist_r >= 360 || dist_l >= 360){	//360度以上回転発生でFail Safe
 			while(1){
 			   drive_dir(0, 2);
 			   drive_dir(1, 2);

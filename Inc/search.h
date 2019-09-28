@@ -81,7 +81,7 @@ void adv_pos();											//aマウスの位置情報を前進
 void conf_route();										//a次ルートの確認
 void map_Init();										//aマップデータ初期化
 void write_map();										//aマップ書き込み
-void turn_dir(uint8_t);									//a自機方向情報変更
+void turn_dir(uint8_t, uint8_t);									//a自機方向情報変更
 void make_smap();										//a歩数マップ作成
 void make_route();										//a最短経路検索
 

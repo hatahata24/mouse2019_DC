@@ -11,9 +11,9 @@ search.c:602:6:conf_route	8	static
 search.c:622:6:map_Init	16	static
 search.c:653:6:write_map	16	static
 search.c:706:6:turn_dir	16	static
-search.c:722:6:make_smap	56	static
-search.c:845:6:make_route	16	static
-search.c:956:6:find_pregoal	24	static
-search.c:1060:6:make_smap2	24	static
-search.c:1130:6:store_map_in_eeprom	16	static
-search.c:1151:6:load_map_from_eeprom	16	static
+search.c:724:6:make_smap	56	static
+search.c:847:6:make_route	16	static
+search.c:958:6:find_pregoal	24	static
+search.c:1062:6:make_smap2	24	static
+search.c:1132:6:store_map_in_eeprom	16	static
+search.c:1153:6:load_map_from_eeprom	16	static

@@ -17,7 +17,7 @@
 #define SPEED_MIN 100
 #define SPEED_HIGH 800
 
-#define SETPOS_BACK 60
+#define SETPOS_BACK 100
 #define SETPOS_SET 35
 
 #define W_DIST 70
@@ -32,17 +32,17 @@
 
 
 //sensor params
-#define sensor_wait 3000
+#define sensor_wait 3500
 
 //----wall judge----
-#define WALL_BASE_FR 	30				//FR
-#define WALL_BASE_FL 	70				//FL
-#define WALL_BASE_R		40				//R
-#define WALL_BASE_L 	40	     		//L
+#define WALL_BASE_FR 	70//30				//FR
+#define WALL_BASE_FL 	80//70				//FL
+#define WALL_BASE_R		45				//R
+#define WALL_BASE_L 	45	     		//L
 
 //----wall control judge----
-#define CTRL_BASE_L		10				//R
-#define CTRL_BASE_R		10				//L
+#define CTRL_BASE_L		30				//R
+#define CTRL_BASE_R		30				//L
 #define CTRL_MAX_W		2000			//control value max
 #define CTRL_CONT_W		0.5F//.8F//0.1F//3//1//0.8F			//Proportional C
 

@@ -138,12 +138,14 @@ void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16
 	speed_min_l = speed_min_r = speed_min_p;
 	speed_max_l = speed_max_r = speed_max_p;
 	accel_l = accel_r = accel_p;							//引数の各パラメータをグローバル変数化
-	if(H_accel_flag == 0)target_speed_l = target_speed_r = speed_min_p;
+	if(H_accel_flag == 1)target_speed_l = target_speed_r = speed_min_p;
 
 	drive_start();											//走行開始
 
 	//----走行----
 	while((dist_l < dist) || (dist_r < dist));				//左右のモータが指定距離以上進むまで待機
+
+//	drive_stop();
 }
 
 
@@ -479,7 +481,7 @@ void rotate_R90(void){
 
 	while(degree_z > target_degree_z-90);
 
-	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
+	turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
 	drive_stop();
 }
 
@@ -508,7 +510,7 @@ void rotate_L90(void){
 
 	while(degree_z < target_degree_z+90);
 
-	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも右回転処理&目標角度右90度
+	turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも右回転処理&目標角度右90度
 	drive_stop();
 }
 
@@ -520,6 +522,8 @@ void rotate_L90(void){
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void rotate_180(void){
+
+	full_led_write(2);
 	target_omega_z = 800;
 	accel_l = 3000;
 	accel_r = -3000;
@@ -537,8 +541,9 @@ void rotate_180(void){
 
 	while(degree_z > target_degree_z-180);
 
-	turn_dir(DIR_TURN_180);									//マイクロマウス内部位置情報でも180度回転処理&目標角度左180度
+	turn_dir(DIR_TURN_180, 1);									//マイクロマウス内部位置情報でも180度回転処理&目標角度左180度
 	drive_stop();
+
 }
 
 
@@ -580,7 +585,7 @@ void slalom_R90(void){
 	target_degaccel_z = -4000;
 
 	while(degree_z > target_degree_z-90);
-	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
+	turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
 
 	MF.FLAG.GYRO = 0;
 
@@ -635,7 +640,7 @@ void slalom_L90(void){
 	target_degaccel_z = 4000;
 
 	while(degree_z < target_degree_z+90);
-	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+	turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
 
 	MF.FLAG.GYRO = 0;
 
@@ -689,7 +694,7 @@ void slalom_R902(void){
 	target_degaccel_z = -20000;
 
 	while(degree_z > target_degree_z-80);
-	turn_dir(DIR_TURN_R90);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
+	turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
 
 	MF.FLAG.GYRO = 0;
 
@@ -741,7 +746,7 @@ void slalom_L902(void){
 	target_degaccel_z = 20000;
 
 	while(degree_z < target_degree_z+80);
-	turn_dir(DIR_TURN_L90);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+	turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
 
 	MF.FLAG.GYRO = 0;
 

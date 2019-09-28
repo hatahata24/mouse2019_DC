@@ -105,7 +105,7 @@ void searchB(){
 	write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
-	half_sectionA();
+	start_sectionA();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====
@@ -703,13 +703,15 @@ void write_map(){
 //a引数1：t_pat …… 回転方向(search.hでマクロ定義)
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void turn_dir(uint8_t t_pat){
+void turn_dir(uint8_t t_pat, uint8_t t_mode){
 
 	//====a方向を変更====
 	mouse.dir = (mouse.dir + t_pat) & 0x03;					//a指定された分mouse.dirを回転させる
-	if(t_pat == 0x01) target_degree_z -= 90.5;				//目標角度+右90度
-	if(t_pat == 0xff) target_degree_z += 90.5;				//目標角度+左90度
-	if(t_pat == 0x02) target_degree_z -= 181;				//目標角度+右180度
+	if(t_mode == 1){
+		if(t_pat == 0x01) target_degree_z -= 90.5;				//目標角度+右90度
+		if(t_pat == 0xff) target_degree_z += 90.5;				//目標角度+左90度
+		if(t_pat == 0x02) target_degree_z -= 181;				//目標角度+右180度
+	}
 }
 
 
@@ -773,7 +775,7 @@ void make_smap(void){
 					//----a東壁についての処理----
 					if(!(m_temp & 0x04) && x != 15){		//a東壁がなく現在最東端でないとき
 						if(smap[y][x+1] == 0x03e7){			//a東側が未記入なら
-							smap[y][x+1] = smap[y][x] + 1;	//a次の歩数を書き込む
+							smap[y][x+1] = smap[y][x] + turn;	//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
 								//----a直線優先処理----
 								for (int k = 1; k < 16 - x; k++) {					//a現在座標から見て東のマスすべてにおいて
@@ -792,7 +794,7 @@ void make_smap(void){
 					//----a南壁についての処理----
 					if(!(m_temp & 0x02) && y != 0){			//a南壁がなく現在最南端でないとき
 						if(smap[y-1][x] == 0x03e7){			//a南側が未記入なら
-							smap[y-1][x] = smap[y][x] + 1;	//a次の歩数を書き込む
+							smap[y-1][x] = smap[y][x] + turn;	//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
 								//----a直線優先処理----
 								for (int k = 1; k < y; k++) {						//a現在座標から見て南のマスすべてにおいて
@@ -811,7 +813,7 @@ void make_smap(void){
 					//----a西壁についての処理----
 					if(!(m_temp & 0x01) && x != 0){			//a西壁がなく現在最西端でないとき
 						if(smap[y][x-1] == 0x03e7){			//a西側が未記入なら
-							smap[y][x-1] = smap[y][x] + 1;	//a次の歩数を書き込む
+							smap[y][x-1] = smap[y][x] + turn;	//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
 								//----a直線優先処理----
 								for (int k = 1; k < x; k++) {						//a現在座標から見て西のマスすべてにおいて
@@ -926,15 +928,15 @@ void make_route(){
 			route[i] = 0x88;									//a格納データ形式を変更
 			break;
 		case 0x01:												//a右折する場合
-			turn_dir(DIR_TURN_R90);								//a内部情報の方向を90度右回転
+			turn_dir(DIR_TURN_R90, 0);								//a内部情報の方向を90度右回転
 			route[i] = 0x44;									//a格納データ形式を変更
 			break;
 		case 0x02:												//Uターンする場合
-			turn_dir(DIR_TURN_180);								//a内部情報の方向を180度回転
+			turn_dir(DIR_TURN_180, 0);								//a内部情報の方向を180度回転
 			route[i] = 0x22;									//a格納データ形式を変更
 			break;
 		case 0x03:												//a左折する場合
-			turn_dir(DIR_TURN_L90);								//a内部情報の方向を90度右回転
+			turn_dir(DIR_TURN_L90, 0);								//a内部情報の方向を90度左回転
 			route[i] = 0x11;									//a格納データ形式を変更
 			break;
 		default:												//aそれ以外の場合
