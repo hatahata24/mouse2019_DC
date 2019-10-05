@@ -278,6 +278,7 @@ void driveC2(uint16_t dist){
 void set_position(){
 
   driveC2(SETPOS_BACK);         //尻を当てる程度に後退。回転後に停止する
+  degree_z = target_degree_z;
   driveC(SETPOS_SET);           //デフォルト速度で区画中心になる分回転。回転後に停止する
 }
 
@@ -564,7 +565,7 @@ void slalom_R90(void){
 
 	control_start();
 	dist_l = dist_r = 0;
-	while(dist_l < 18 && dist_r < 18);
+	while(dist_l < SLALOM_OFFSET/*19+10*/ && dist_r < SLALOM_OFFSET/*19+10*/);
 	drive_stop();
 	control_stop();
 
@@ -597,7 +598,7 @@ void slalom_R90(void){
 	MF.FLAG.SPD = 1;
 
 	control_start();
-	while(dist_l < 18 && dist_r < 18);
+	while(dist_l < SLALOM_OFFSET && dist_r < SLALOM_OFFSET);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
 }
 
@@ -619,7 +620,7 @@ void slalom_L90(void){
 
 	control_start();
 	dist_l = dist_r = 0;
-	while(dist_l < 18 && dist_r < 18);
+	while(dist_l < SLALOM_OFFSET && dist_r < SLALOM_OFFSET);
 	drive_stop();
 	control_stop();
 
@@ -651,7 +652,7 @@ void slalom_L90(void){
 	dist_l = dist_r = 0;		//走行距離の初期化
 	MF.FLAG.SPD = 1;
 	control_start();
-	while(dist_l < 18 && dist_r < 18);
+	while(dist_l < SLALOM_OFFSET/*19+5*/ && dist_r < SLALOM_OFFSET/*19+5*/);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
 }
 
@@ -1413,7 +1414,7 @@ void slalom_test(void){
 					//----slalom右折----
 					printf("slalom turn right .\n");
 					half_sectionA();
-					for(int i = 0; i < 8; i++){
+					for(int i = 0; i < 1; i++){
 						slalom_R90();	//一区画のパルス分デフォルトインターバルで走行
 					}
 					half_sectionD();
@@ -1422,7 +1423,7 @@ void slalom_test(void){
 					//----slalom左折----
 					printf("slalom turn left .\n");
 					half_sectionA();
-					for(int i = 0; i < 8; i++){
+					for(int i = 0; i < 1; i++){
 						slalom_L90();				//16回右90度回転、つまり4周回転
 					}
 					half_sectionD();
@@ -1823,7 +1824,7 @@ void slalom_run(void){
 					break;
 
 				case 5:
-					//----二次走行+直線優先----
+					//----二次走行スラローム+直線優先----
 					printf("High Speed Run. (Slalom)\n");
 
 					MF.FLAG.SCND = 1;
@@ -1846,11 +1847,14 @@ void slalom_run(void){
 					break;
 
 				case 6:
-					//----二次走行+直線優先----
+					//----二次走行スラロームHigh Speed+直線優先+既知区間加速----
 					printf("High Speed Run. (Slalom)\n");
 
 					MF.FLAG.SCND = 1;
-//					MF.FLAG.STRAIGHT = 1;
+					MF.FLAG.STRAIGHT = 1;
+					MF.FLAG.ACCL2 = 1;
+					accel_hs = 5000;
+					speed_max_hs = 1200;
 					start_flag = 0;
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -1858,17 +1862,40 @@ void slalom_run(void){
 					get_base();
 
 					HAL_Delay(5000);
-					searchC2();
+					searchD2();
 					HAL_Delay(500);
 
 					goal_x = goal_y = 0;
-					searchC2();
+					searchD2();
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 					break;
 
 				case 7:
+					//----二次走行スラロームHigh Speed+直線優先+既知区間加速----
+					printf("High Speed Run. (Slalom)\n");
+
+					MF.FLAG.SCND = 1;
+					MF.FLAG.STRAIGHT = 1;
+					MF.FLAG.ACCL2 = 1;
+					accel_hs = 5000;
+					speed_max_hs = 1600;
+					start_flag = 0;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					HAL_Delay(5000);
+					searchD2();
+					HAL_Delay(500);
+
+					goal_x = goal_y = 0;
+					searchD2();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 
 			}

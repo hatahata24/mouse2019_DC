@@ -10,7 +10,7 @@ search.c:577:6:adv_pos	4	static
 search.c:602:6:conf_route	8	static
 search.c:622:6:map_Init	16	static
 search.c:653:6:write_map	16	static
-search.c:706:6:turn_dir	16	static
+search.c:706:6:turn_dir	24	static
 search.c:724:6:make_smap	56	static
 search.c:847:6:make_route	16	static
 search.c:958:6:find_pregoal	24	static

@@ -17,8 +17,10 @@
 #define SPEED_MIN 100
 #define SPEED_HIGH 800
 
-#define SETPOS_BACK 100
+#define SETPOS_BACK 150
 #define SETPOS_SET 35
+
+#define SLALOM_OFFSET 23
 
 #define W_DIST 70
 
@@ -32,17 +34,17 @@
 
 
 //sensor params
-#define sensor_wait 3500
+#define sensor_wait 2500//2000//3500
 
 //----wall judge----
 #define WALL_BASE_FR 	70//30				//FR
-#define WALL_BASE_FL 	80//70				//FL
-#define WALL_BASE_R		45				//R
+#define WALL_BASE_FL 	80//75//80//70				//FL
+#define WALL_BASE_R		55				//R
 #define WALL_BASE_L 	45	     		//L
 
 //----wall control judge----
-#define CTRL_BASE_L		30				//R
-#define CTRL_BASE_R		30				//L
+#define CTRL_BASE_L		10				//R
+#define CTRL_BASE_R		10				//L
 #define CTRL_MAX_W		2000			//control value max
 #define CTRL_CONT_W		0.5F//.8F//0.1F//3//1//0.8F			//Proportional C
 
@@ -58,7 +60,7 @@
 #define DOO 2093
 
 //----goal point---
-#define GOAL_X 9	//7
-#define GOAL_Y 6	//7
+#define GOAL_X 6	//7
+#define GOAL_Y 4	//7
 
 #endif /* INC_PARAMS_H_ */
