@@ -16,6 +16,7 @@
 #define SPEED_RUN 400
 #define SPEED_MIN 100
 #define SPEED_HIGH 800
+#define SPEED_HIGH_HIGH 1200
 
 #define SETPOS_BACK 150
 #define SETPOS_SET 35

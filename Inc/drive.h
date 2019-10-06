@@ -76,35 +76,43 @@ void driveD(int16_t, uint16_t, uint16_t, uint16_t);			//a減速走行
 void driveU(uint16_t);			//a等速走行（前の速度を維持）
 void driveC(uint16_t);			//aデフォルトインターバルで走行
 void driveC2(uint16_t);			//aデフォルトインターバルで逆方向走行
-void slalomU12(uint16_t);
-void slalomR12(uint16_t, uint16_t, uint16_t, uint16_t);
-void slalomR22(uint16_t);
-void slalomR32(int32_t, uint16_t, uint16_t, uint16_t, uint16_t);
-void slalomU22(uint16_t);
 
 
 //----a上位関数----
 void set_position(void);		//a上下位置合わせ
 void set_positionX(uint8_t);	//a上下左右位置合わせ
 void start_sectionA(void);		//a加速スタート区画
-void start_sectionA2(void);		//a加速スタート区画
+void start_sectionA2(void);		//a加速スタート区画High Speed
+void start_sectionA3(void);		//a加速スタート区画High High Speed
 void half_sectionA(void);		//a加速半区画
-void half_sectionA2(void);		//a加速半区画
+void half_sectionA2(void);		//a加速半区画High Speed
+void half_sectionA3(void);		//a加速半区画High High Speed
 void half_sectionD(void);		//a減速半区画
-void half_sectionD2(void);		//a減速半区画
+void half_sectionD2(void);		//a減速半区画High Speed
+void half_sectionD3(void);		//a減速半区画High High Speed
+void half_sectionU(void);		//a等速半区画
 void one_section(void);			//a加減速一区画
 void one_sectionA(void);		//a加減速一区画
-void one_sectionA2(void);		//a加減速一区画
+void one_sectionA2(void);		//a加減速一区画High Speed
+void one_sectionA3(void);		//a加減速一区画High High Speed
 void one_sectionD(void);		//a加減速一区画
-void one_sectionD2(void);		//a加減速一区画
+void one_sectionD2(void);		//a加減速一区画High Speed
+void one_sectionD3(void);		//a加減速一区画High High Speed
 void one_sectionU(void);		//a等速一区画
 void rotate_R90(void);			//a右90回転
 void rotate_L90(void);			//a左90回転
 void rotate_180(void);			//180度回転
-void slalom_R90(void);			//aスラローム右90回転
-void slalom_L90(void);			//aスラローム左90回転
-void slalom_R902(void);			//aスラローム右90回転
-void slalom_L902(void);			//aスラローム左90回転
+void slalom_R90(void);			//aスラローム右90度
+void slalom_L90(void);			//aスラローム左90度
+void slalom_R902(void);			//aスラローム右90度High Speed
+void slalom_L902(void);			//aスラローム左90度High Speed
+void Lslalom_R90(void);			//a大回りスラローム右90度
+void Lslalom_L90(void);			//a大回りスラローム左90度
+void Lslalom_R902(void);		//a大回りスラローム右90度High Speed
+void Lslalom_L902(void);		//a大回りスラローム左90度High Speed
+void Lslalom_R903(void);		//a大回りスラローム右90度High High Speed
+void Lslalom_L903(void);		//a大回りスラローム左90度High High Speed
+
 
 void v_R45(void);				//V45右
 void v_L45(void);				//V45左

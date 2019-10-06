@@ -376,6 +376,46 @@ void half_sectionD2(void){
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
+//half_sectionA3
+// 半区画分加速しながら走行する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void half_sectionA3(void){
+	full_led_write(1);
+	control_start();
+	driveA(10000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF);				//半区画分加速しながら走行。走行後は停止しない
+	if(MF.FLAG.SCND == 0)get_wall_info();								//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//half_sectionD3
+// 半区画分減速しながら走行し停止する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void half_sectionD3(void){
+	full_led_write(3);
+	control_start();
+	driveD(-10000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF);						//半区画分指定減速度で減速走行。走行後は停止する
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//half_sectionU
+// 等速で半区画分進む
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void half_sectionU(void){
+	full_led_write(7);
+	control_start();
+	driveU(SEC_HALF);													//半区画分等速走行。走行後は停止しない
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
 //one_section
 // 1区画分進んで停止する
 // 引数：なし
@@ -759,6 +799,318 @@ void slalom_L902(void){
 	MF.FLAG.SPD = 1;
 	control_start();
 	while(dist_l < 34 && dist_r < 34);
+	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//Lslalom_R90
+// スラロームで右に90度回転する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void Lslalom_R90(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = 400;
+	speed_max_r = 400;
+
+	control_start();
+	while(dist_l < 24 && dist_r < 24);
+	drive_stop();
+	control_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 1000;
+	target_omega_z = 0;
+	omega_max = 200;
+	speed_G = 400;
+
+	MF.FLAG.DRV = 1;
+	while(degree_z > target_degree_z-25);
+
+	target_degaccel_z = 0;
+
+	while(degree_z > target_degree_z-75);
+
+	target_degaccel_z = -1000;
+
+	while(degree_z > target_degree_z-90);
+	turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = SPEED_RUN;
+	speed_max_r = SPEED_RUN;
+	dist_l = dist_r = 0;
+	MF.FLAG.SPD = 1;
+	control_start();
+	while(dist_l < 24 && dist_r < 24);
+	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//Lslalom_L90
+// 大回りスラロームで右に90度回転する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void Lslalom_L90(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = 400;
+	speed_max_r = 400;
+
+	control_start();
+	while(dist_l < 24 && dist_r < 24);
+	drive_stop();
+	control_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -1000;
+	target_omega_z = 0;
+	omega_min = -200;
+	speed_G = 400;
+
+	MF.FLAG.DRV = 1;
+	while(degree_z < target_degree_z+25);
+
+	target_degaccel_z = 0;
+
+	while(degree_z < target_degree_z+75);
+
+	target_degaccel_z = 1000;
+
+	while(degree_z < target_degree_z+90);
+	turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = SPEED_RUN;
+	speed_max_r = SPEED_RUN;
+	dist_l = dist_r = 0;
+	MF.FLAG.SPD = 1;
+	control_start();
+	while(dist_l < 24 && dist_r < 24);
+	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//Lslalom_R902
+// スラロームで右に90度回転する High Speed
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void Lslalom_R902(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = 800;
+	speed_max_r = 800;
+
+	control_start();
+	while(dist_l < 14 && dist_r < 14);
+	drive_stop();
+	control_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 3000;
+	target_omega_z = 0;
+	omega_max = 450;
+	speed_G = 800;
+
+	MF.FLAG.DRV = 1;
+	while(degree_z > target_degree_z-35);
+
+	target_degaccel_z = 0;
+
+	while(degree_z > target_degree_z-60);
+
+	target_degaccel_z = -3000;
+
+	while(degree_z > target_degree_z-90);
+	turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = SPEED_HIGH;
+	speed_max_r = SPEED_HIGH;
+	dist_l = dist_r = 0;
+	MF.FLAG.SPD = 1;
+	control_start();
+	while(dist_l < 14 && dist_r < 14);
+	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//Lslalom_L902
+// 大回りスラロームで右に90度回転する High Speed
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void Lslalom_L902(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = 800;
+	speed_max_r = 800;
+
+	control_start();
+	while(dist_l < 14 && dist_r < 14);
+	drive_stop();
+	control_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -3000;
+	target_omega_z = 0;
+	omega_min = -450;
+	speed_G = 800;
+
+	MF.FLAG.DRV = 1;
+	while(degree_z < target_degree_z+35);
+
+	target_degaccel_z = 0;
+
+	while(degree_z < target_degree_z+60);
+
+	target_degaccel_z = 3000;
+
+	while(degree_z < target_degree_z+90);
+	turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = SPEED_HIGH;
+	speed_max_r = SPEED_HIGH;
+	dist_l = dist_r = 0;
+	MF.FLAG.SPD = 1;
+	control_start();
+	while(dist_l < 14 && dist_r < 14);
+	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//Lslalom_R903
+// スラロームで右に90度回転する High High Speed
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void Lslalom_R903(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = 1200;
+	speed_max_r = 1200;
+
+	control_start();
+	while(dist_l < 17 && dist_r < 17);
+	drive_stop();
+	control_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 7000;
+	target_omega_z = 0;
+	omega_max = 700;
+	speed_G = 1200;
+
+	MF.FLAG.DRV = 1;
+	while(degree_z > target_degree_z-40);
+
+	target_degaccel_z = 0;
+
+	while(degree_z > target_degree_z-55);
+
+	target_degaccel_z = -7000;
+
+	while(degree_z > target_degree_z-90);
+	turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = SPEED_HIGH_HIGH;
+	speed_max_r = SPEED_HIGH_HIGH;
+	dist_l = dist_r = 0;
+	MF.FLAG.SPD = 1;
+	control_start();
+	while(dist_l < 17 && dist_r < 17);
+	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//Lslalom_L903
+// 大回りスラロームで右に90度回転する High High Speed
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void Lslalom_L903(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = 1200;
+	speed_max_r = 1200;
+
+	control_start();
+	while(dist_l < 17 && dist_r < 17);
+	drive_stop();
+	control_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -7000;
+	target_omega_z = 0;
+	omega_min = -700;
+	speed_G = 1200;
+
+	MF.FLAG.DRV = 1;
+	while(degree_z < target_degree_z+40);
+
+	target_degaccel_z = 0;
+
+	while(degree_z < target_degree_z+55);
+
+	target_degaccel_z = 7000;
+
+	while(degree_z < target_degree_z+90);
+	turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = SPEED_HIGH_HIGH;
+	speed_max_r = SPEED_HIGH_HIGH;
+	dist_l = dist_r = 0;
+	MF.FLAG.SPD = 1;
+	control_start();
+	while(dist_l < 17 && dist_r < 17);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
 }
 
@@ -1364,7 +1716,7 @@ void slalom_test(void){
 		  if(dist_r >= 20){
 			  mode++;
 			  dist_r = 0;
-			  if(mode > 7){
+			  if(mode > 15){
 				  mode = 0;
 			  }
 			  printf("Mode : %d\n", mode);
@@ -1375,7 +1727,7 @@ void slalom_test(void){
 			  mode--;
 			  dist_r = 0;
 			  if(mode < 0){
-				  mode = 7;
+				  mode = 15;
 			  }
 			  printf("Mode : %d\n", mode);
 			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
@@ -1447,7 +1799,7 @@ void slalom_test(void){
 					half_sectionA2();
 					for(int i = 0; i < 16; i++){
 						full_led_write(1);
-						slalom_R902();	//一区画のパルス分デフォルトインターバルで走行
+						slalom_R902();				//16回右90度回転、つまり4周回転
 						full_led_write(2);
 						one_sectionU();
 					}
@@ -1460,12 +1812,78 @@ void slalom_test(void){
 					half_sectionA2();
 					for(int i = 0; i < 16; i++){
 						full_led_write(1);
-						slalom_L902();				//16回右90度回転、つまり4周回転
+						slalom_L902();				//16回左90度回転、つまり4周回転
 						full_led_write(2);
 						one_sectionU();
 					}
 					full_led_write(3);
 					half_sectionD2();
+					break;
+				case 8:
+					//----Lslalom2右折----
+					printf("Lslalom turn right .\n");
+					half_sectionA();
+					for(int i = 0; i < 16; i++){
+						full_led_write(2);
+						Lslalom_R90();				//16回右90度回転、つまり4周回転
+					}
+					full_led_write(3);
+					half_sectionD();
+					break;
+				case 9:
+					//----Lslalom2左折----
+					printf("Lslalom turn left .\n");
+					half_sectionA();
+					for(int i = 0; i < 16; i++){
+						full_led_write(2);
+						Lslalom_L90();				//16回左90度回転、つまり4周回転
+					}
+					full_led_write(3);
+					half_sectionD();
+					break;
+				case 10:
+					//----Lslalom2右折 High Speed----
+					printf("Lslalom turn right High Speed .\n");
+					half_sectionA2();
+					for(int i = 0; i < 16; i++){
+						full_led_write(2);
+						Lslalom_R902();				//16回右90度回転、つまり4周回転
+					}
+					full_led_write(3);
+					half_sectionD2();
+					break;
+				case 11:
+					//----Lslalom2左折 High Speed----
+					printf("Lslalom turn left High Speed .\n");
+					half_sectionA2();
+					for(int i = 0; i < 16; i++){
+						full_led_write(2);
+						Lslalom_L902();				//16回左90度回転、つまり4周回転
+					}
+					full_led_write(3);
+					half_sectionD2();
+					break;
+				case 12:
+					//----Lslalom3右折 High High Speed----
+					printf("Lslalom turn right High High Speed .\n");
+					half_sectionA3();
+					for(int i = 0; i < 16; i++){
+						full_led_write(2);
+						Lslalom_R903();				//16回右90度回転、つまり4周回転
+					}
+					full_led_write(3);
+					half_sectionD3();
+					break;
+				case 13:
+					//----Lslalom3左折 High High Speed----
+					printf("Lslalom turn left High High Speed .\n");
+					half_sectionA3();
+					for(int i = 0; i < 16; i++){
+						full_led_write(2);
+						Lslalom_L903();				//16回左90度回転、つまり4周回転
+					}
+					full_led_write(3);
+					half_sectionD3();
 					break;
 			}
 		}

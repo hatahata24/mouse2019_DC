@@ -1124,6 +1124,90 @@ void make_smap2()
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
+//pass_route
+// route配列をpass圧縮する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void pass_route(void){
+	int i;
+	for(i = 0; i < 256; i++){
+		pass[i] = 0;								//pass配列の初期化
+	}
+	uint8_t p = 0;									//pass配列の配列番号用変数
+	i = 0;
+	uint8_t s = 0;									//直線数カウント用変数
+	while(route[i] != 0x00){
+		switch(route[i]){
+		case 0x88:										//まず直進
+			switch(route[i+1]){
+			case 0x88:									//直進→直進
+				s++;
+				while(route[i+2] == 0x88){				//さらに直進であるならば
+					s++;								//直進カウンタ+1
+					i++;
+				}
+				pass[p] = s;							//pass配列に直進数を代入
+				break;
+
+			case 0x44:									//直進→右
+				switch(route[i+2]){
+				case 0x88:								//直進→右→直進　=　大回り右90度
+					pass[p] = -3;
+					break;
+
+				case 0x44:								//直進→右→右
+					if(route[i+3] == 0x88){				//直進→右→右→直進　=　大回り右180度
+						pass[p] = -5;
+					}
+					break;
+
+				case 0x11:
+					pass[p] = s;
+					pass[p+1] = -1;
+					pass[p+2] = -2;
+					p = p + 2;
+					break;
+				}
+				break;
+
+			case 0x11:									//直進→左
+				switch(route[i+2]){
+				case 0x88:								//直進→左→直進　=　大回り左90度
+					pass[p] = -4;
+					break;
+
+				case 0x44:
+					pass[p] = s;
+					pass[p+1] = -2;
+					pass[p+2] = -1;
+					p = p + 2;
+					break;
+
+				case 0x11:								//直進→左→左
+					if(route[i+3] == 0x88){				//直進→左→左→直進　=　大回り左180度
+						pass[p] = -6;
+					}
+					break;
+				}
+				break;
+			}
+			break;
+
+		case 0x44:										//右　=　右スラローム
+			pass[p] = -1;
+			break;
+
+		case 0x11:										//左　=　左スラローム
+			pass[p] = -2;
+			break;
+		}
+		p++;											//pass配列数カウンタ+1
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
 //store_map_in_eeprom
 // mapデータをeepromに格納する
 //a引数：なし

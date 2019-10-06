@@ -42,6 +42,8 @@ struct coordinate_and_direction{
 	uint16_t m_step2;
 	uint8_t pregoal_x, pregoal_y;
 	uint8_t allmap_comp_flag;
+
+	int8_t pass[256];									//pass圧縮後のルート保存用配列
 #else													//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
 	extern uint8_t map[16][16];							//aマップ格納配列
@@ -59,6 +61,8 @@ struct coordinate_and_direction{
 	extern uint16_t m_step2;
 	extern uint8_t pregoal_x, pregoal_y;
 	extern uint8_t allmap_comp_flag;
+
+	extern int8_t pass[256];							//pass圧縮後のルート保存用配列
 #endif
 
 
