@@ -88,6 +88,8 @@ void make_route();										//a最短経路検索
 void find_pregoal();									//a仮goalの検索
 void make_smap2();										//a仮goalまでの歩数マップ作成
 
+void pass_route();										//pass圧縮関数
+
 void store_map_in_eeprom(void);
 void load_map_from_eeprom(void);
 
