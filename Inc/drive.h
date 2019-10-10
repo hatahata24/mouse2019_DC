@@ -112,6 +112,8 @@ void Lslalom_R902(void);		//a大回りスラローム右90度High Speed
 void Lslalom_L902(void);		//a大回りスラローム左90度High Speed
 void Lslalom_R903(void);		//a大回りスラローム右90度High High Speed
 void Lslalom_L903(void);		//a大回りスラローム左90度High High Speed
+void Lslalom_R180(void);		//a大回りスラローム右180度
+void Lslalom_L180(void);		//a大回りスラローム左180度
 
 
 void v_R45(void);				//V45右

@@ -568,6 +568,112 @@ void searchE(){
 }
 
 
+/*-----------------------------------------------------------
+		足立法探索走行F（スラローム(+既知区間加速走行)+pass圧縮）
+-----------------------------------------------------------*/
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//searchF
+//aスラローム走行(+既知区間加速)+pass圧縮でgoal座標に進む
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchF(){
+
+	if(MF.FLAG.SCND){
+		load_map_from_eeprom();
+	}
+
+	//====a1区画前進====
+	adv_pos();
+
+	//====a歩数マップ・経路作成====
+	make_smap();											//a歩数マップ作成
+	make_route();											//a最短経路探索（route配列に動作が格納される）
+
+	//====pass圧縮====
+	p_cnt = 0;												//a経路カウンタの初期化
+	pass_route();
+
+	//====a前に壁が無い想定で問答無用で前進====
+	start_sectionA();
+
+	H_accel_flag = 0;
+
+	//====a探索走行====
+	do{
+		//----a進行----
+		switch(pass[p_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
+			//----a右スラローム----
+			case -1:
+				slalom_R90();
+				break;
+
+			//----a左スラローム----
+			case -2:
+				slalom_L90();
+				break;
+
+			//----a大回り右90----
+			case -3:
+				half_sectionU();
+				Lslalom_R90();
+				half_sectionU();
+				break;
+
+			//----a大回り左90----
+			case -4:
+				half_sectionU();
+				Lslalom_L90();
+				half_sectionU();
+				break;
+
+			//----a大回り右180----
+			case -5:
+				half_sectionU();
+				Lslalom_R180();
+				half_sectionU();
+				break;
+
+			//----a大回り左180----
+			case -6:
+				half_sectionU();
+				Lslalom_L180();
+				half_sectionU();
+				break;
+
+			//----a前進----
+			default:
+				if(pass[p_cnt-1] == 1){
+					one_sectionU();
+				}else{
+					one_sectionA();
+					H_accel_flag = 1;
+					int k;
+					for(k = 0; k < pass[p_cnt-1]-2; k++){
+						one_sectionU();
+					}
+					one_sectionD();
+					H_accel_flag = 0;
+					full_led_write(3);
+				}
+				break;
+		}
+		adv_pos2(pass[p_cnt-1]);
+		if(MF.FLAG.SCND == 0)conf_route();
+
+	}while((mouse.x != goal_x) || (mouse.y != goal_y));
+
+	half_sectionD();
+
+	HAL_Delay(2000);
+	rotate_180();											//180度回転
+
+	if(!MF.FLAG.SCND){
+		store_map_in_eeprom();
+	}
+}
+
+
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //adv_pos
 //aマイクロマウス内部位置情報で前進させる
@@ -588,6 +694,207 @@ void adv_pos(){
 		break;
 	case 0x03:												//a西方向に向いている場合
 		mouse.x--;											//X座標をデクリメント
+		break;
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//adv_pos2
+//aマイクロマウス内部位置情報で前進させる(pass圧縮対応版)
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void adv_pos2(int8_t pass_pat){
+	int k;
+
+	switch(mouse.dir){										//aマイクロマウスが現在向いている方向で判定
+	case 0x00:												//a北方向に向いている場合
+		switch(pass_pat){										//aマイクロマウスが現在向いている方向で判定
+		//----a右スラローム----
+		case -1:
+		case -2:
+			mouse.y++;											//Y座標をインクリメント
+			break;
+
+		//----a大回り右90----
+		case -3:
+			mouse.x--;											//X座標をデクリメント
+			mouse.y++;											//Y座標をインクリメント
+			mouse.y++;											//Y座標をインクリメント
+			break;
+
+		//----a大回り左90----
+		case -4:
+			mouse.x++;											//X座標をインクリメント
+			mouse.y++;											//Y座標をインクリメント
+			mouse.y++;											//Y座標をインクリメント
+			break;
+
+		//----a大回り右180----
+		case -5:
+			mouse.y--;											//Y座標をデクリメント
+			mouse.x--;											//X座標をデクリメント
+			mouse.y++;											//Y座標をインクリメント
+			mouse.y++;											//Y座標をインクリメント
+			break;
+
+		//----a大回り左180----
+		case -6:
+			mouse.y--;											//Y座標をデクリメント
+			mouse.x++;											//X座標をインクリメント
+			mouse.y++;											//Y座標をインクリメント
+			mouse.y++;											//Y座標をインクリメント
+			break;
+
+		//----a前進----
+		default:
+			for(k = 0; k < pass_pat; k++){
+				mouse.y++;											//Y座標をインクリメント
+			}
+			break;
+		}
+		break;
+
+	case 0x01:												//a東方向に向いている場合
+		switch(pass_pat){										//aマイクロマウスが現在向いている方向で判定
+		//----a右スラローム----
+		case -1:
+		case -2:
+			mouse.x++;											//X座標をインクリメント
+			break;
+
+		//----a大回り右90----
+		case -3:
+			mouse.y++;											//Y座標をインクリメント
+			mouse.x++;											//X座標をインクリメント
+			mouse.x++;											//X座標をインクリメント
+			break;
+
+		//----a大回り左90----
+		case -4:
+			mouse.y--;											//Y座標をデクリメント
+			mouse.x++;											//X座標をインクリメント
+			mouse.x++;											//X座標をインクリメント
+			break;
+
+		//----a大回り右180----
+		case -5:
+			mouse.x--;											//X座標をデクリメント
+			mouse.y++;											//Y座標をインクリメント
+			mouse.x++;											//X座標をインクリメント
+			mouse.x++;											//X座標をインクリメント
+			break;
+
+		//----a大回り左180----
+		case -6:
+			mouse.x--;											//X座標をデクリメント
+			mouse.y--;											//Y座標をデクリメント
+			mouse.x++;											//X座標をインクリメント
+			mouse.x++;											//X座標をインクリメント
+			break;
+
+		//----a前進----
+		default:
+			for(k = 0; k < pass[p_cnt-1]; k++){
+				mouse.x++;											//X座標をインクリメント
+			}
+			break;
+		}
+		break;
+
+	case 0x02:												//a南方向に向いている場合
+		switch(pass_pat){										//aマイクロマウスが現在向いている方向で判定
+		//----a右スラローム----
+		case -1:
+		case -2:
+			mouse.y--;											//Y座標をデクリメント
+			break;
+
+		//----a大回り右90----
+		case -3:
+			mouse.x++;											//X座標をインクリメント
+			mouse.y--;											//Y座標をデクリメント
+			mouse.y--;											//Y座標をデクリメント
+			break;
+
+		//----a大回り左90----
+		case -4:
+			mouse.x--;											//Y座標をデクリメント
+			mouse.y--;											//Y座標をデクリメント
+			mouse.y--;											//Y座標をデクリメント
+			break;
+
+		//----a大回り右180----
+		case -5:
+			mouse.y++;											//Y座標をインクリメント
+			mouse.x++;											//X座標をインクリメント
+			mouse.y--;											//Y座標をデクリメント
+			mouse.y--;											//Y座標をデクリメント
+			break;
+
+		//----a大回り左180----
+		case -6:
+			mouse.y++;											//Y座標をインクリメント
+			mouse.x--;											//X座標をデクリメント
+			mouse.y--;											//Y座標をデクリメント
+			mouse.y--;											//Y座標をデクリメント
+			break;
+
+		//----a前進----
+		default:
+			for(k = 0; k < pass[p_cnt-1]; k++){
+				mouse.y--;											//Y座標をデクリメント
+			}
+			break;
+		}
+		break;
+
+	case 0x03:												//a西方向に向いている場合
+		switch(pass_pat){										//aマイクロマウスが現在向いている方向で判定
+		//----a右スラローム----
+		case -1:
+		case -2:
+			mouse.x--;											//X座標をデクリメント
+			break;
+
+		//----a大回り右90----
+		case -3:
+			mouse.y--;											//Y座標をデクリメント
+			mouse.x--;											//X座標をデクリメント
+			mouse.x--;											//X座標をデクリメント
+			break;
+
+		//----a大回り左90----
+		case -4:
+			mouse.y++;											//Y座標をインクリメント
+			mouse.x--;											//X座標をデクリメント
+			mouse.x--;											//X座標をデクリメント
+			break;
+
+		//----a大回り右180----
+		case -5:
+			mouse.x++;											//X座標をインクリメント
+			mouse.y--;											//Y座標をデクリメント
+			mouse.x--;											//X座標をデクリメント
+			mouse.x--;											//X座標をデクリメント
+			break;
+
+		//----a大回り左180----
+		case -6:
+			mouse.x++;											//X座標をインクリメント
+			mouse.y++;											//Y座標をインクリメント
+			mouse.x--;											//X座標をデクリメント
+			mouse.x--;											//X座標をデクリメント
+			break;
+
+		//----a前進----
+		default:
+			for(k = 0; k < pass[p_cnt-1]; k++){
+				mouse.x--;											//X座標をデクリメント
+			}
+			break;
+		}
 		break;
 	}
 }
@@ -1136,70 +1443,156 @@ void pass_route(void){
 	}
 	uint8_t p = 0;									//pass配列の配列番号用変数
 	i = 0;
-	uint8_t s = 0;									//直線数カウント用変数
-	while(route[i] != 0x00){
+	uint8_t s = 0;									//a直線数カウント用変数
+	while(route[i] != 0xff){
+		s = 0;
 		switch(route[i]){
-		case 0x88:										//まず直進
+		case 0x88:										//aまず直進
+			s++;
 			switch(route[i+1]){
-			case 0x88:									//直進→直進
-				s++;
-				while(route[i+2] == 0x88){				//さらに直進であるならば
-					s++;								//直進カウンタ+1
+			case 0x88:									//a直進→直進
+				while(route[i+2] == 0x88){				//aさらに直進であるならば
+					s++;								//a直進カウンタ+1
 					i++;
 				}
 				pass[p] = s;							//pass配列に直進数を代入
+				i++;
 				break;
 
-			case 0x44:									//直進→右
+			case 0x44:									//a直進→右
 				switch(route[i+2]){
-				case 0x88:								//直進→右→直進　=　大回り右90度
+				case 0x88:								//a直進→右→直進　=　大回り右90度
 					pass[p] = -3;
+					i = i + 3;
 					break;
 
-				case 0x44:								//直進→右→右
-					if(route[i+3] == 0x88){				//直進→右→右→直進　=　大回り右180度
+				case 0x44:								//a直進→右→右
+					if(route[i+3] == 0x88){				//a直進→右→右→直進　=　大回り右180度
 						pass[p] = -5;
+						i = i + 4;
+					}else{								//a直進→右→右→左(左以外は存在しない)
+						if(p > 0 && pass[p-1] > 0){
+							pass[p-1]++;
+							pass[p] = -1;
+							pass[p+1] = -1;
+							pass[p+2] = -2;				//a直進→右→右→左(左以外は存在しない)　そのまま保存　直前が直進の場合
+							p = p + 2;
+						}else{
+							pass[p] = 1;
+							pass[p+1] = -1;
+							pass[p+2] = -1;
+							pass[p+3] = -2;				//a直進→右→右→左(左以外は存在しない)　そのまま保存
+							p = p + 3;
+						}
+						i = i + 4;
 					}
 					break;
 
-				case 0x11:
-					pass[p] = s;
-					pass[p+1] = -1;
-					pass[p+2] = -2;
-					p = p + 2;
+				case 0x11:								//a直進→右→左
+					if(p > 0 && pass[p-1] > 0){
+						pass[p-1]++;
+						pass[p] = -1;
+						pass[p+1] = -2;					//a直進→右→左　そのまま保存　　直前が直進の場合
+						p++;
+					}else{
+						pass[p] = s;
+						pass[p+1] = -1;
+						pass[p+2] = -2;					//a直進→右→左　そのまま保存
+						p = p + 2;
+					}
+					i = i + 3;
+					break;
+
+				default:								//a直進→右→終了
+					if(p > 0 && pass[p-1] > 0){
+						pass[p-1]++;
+						pass[p] = -1;					//a直進→右→終了　　直前が直進の場合
+					}else{
+						pass[p] = s;
+						pass[p+1] = -1;					//a直進→右→終了
+						p++;
+					}
+					i = i + 2;
 					break;
 				}
 				break;
 
-			case 0x11:									//直進→左
+			case 0x11:									//a直進→左
 				switch(route[i+2]){
-				case 0x88:								//直進→左→直進　=　大回り左90度
+				case 0x88:								//a直進→左→直進　=　大回り左90度
 					pass[p] = -4;
+					i = i + 3;
 					break;
 
-				case 0x44:
-					pass[p] = s;
-					pass[p+1] = -2;
-					pass[p+2] = -1;
-					p = p + 2;
-					break;
-
-				case 0x11:								//直進→左→左
-					if(route[i+3] == 0x88){				//直進→左→左→直進　=　大回り左180度
-						pass[p] = -6;
+				case 0x44:								//a直進→左→右
+					if(p > 0 && pass[p-1] > 0){
+						pass[p-1]++;
+						pass[p] = -2;
+						pass[p+1] = -1;					//a直進→左→右　そのまま保存　　直前が直進の場合
+						p++;
+					}else{
+						pass[p] = s;
+						pass[p+1] = -2;
+						pass[p+2] = -1;					//a直進→左→右　そのまま保存
+						p = p + 2;
 					}
+					i = i + 3;
+					break;
+
+				case 0x11:								//a直進→左→左
+					if(route[i+3] == 0x88){				//a直進→左→左→直進　=　大回り左180度
+						pass[p] = -6;
+						i = i + 4;
+					}else{								//a直進→左→左→右(右以外は存在しない)
+						if(p > 0 && pass[p-1] > 0){
+							pass[p-1]++;
+							pass[p] = -2;
+							pass[p+1] = -2;
+							pass[p+2] = -1;				//a直進→左→左→右(右以外は存在しない)　そのまま保存　　直前が直進の場合
+							p = p + 2;
+						}else{
+							pass[p] = 1;
+							pass[p+1] = -2;
+							pass[p+2] = -2;
+							pass[p+3] = -1;				//a直進→左→左→右(右以外は存在しない)　そのまま保存
+							p = p + 3;
+						}
+						i = i + 4;
+					}
+					break;
+
+				default:								//a直進→左→終了
+					if(p > 0 && pass[p-1] > 0){
+						pass[p-1]++;
+						pass[p] = -2;					//a直進→左→終了　そのまま保存　　直前が直進の場合
+					}else{
+						pass[p] = s;
+						pass[p+1] = -2;					//a直進→左→終了　そのまま保存
+						p++;
+					}
+					i = i + 2;
 					break;
 				}
 				break;
+
+			default:									//a直進→終了
+				if(p > 0 && pass[p-1] > 0){
+					pass[p-1]++;						//a直進→終了　そのまま保存　　直前が直進の場合
+				}else{
+					pass[p] = s;						//a直進→終了　そのまま保存
+				}
+				i++;
 			}
 			break;
 
-		case 0x44:										//右　=　右スラローム
+		case 0x44:										//a右　=　右スラローム
 			pass[p] = -1;
+			i++;
 			break;
 
-		case 0x11:										//左　=　左スラローム
+		case 0x11:										//a左　=　左スラローム
 			pass[p] = -2;
+			i++;
 			break;
 		}
 		p++;											//pass配列数カウンタ+1

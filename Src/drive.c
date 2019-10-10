@@ -174,7 +174,7 @@ void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_
 	//----減速走行----
 	while((dist_l < dist) || (dist_r < dist));			//a左右のモータが減速分の距離以上進むまで待機
 
-	drive_stop();											//走行停止
+	if(H_accel_flag != 1)drive_stop();											//走行停止
 }
 
 
@@ -435,7 +435,7 @@ void one_section(void){
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void one_sectionA(void){
-	full_led_write(4);
+	full_led_write(5);
 	control_start();
 	driveA(accel_hs, SPEED_RUN, speed_max_hs, SEC_HALF*2);				//1区画分加速走行。走行後は停止しない
 	if(MF.FLAG.SCND == 0)get_wall_info();								//壁情報を取得，片壁制御の有効・無効の判断
@@ -818,6 +818,7 @@ void Lslalom_R90(void){
 	speed_max_r = 400;
 
 	control_start();
+	dist_l = dist_r = 0;
 	while(dist_l < 24 && dist_r < 24);
 	drive_stop();
 	control_stop();
@@ -826,15 +827,15 @@ void Lslalom_R90(void){
 
 	target_degaccel_z = 1000;
 	target_omega_z = 0;
-	omega_max = 200;
+	omega_max = 250;
 	speed_G = 400;
 
 	MF.FLAG.DRV = 1;
-	while(degree_z > target_degree_z-25);
+	while(degree_z > target_degree_z-30);
 
 	target_degaccel_z = 0;
 
-	while(degree_z > target_degree_z-75);
+	while(degree_z > target_degree_z-70);
 
 	target_degaccel_z = -1000;
 
@@ -870,6 +871,7 @@ void Lslalom_L90(void){
 	speed_max_r = 400;
 
 	control_start();
+	dist_l = dist_r = 0;
 	while(dist_l < 24 && dist_r < 24);
 	drive_stop();
 	control_stop();
@@ -878,15 +880,15 @@ void Lslalom_L90(void){
 
 	target_degaccel_z = -1000;
 	target_omega_z = 0;
-	omega_min = -200;
+	omega_min = -250;
 	speed_G = 400;
 
 	MF.FLAG.DRV = 1;
-	while(degree_z < target_degree_z+25);
+	while(degree_z < target_degree_z+30);
 
 	target_degaccel_z = 0;
 
-	while(degree_z < target_degree_z+75);
+	while(degree_z < target_degree_z+70);
 
 	target_degaccel_z = 1000;
 
@@ -922,7 +924,8 @@ void Lslalom_R902(void){
 	speed_max_r = 800;
 
 	control_start();
-	while(dist_l < 14 && dist_r < 14);
+	dist_l = dist_r = 0;
+	while(dist_l < 20 && dist_r < 20);
 	drive_stop();
 	control_stop();
 
@@ -954,7 +957,7 @@ void Lslalom_R902(void){
 	dist_l = dist_r = 0;
 	MF.FLAG.SPD = 1;
 	control_start();
-	while(dist_l < 14 && dist_r < 14);
+	while(dist_l < 20 && dist_r < 20);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
 }
 
@@ -974,7 +977,8 @@ void Lslalom_L902(void){
 	speed_max_r = 800;
 
 	control_start();
-	while(dist_l < 14 && dist_r < 14);
+	dist_l = dist_r = 0;
+	while(dist_l < 20 && dist_r < 20);
 	drive_stop();
 	control_stop();
 
@@ -1006,7 +1010,7 @@ void Lslalom_L902(void){
 	dist_l = dist_r = 0;
 	MF.FLAG.SPD = 1;
 	control_start();
-	while(dist_l < 14 && dist_r < 14);
+	while(dist_l < 20 && dist_r < 20);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
 }
 
@@ -1026,6 +1030,7 @@ void Lslalom_R903(void){
 	speed_max_r = 1200;
 
 	control_start();
+	dist_l = dist_r = 0;
 	while(dist_l < 17 && dist_r < 17);
 	drive_stop();
 	control_stop();
@@ -1078,6 +1083,7 @@ void Lslalom_L903(void){
 	speed_max_r = 1200;
 
 	control_start();
+	dist_l = dist_r = 0;
 	while(dist_l < 17 && dist_r < 17);
 	drive_stop();
 	control_stop();
@@ -1111,6 +1117,114 @@ void Lslalom_L903(void){
 	MF.FLAG.SPD = 1;
 	control_start();
 	while(dist_l < 17 && dist_r < 17);
+	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//Lslalom_R180
+// スラロームで右に180度回転する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void Lslalom_R180(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = 400;
+	speed_max_r = 400;
+
+	control_start();
+	dist_l = dist_r = 0;
+	while(dist_l < 60 && dist_r < 60);
+	drive_stop();
+	control_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = 2000;
+	target_omega_z = 0;
+	omega_max = 260;
+	speed_G = 400;
+
+	MF.FLAG.DRV = 1;
+	while(degree_z > target_degree_z-20);
+
+	target_degaccel_z = 0;
+
+	while(degree_z > target_degree_z-170);
+
+	target_degaccel_z = -2000;
+
+	while(degree_z > target_degree_z-180);
+	turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+	turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = SPEED_RUN;
+	speed_max_r = SPEED_RUN;
+	dist_l = dist_r = 0;
+	MF.FLAG.SPD = 1;
+	control_start();
+	while(dist_l < 60 && dist_r < 60);
+	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//Lslalom_L180
+// 大回りスラロームで右に180度回転する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void Lslalom_L180(void){
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = 400;
+	speed_max_r = 400;
+
+	control_start();
+	dist_l = dist_r = 0;
+	while(dist_l < 60 && dist_r < 60);
+	drive_stop();
+	control_stop();
+
+	MF.FLAG.GYRO = 1;
+
+	target_degaccel_z = -2000;
+	target_omega_z = 0;
+	omega_min = -260;
+	speed_G = 400;
+
+	MF.FLAG.DRV = 1;
+	while(degree_z < target_degree_z+20);
+
+	target_degaccel_z = 0;
+
+	while(degree_z < target_degree_z+170);
+
+	target_degaccel_z = 2000;
+
+	while(degree_z < target_degree_z+180);
+	turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+	turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+
+	MF.FLAG.GYRO = 0;
+
+	accel_l = 10000;
+	accel_r = 10000;
+	speed_max_l = SPEED_RUN;
+	speed_max_r = SPEED_RUN;
+	dist_l = dist_r = 0;
+	MF.FLAG.SPD = 1;
+	control_start();
+	while(dist_l < 60 && dist_r < 60);
 	if(MF.FLAG.SCND == 0)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
 }
 
@@ -1639,12 +1753,7 @@ void init_test(void){
 
 			  switch(mode){
 				case 0:
-					//----right90度回転----
-					printf("Rotate R90.\n");
-					for(int i = 0; i < 16; i++){
-						rotate_R90();				//16回右90度回転、つまり4周回転
-					}
-//					get_base();
+					get_base();
 					break;
 				case 1:
 					//----4区画等速走行----
@@ -1677,6 +1786,7 @@ void init_test(void){
 				case 5:
 					//----4区画連続走行----
 					printf("4 Section, Forward, Continuous.\n");
+					get_base();
 					half_sectionA();				//半区画のパルス分加速しながら走行
 					for(int i = 0; i < 6-1; i++){
 						one_sectionU();			//一区画のパルス分等速走行
@@ -1781,21 +1891,8 @@ void slalom_test(void){
 					half_sectionD();
 					break;
 				case 5:
-					//----slalom2右折----
-					printf("slalom turn right .\n");
-					half_sectionA2();
-					for(int i = 0; i < 1; i++){
-						full_led_write(1);
-						slalom_R902();	//一区画のパルス分デフォルトインターバルで走行
-						full_led_write(2);
-						one_sectionU();
-					}
-					full_led_write(3);
-					half_sectionD2();
-					break;
-				case 6:
-					//----slalom2右折----
-					printf("slalom turn right .\n");
+					//----slalom2右折 High Speed----
+					printf("slalom turn right High Speed .\n");
 					half_sectionA2();
 					for(int i = 0; i < 16; i++){
 						full_led_write(1);
@@ -1806,9 +1903,9 @@ void slalom_test(void){
 					full_led_write(3);
 					half_sectionD2();
 					break;
-				case 7:
-					//----slalom2左折----
-					printf("slalom turn left .\n");
+				case 6:
+					//----slalom2左折 High Speed----
+					printf("slalom turn left High Speed .\n");
 					half_sectionA2();
 					for(int i = 0; i < 16; i++){
 						full_led_write(1);
@@ -1819,8 +1916,8 @@ void slalom_test(void){
 					full_led_write(3);
 					half_sectionD2();
 					break;
-				case 8:
-					//----Lslalom2右折----
+				case 7:
+					//----Lslalom右折----
 					printf("Lslalom turn right .\n");
 					half_sectionA();
 					for(int i = 0; i < 16; i++){
@@ -1830,8 +1927,8 @@ void slalom_test(void){
 					full_led_write(3);
 					half_sectionD();
 					break;
-				case 9:
-					//----Lslalom2左折----
+				case 8:
+					//----Lslalom左折----
 					printf("Lslalom turn left .\n");
 					half_sectionA();
 					for(int i = 0; i < 16; i++){
@@ -1841,7 +1938,7 @@ void slalom_test(void){
 					full_led_write(3);
 					half_sectionD();
 					break;
-				case 10:
+				case 9:
 					//----Lslalom2右折 High Speed----
 					printf("Lslalom turn right High Speed .\n");
 					half_sectionA2();
@@ -1852,7 +1949,7 @@ void slalom_test(void){
 					full_led_write(3);
 					half_sectionD2();
 					break;
-				case 11:
+				case 10:
 					//----Lslalom2左折 High Speed----
 					printf("Lslalom turn left High Speed .\n");
 					half_sectionA2();
@@ -1863,7 +1960,7 @@ void slalom_test(void){
 					full_led_write(3);
 					half_sectionD2();
 					break;
-				case 12:
+				case 11:
 					//----Lslalom3右折 High High Speed----
 					printf("Lslalom turn right High High Speed .\n");
 					half_sectionA3();
@@ -1874,7 +1971,7 @@ void slalom_test(void){
 					full_led_write(3);
 					half_sectionD3();
 					break;
-				case 13:
+				case 12:
 					//----Lslalom3左折 High High Speed----
 					printf("Lslalom turn left High High Speed .\n");
 					half_sectionA3();
@@ -1884,6 +1981,28 @@ void slalom_test(void){
 					}
 					full_led_write(3);
 					half_sectionD3();
+					break;
+				case 13:
+					//----Lslalom右180----
+					printf("Lslalom turn right & right .\n");
+					half_sectionA();
+					for(int i = 0; i < 16; i++){
+						full_led_write(2);
+						Lslalom_R180();				//16回右180度回転、つまり4周回転
+					}
+					full_led_write(3);
+					half_sectionD();
+					break;
+				case 14:
+					//----Lslalom左180----
+					printf("Lslalom turn left & left .\n");
+					half_sectionA();
+					for(int i = 0; i < 16; i++){
+						full_led_write(2);
+						Lslalom_L180();				//16回左180度回転、つまり4周回転
+					}
+					full_led_write(3);
+					half_sectionD();
 					break;
 			}
 		}
@@ -2020,7 +2139,7 @@ void simple_run(void){
 					get_base();
 
 					searchA();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchA();
@@ -2041,7 +2160,7 @@ void simple_run(void){
 					get_base();
 
 					searchB();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchB();
@@ -2062,7 +2181,7 @@ void simple_run(void){
 					get_base();
 
 					searchB();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchB();
@@ -2141,7 +2260,7 @@ void slalom_run(void){
 					get_base();
 
 					searchC();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchC();
@@ -2162,7 +2281,7 @@ void slalom_run(void){
 					get_base();
 
 					searchC();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchC();
@@ -2186,7 +2305,7 @@ void slalom_run(void){
 					get_base();
 
 					searchD();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD();
@@ -2209,7 +2328,7 @@ void slalom_run(void){
 					get_base();
 
 					searchD();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD();
@@ -2232,7 +2351,7 @@ void slalom_run(void){
 					get_base();
 
 					searchD();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD();
@@ -2255,7 +2374,7 @@ void slalom_run(void){
 
 					HAL_Delay(5000);
 					searchC();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchC();
@@ -2281,7 +2400,7 @@ void slalom_run(void){
 
 					HAL_Delay(5000);
 					searchD2();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD2();
@@ -2307,7 +2426,7 @@ void slalom_run(void){
 
 					HAL_Delay(5000);
 					searchD2();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD2();
@@ -2431,7 +2550,7 @@ void sample_course_run(void){
 					get_base();
 
 					searchC();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchE();
@@ -2453,7 +2572,7 @@ void sample_course_run(void){
 					get_base();
 
 					searchC();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchE();
@@ -2525,7 +2644,7 @@ void perfect_run(void){
 					get_base();
 
 					searchB();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchB();
@@ -2546,7 +2665,7 @@ void perfect_run(void){
 					get_base();
 
 					searchB();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchB();
@@ -2567,7 +2686,7 @@ void perfect_run(void){
 					get_base();
 
 					searchC();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchC();
@@ -2588,7 +2707,7 @@ void perfect_run(void){
 					get_base();
 
 					searchC();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchC();
@@ -2679,7 +2798,7 @@ void perfect_slalom(void){
 					get_base();
 
 					searchC();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchC();
@@ -2703,7 +2822,7 @@ void perfect_slalom(void){
 					get_base();
 
 					searchD();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD();
@@ -2727,7 +2846,7 @@ void perfect_slalom(void){
 					get_base();
 
 					searchD();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD();
@@ -2751,7 +2870,7 @@ void perfect_slalom(void){
 					get_base();
 
 					searchD();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD();
@@ -2773,7 +2892,7 @@ void perfect_slalom(void){
 					get_base();
 
 					searchC2();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchC2();
@@ -2797,7 +2916,7 @@ void perfect_slalom(void){
 					get_base();
 
 					searchD2();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD2();
@@ -2821,7 +2940,7 @@ void perfect_slalom(void){
 					get_base();
 
 					searchD2();
-					HAL_Delay(500);
+					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
 					searchD2();

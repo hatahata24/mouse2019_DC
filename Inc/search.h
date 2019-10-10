@@ -44,6 +44,7 @@ struct coordinate_and_direction{
 	uint8_t allmap_comp_flag;
 
 	int8_t pass[256];									//pass圧縮後のルート保存用配列
+	uint8_t p_cnt;										//pass経路カウンタ
 #else													//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
 	extern uint8_t map[16][16];							//aマップ格納配列
@@ -63,6 +64,7 @@ struct coordinate_and_direction{
 	extern uint8_t allmap_comp_flag;
 
 	extern int8_t pass[256];							//pass圧縮後のルート保存用配列
+	extern uint8_t p_cnt;								//pass経路カウンタ
 #endif
 
 
@@ -80,8 +82,11 @@ void searchC2();										//aスラロームHighSpeed走行
 void searchD();											//aスラローム+既知区間加速探索走行
 void searchD2();										//aスラロームHighSpeed+既知区間加速探索走行
 void searchE();											//aスラローム全面探索走行
+void searchF();											//aスラローム(+既知区間加速探索走行)+pass圧縮
+
 
 void adv_pos();											//aマウスの位置情報を前進
+void adv_pos2(int8_t);										//aマウスの位置情報を前進(pass圧縮対応版)
 void conf_route();										//a次ルートの確認
 void map_Init();										//aマップデータ初期化
 void write_map();										//aマップ書き込み

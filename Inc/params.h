@@ -30,24 +30,24 @@
 
 //gyro controll params
 #define CTRL_BASE_G		1				//G
-#define CTRL_MAX_G		2000//3500				//control value max
-#define CTRL_CONT_G		1//4000			//Proportional C
+#define CTRL_MAX_G		1000			//control value max
+#define CTRL_CONT_G		1				//Proportional C
 
 
 //sensor params
 #define sensor_wait 2500//2000//3500
 
 //----wall judge----
-#define WALL_BASE_FR 	70//30				//FR
-#define WALL_BASE_FL 	80//75//80//70				//FL
-#define WALL_BASE_R		55				//R
-#define WALL_BASE_L 	45	     		//L
+#define WALL_BASE_FR 	150//70//30				//FR
+#define WALL_BASE_FL 	250//80//75//80//70				//FL
+#define WALL_BASE_R		100//55				//R
+#define WALL_BASE_L 	100//45	     		//L
 
 //----wall control judge----
-#define CTRL_BASE_L		10				//R
-#define CTRL_BASE_R		10				//L
-#define CTRL_MAX_W		2000			//control value max
-#define CTRL_CONT_W		0.5F//.8F//0.1F//3//1//0.8F			//Proportional C
+#define CTRL_BASE_R		25				//R
+#define CTRL_BASE_L		50				//L
+#define CTRL_MAX_W		1000			//control value max
+#define CTRL_CONT_W		0.5F//0.1F//1//0.8F			//Proportional C
 
 
 //music params
@@ -61,7 +61,7 @@
 #define DOO 2093
 
 //----goal point---
-#define GOAL_X 6	//7
-#define GOAL_Y 4	//7
+#define GOAL_X 9	//7
+#define GOAL_Y 6	//7
 
 #endif /* INC_PARAMS_H_ */

@@ -237,7 +237,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 					if(CTRL_BASE_L < dif_l || CTRL_BASE_R < dif_r){
 						if(CTRL_BASE_L < dif_l){
-							dwl_tmp += CTRL_CONT_W * dif_l;				//a比例制御値を決定
+							dwl_tmp += CTRL_CONT_W * 0.5 * dif_l;				//a比例制御値を決定
 							dwr_tmp += -1 * CTRL_CONT_W * dif_l;		//a比例制御値を決定
 						}
 						else if(CTRL_BASE_R < dif_r){
@@ -285,7 +285,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					//a制御フラグがなければ壁制御値0
 					dgl = dgr = 0;
 				}
-
 				break;
 		}
 
@@ -502,10 +501,28 @@ int main(void)
 		  		  break;
 
 		  	  case 3:
-		  		  //----flash 動作確認----
-		  		  printf("eprom start \n");
-		  		  store_map_in_eeprom();
-		  		  printf("eprom fin \n");
+				  drive_ready();
+		  		  //----aスラローム走行&pass圧縮----
+				  printf("First Run. (Slalom)\n");
+
+				  MF.FLAG.SCND = 1;
+				  MF.FLAG.ACCL2 = 1;
+				  start_flag = 0;
+				  accel_hs = 5000;
+				  speed_max_hs = 800;
+				  goal_x = GOAL_X;
+				  goal_y = GOAL_Y;
+
+				  get_base();
+
+				  searchF();
+				  HAL_Delay(2000);
+
+				  goal_x = goal_y = 0;
+				  searchF();
+
+				  goal_x = GOAL_X;
+				  goal_y = GOAL_Y;
 		  		  break;
 
 		  	  case 4:
