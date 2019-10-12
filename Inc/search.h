@@ -45,6 +45,7 @@ struct coordinate_and_direction{
 
 	int8_t pass[256];									//pass圧縮後のルート保存用配列
 	uint8_t p_cnt;										//pass経路カウンタ
+	uint8_t pass_mode;									//pass圧縮モード選択
 #else													//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
 	extern uint8_t map[16][16];							//aマップ格納配列
@@ -65,6 +66,7 @@ struct coordinate_and_direction{
 
 	extern int8_t pass[256];							//pass圧縮後のルート保存用配列
 	extern uint8_t p_cnt;								//pass経路カウンタ
+	extern uint8_t pass_mode;							//pass圧縮モード選択
 #endif
 
 
@@ -83,6 +85,8 @@ void searchD();											//aスラローム+既知区間加速探索走行
 void searchD2();										//aスラロームHighSpeed+既知区間加速探索走行
 void searchE();											//aスラローム全面探索走行
 void searchF();											//aスラローム(+既知区間加速探索走行)+pass圧縮
+void searchF2();										//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新
+void searchF3();										//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新+半区画ベース
 
 
 void adv_pos();											//aマウスの位置情報を前進
@@ -98,6 +102,7 @@ void find_pregoal();									//a仮goalの検索
 void make_smap2();										//a仮goalまでの歩数マップ作成
 
 void pass_route();										//pass圧縮関数
+void pass_route2();										//pass圧縮関数2(半区画ベース)
 
 void store_map_in_eeprom(void);
 void load_map_from_eeprom(void);

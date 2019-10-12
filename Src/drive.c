@@ -1145,7 +1145,7 @@ void Lslalom_R180(void){
 
 	target_degaccel_z = 2000;
 	target_omega_z = 0;
-	omega_max = 260;
+	omega_max = 300;
 	speed_G = 400;
 
 	MF.FLAG.DRV = 1;
@@ -1199,7 +1199,7 @@ void Lslalom_L180(void){
 
 	target_degaccel_z = -2000;
 	target_omega_z = 0;
-	omega_min = -260;
+	omega_min = -300;
 	speed_G = 400;
 
 	MF.FLAG.DRV = 1;
@@ -2012,7 +2012,7 @@ void slalom_test(void){
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //v_test
-// スラローム走行テスト
+// 斜め走行テスト
 // 引数：なし
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -2069,6 +2069,177 @@ void v_test(void){
 				case 3:
 					break;
 				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					break;
+				case 7:
+					break;
+			}
+		}
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//pass_test
+// pass圧縮走行テスト
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void pass_test(void){
+
+	int mode = 0;
+	printf("Test pass Run, Mode : %d\n", mode);
+
+	while(1){
+		led_write(mode & 0b001, mode & 0b010, mode & 0b100);
+		  if(dist_r >= 20){
+			  mode++;
+			  dist_r = 0;
+			  if(mode > 7){
+				  mode = 0;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(dist_r <= -20){
+			  mode--;
+			  dist_r = 0;
+			  if(mode < 0){
+				  mode = 7;
+			  }
+			  printf("Mode : %d\n", mode);
+			  //buzzer(pitagola2[mode-1][0], pitagola2[mode-1][1]);
+			  //buzzer(pitagola[2][0], pitagola[2][1]);
+		  }
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
+			  HAL_Delay(50);
+			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  drive_ready();
+
+			  switch(mode){
+				case 0:
+					//----一次探索スラローム走行----
+					printf("First Run. (Slalom)\n");
+
+					MF.FLAG.SCND = 0;
+					start_flag = 0;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+					break;
+				case 1:
+					//----直線と大回り(仮)圧縮----
+					printf("straight pass press .\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					start_flag = 0;
+					accel_hs = 5000;
+					speed_max_hs = 800;
+
+					pass_mode = 1;
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+					break;
+				case 2:
+					//----直線と大回り圧縮(機体位置の移動が不十分)----
+					printf("straight pass press .\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					start_flag = 0;
+					accel_hs = 5000;
+					speed_max_hs = 800;
+
+					pass_mode = 2;
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+					break;
+				case 3:
+					//----直線と大回り圧縮(adv_posを停止)----
+					printf("straight pass press .\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					start_flag = 0;
+					accel_hs = 5000;
+					speed_max_hs = 800;
+
+					pass_mode = 2;
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF2();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF2();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+					break;
+				case 4:
+					//----直線と大回り圧縮(adv_posを停止)+半区画ベース----
+					printf("straight pass press .\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					start_flag = 0;
+					accel_hs = 5000;
+					speed_max_hs = 800;
+
+					pass_mode = 3;
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF3();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF3();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 				case 5:
 					break;

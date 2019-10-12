@@ -501,28 +501,9 @@ int main(void)
 		  		  break;
 
 		  	  case 3:
-				  drive_ready();
 		  		  //----aスラローム走行&pass圧縮----
 				  printf("First Run. (Slalom)\n");
-
-				  MF.FLAG.SCND = 1;
-				  MF.FLAG.ACCL2 = 1;
-				  start_flag = 0;
-				  accel_hs = 5000;
-				  speed_max_hs = 800;
-				  goal_x = GOAL_X;
-				  goal_y = GOAL_Y;
-
-				  get_base();
-
-				  searchF();
-				  HAL_Delay(2000);
-
-				  goal_x = goal_y = 0;
-				  searchF();
-
-				  goal_x = GOAL_X;
-				  goal_y = GOAL_Y;
+		  		  pass_test();
 		  		  break;
 
 		  	  case 4:

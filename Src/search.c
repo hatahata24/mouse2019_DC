@@ -75,7 +75,7 @@ void searchA(){
 	}while((mouse.x != goal_x) || (mouse.y != goal_y));		//a現在座標とgoal座標が等しくなるまで実行
 
 	printf("goal\n");
-	HAL_Delay(2000);										//aスタートでは***2秒以上***停止しなくてはならない
+	HAL_Delay(500);										//aスタートでは***2秒以上***停止しなくてはならない
 	rotate_180();											//180度回転
 
 	if(!MF.FLAG.SCND){
@@ -151,7 +151,7 @@ void searchB(){
 
 	half_sectionD();
 
-	HAL_Delay(2000);
+	HAL_Delay(500);
 	rotate_180();											//180度回転
 
 	if(!MF.FLAG.SCND){
@@ -201,7 +201,6 @@ void searchC(){
 			//----a右折スラローム----
 			case 0x44:
 				slalom_R90();
-
 				break;
 			//----180回転----
 			case 0x22:
@@ -224,7 +223,7 @@ void searchC(){
 
 	half_sectionD();
 
-	HAL_Delay(2000);
+	HAL_Delay(500);
 	rotate_180();											//180度回転
 
 	if(!MF.FLAG.SCND){
@@ -294,7 +293,7 @@ void searchC2(){
 
 	half_sectionD2();
 
-	HAL_Delay(2000);
+	HAL_Delay(500);
 	rotate_180();											//180度回転
 
 	if(!MF.FLAG.SCND){
@@ -382,7 +381,7 @@ void searchD(){
 
 	half_sectionD();
 
-	HAL_Delay(2000);
+	HAL_Delay(500);
 	rotate_180();											//180度回転
 
 	if(!MF.FLAG.SCND){
@@ -467,7 +466,7 @@ void searchD2(){
 
 	half_sectionD2();
 
-	HAL_Delay(2000);
+	HAL_Delay(500);
 	rotate_180();											//180度回転
 
 	if(!MF.FLAG.SCND){
@@ -559,7 +558,7 @@ void searchE(){
 	//printf("i = %d\n", i);
 	//printf("fin\n");
 
-	HAL_Delay(2000);
+	HAL_Delay(500);
 	rotate_180();											//180度回転
 
 	if(!MF.FLAG.SCND){
@@ -615,16 +614,80 @@ void searchF(){
 
 			//----a大回り右90----
 			case -3:
-				half_sectionU();
-				Lslalom_R90();
-				half_sectionU();
+				if(pass_mode == 1){
+					half_sectionU();
+					Lslalom_R90();
+					half_sectionU();
+				}else if(pass_mode == 2){
+					if(pass[p_cnt] == -3){
+						half_sectionU();
+						Lslalom_R90();
+						Lslalom_R90();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -4){
+						half_sectionU();
+						Lslalom_R90();
+						Lslalom_L90();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -5){
+						half_sectionU();
+						Lslalom_R90();
+						Lslalom_R180();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -6){
+						half_sectionU();
+						Lslalom_R90();
+						Lslalom_L180();
+						half_sectionU();
+						p_cnt++;
+					}else{
+						half_sectionU();
+						Lslalom_R90();
+						half_sectionU();
+					}
+				}
 				break;
 
 			//----a大回り左90----
 			case -4:
-				half_sectionU();
-				Lslalom_L90();
-				half_sectionU();
+				if(pass_mode == 1){
+					half_sectionU();
+					Lslalom_L90();
+					half_sectionU();
+				}else if(pass_mode == 2){
+					if(pass[p_cnt] == -3){
+						half_sectionU();
+						Lslalom_L90();
+						Lslalom_R90();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -4){
+						half_sectionU();
+						Lslalom_L90();
+						Lslalom_L90();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -5){
+						half_sectionU();
+						Lslalom_L90();
+						Lslalom_R180();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -6){
+						half_sectionU();
+						Lslalom_L90();
+						Lslalom_L180();
+						half_sectionU();
+						p_cnt++;
+					}else{
+						half_sectionU();
+						Lslalom_L90();
+						half_sectionU();
+					}
+				}
 				break;
 
 			//----a大回り右180----
@@ -639,6 +702,12 @@ void searchF(){
 				half_sectionU();
 				Lslalom_L180();
 				half_sectionU();
+				break;
+
+			//----pass配列最後(なお本来呼び出される前にゴールする)----
+			case -114:
+				rotate_180();
+				while(1);
 				break;
 
 			//----a前進----
@@ -659,18 +728,289 @@ void searchF(){
 				break;
 		}
 		adv_pos2(pass[p_cnt-1]);
-		if(MF.FLAG.SCND == 0)conf_route();
 
 	}while((mouse.x != goal_x) || (mouse.y != goal_y));
 
 	half_sectionD();
 
-	HAL_Delay(2000);
+	HAL_Delay(500);
 	rotate_180();											//180度回転
 
-	if(!MF.FLAG.SCND){
-		store_map_in_eeprom();
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//searchF2
+//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新でgoal座標に進む
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchF2(){
+
+	if(MF.FLAG.SCND){
+		load_map_from_eeprom();
 	}
+
+	//====a1区画前進====
+	adv_pos();
+
+	//====a歩数マップ・経路作成====
+	make_smap();											//a歩数マップ作成
+	make_route();											//a最短経路探索（route配列に動作が格納される）
+
+	//====pass圧縮====
+	p_cnt = 0;												//a経路カウンタの初期化
+	pass_route();
+
+	//====a前に壁が無い想定で問答無用で前進====
+	start_sectionA();
+
+	H_accel_flag = 0;
+
+	//====a探索走行====
+	do{
+		//----a進行----
+		switch(pass[p_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
+			//----a右スラローム----
+			case -1:
+				slalom_R90();
+				break;
+
+			//----a左スラローム----
+			case -2:
+				slalom_L90();
+				break;
+
+			//----a大回り右90----
+			case -3:
+				if(pass_mode == 1){
+					half_sectionU();
+					Lslalom_R90();
+					half_sectionU();
+				}else if(pass_mode == 2){
+					if(pass[p_cnt] == -3){
+						half_sectionU();
+						Lslalom_R90();
+						Lslalom_R90();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -4){
+						half_sectionU();
+						Lslalom_R90();
+						Lslalom_L90();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -5){
+						half_sectionU();
+						Lslalom_R90();
+						Lslalom_R180();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -6){
+						half_sectionU();
+						Lslalom_R90();
+						Lslalom_L180();
+						half_sectionU();
+						p_cnt++;
+					}else{
+						half_sectionU();
+						Lslalom_R90();
+						half_sectionU();
+					}
+				}
+				break;
+
+			//----a大回り左90----
+			case -4:
+				if(pass_mode == 1){
+					half_sectionU();
+					Lslalom_L90();
+					half_sectionU();
+				}else if(pass_mode == 2){
+					if(pass[p_cnt] == -3){
+						half_sectionU();
+						Lslalom_L90();
+						Lslalom_R90();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -4){
+						half_sectionU();
+						Lslalom_L90();
+						Lslalom_L90();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -5){
+						half_sectionU();
+						Lslalom_L90();
+						Lslalom_R180();
+						half_sectionU();
+						p_cnt++;
+					}else if(pass[p_cnt] == -6){
+						half_sectionU();
+						Lslalom_L90();
+						Lslalom_L180();
+						half_sectionU();
+						p_cnt++;
+					}else{
+						half_sectionU();
+						Lslalom_L90();
+						half_sectionU();
+					}
+				}
+				break;
+
+			//----a大回り右180----
+			case -5:
+				half_sectionU();
+				Lslalom_R180();
+				half_sectionU();
+				break;
+
+			//----a大回り左180----
+			case -6:
+				half_sectionU();
+				Lslalom_L180();
+				half_sectionU();
+				break;
+
+			//----pass配列最後(なお本来呼び出される前にゴールする)----
+			case -114:
+				rotate_180();
+				rotate_180();
+				while(1);
+				break;
+
+			//----a前進----
+			default:
+				if(pass[p_cnt-1] == 1){
+					one_sectionU();
+				}else{
+					one_sectionA();
+					H_accel_flag = 1;
+					int k;
+					for(k = 0; k < pass[p_cnt-1]-2; k++){
+						one_sectionU();
+					}
+					one_sectionD();
+					H_accel_flag = 0;
+					full_led_write(3);
+				}
+				break;
+		}
+//		adv_pos2(pass[p_cnt-1]);
+
+	}while(pass[p_cnt] != -114);
+
+	mouse.x = goal_x;
+	mouse.y = goal_y;
+
+	half_sectionD();
+
+	HAL_Delay(500);
+	rotate_180();											//180度回転
+
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//searchF3
+//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新+半区画ベースでgoal座標に進む
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchF3(){
+
+	if(MF.FLAG.SCND){
+		load_map_from_eeprom();
+	}
+
+	//====a1区画前進====
+	adv_pos();
+
+	//====a歩数マップ・経路作成====
+	make_smap();											//a歩数マップ作成
+	make_route();											//a最短経路探索（route配列に動作が格納される）
+
+	//====pass圧縮====
+	p_cnt = 0;												//a経路カウンタの初期化
+	pass_route2();
+
+	//====a前に壁が無い想定で問答無用で前進====
+	start_sectionA();
+
+	H_accel_flag = 0;
+
+	//====a探索走行====
+	do{
+		//----a進行----
+		switch(pass[p_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
+			//----a右スラローム----
+			case -1:
+				slalom_R90();
+				break;
+
+			//----a左スラローム----
+			case -2:
+				slalom_L90();
+				break;
+
+			//----a大回り右90----
+			case -3:
+				Lslalom_R90();
+				break;
+
+			//----a大回り左90----
+			case -4:
+				Lslalom_L90();
+				break;
+
+			//----a大回り右180----
+			case -5:
+				Lslalom_R180();
+				break;
+
+			//----a大回り左180----
+			case -6:
+				Lslalom_L180();
+				break;
+
+			//----pass配列最後(なお本来呼び出される前にゴールする)----
+			case -114:
+				rotate_180();
+				rotate_180();
+				while(1);
+				break;
+
+			//----a前進----
+			default:
+				if(pass[p_cnt-1] < 4){
+					for(int k = 0; k < pass[p_cnt-1]; k++){
+						half_sectionU();
+					}
+				}else{
+					one_sectionA();
+					H_accel_flag = 1;
+					int k;
+					for(k = 0; k < pass[p_cnt-1]-4; k++){
+						half_sectionU();
+					}
+					one_sectionD();
+					H_accel_flag = 0;
+				}
+				break;
+		}
+//		adv_pos2(pass[p_cnt-1]);
+
+	}while(pass[p_cnt] != -114);
+
+	mouse.x = goal_x;
+	mouse.y = goal_y;
+
+	half_sectionD();
+
+	HAL_Delay(500);
+	rotate_180();											//180度回転
+
 }
 
 
@@ -710,8 +1050,9 @@ void adv_pos2(int8_t pass_pat){
 
 	switch(mouse.dir){										//aマイクロマウスが現在向いている方向で判定
 	case 0x00:												//a北方向に向いている場合
-		switch(pass_pat){										//aマイクロマウスが現在向いている方向で判定
-		//----a右スラローム----
+//		switch(pass_pat){										//aマイクロマウスが現在向いている方向で判定
+		switch(pass[p_cnt-1]){										//aマイクロマウスが現在向いている方向で判定
+		//----a左右スラローム----
 		case -1:
 		case -2:
 			mouse.y++;											//Y座標をインクリメント
@@ -1232,7 +1573,13 @@ void make_route(){
 		//----a格納データ形式変更----
 		switch(route[i]){										//route配列に格納した要素値で分岐
 		case 0x00:												//a前進する場合
-			route[i] = 0x88;									//a格納データ形式を変更
+			if(pass_mode != 3){
+				route[i] = 0x88;									//a格納データ形式を変更
+			}else{
+				route[i] = 0x77;
+				route[i+1] = 0x77;
+				i++;
+			}
 			break;
 		case 0x01:												//a右折する場合
 			turn_dir(DIR_TURN_R90, 0);								//a内部情報の方向を90度右回転
@@ -1444,7 +1791,7 @@ void pass_route(void){
 	uint8_t p = 0;									//pass配列の配列番号用変数
 	i = 0;
 	uint8_t s = 0;									//a直線数カウント用変数
-	while(route[i] != 0xff){
+	while(route[i-1] != 0xff){
 		s = 0;
 		switch(route[i]){
 		case 0x88:										//aまず直進
@@ -1462,8 +1809,36 @@ void pass_route(void){
 			case 0x44:									//a直進→右
 				switch(route[i+2]){
 				case 0x88:								//a直進→右→直進　=　大回り右90度
-					pass[p] = -3;
-					i = i + 3;
+
+					if(pass_mode == 1){
+						pass[p] = -3;
+						i = i + 3;
+					}else if(pass_mode == 2){
+						if(route[i+3] == 0x44 && route[i+4] == 0x88){
+							pass[p] = -3;
+							pass[p+1] = -3;
+							i = i + 5;						//大回り右90→大回り右90
+							p++;
+						}else if(route[i+3] == 0x11 && route[i+4] == 0x88){
+							pass[p] = -3;
+							pass[p+1] = -4;
+							i = i + 5;						//大回り右90→大回り左90
+							p++;
+						}else if(route[i+3] == 0x44 && route[i+4] == 0x44 && route[i+5] == 0x88){
+							pass[p] = -3;
+							pass[p+1] = -5;
+							i = i + 6;						//大回り右90→大回り右180
+							p++;
+						}else if(route[i+3] == 0x11 && route[i+4] == 0x11 && route[i+5] == 0x88){
+							pass[p] = -3;
+							pass[p+1] = -6;
+							i = i + 6;						//大回り右90→大回り左180
+							p++;
+						}else{
+							pass[p] = -3;
+							i = i + 3;
+						}
+					}
 					break;
 
 				case 0x44:								//a直進→右→右
@@ -1520,8 +1895,36 @@ void pass_route(void){
 			case 0x11:									//a直進→左
 				switch(route[i+2]){
 				case 0x88:								//a直進→左→直進　=　大回り左90度
-					pass[p] = -4;
-					i = i + 3;
+
+					if(pass_mode == 1){
+						pass[p] = -4;
+						i = i + 3;
+					}else if(pass_mode == 2){
+						if(route[i+3] == 0x44 && route[i+4] == 0x88){
+							pass[p] = -4;
+							pass[p+1] = -3;
+							i = i + 5;						//大回り右90→大回り右90
+							p++;
+						}else if(route[i+3] == 0x11 && route[i+4] == 0x88){
+							pass[p] = -4;
+							pass[p+1] = -4;
+							i = i + 5;						//大回り右90→大回り左90
+							p++;
+						}else if(route[i+3] == 0x44 && route[i+4] == 0x44 && route[i+5] == 0x88){
+							pass[p] = -4;
+							pass[p+1] = -5;
+							i = i + 6;						//大回り右90→大回り右180
+							p++;
+						}else if(route[i+3] == 0x11 && route[i+4] == 0x11 && route[i+5] == 0x88){
+							pass[p] = -4;
+							pass[p+1] = -6;
+							i = i + 6;						//大回り右90→大回り左180
+							p++;
+						}else{
+							pass[p] = -4;
+							i = i + 3;
+						}
+					}
 					break;
 
 				case 0x44:								//a直進→左→右
@@ -1594,8 +1997,80 @@ void pass_route(void){
 			pass[p] = -2;
 			i++;
 			break;
+
+		case 0xff:										//a終了条件
+			pass[p] = -114;
+			i++;
+			break;
 		}
 		p++;											//pass配列数カウンタ+1
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//pass_route2
+// route配列をpass圧縮する
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void pass_route2(void){
+	int i;
+	uint8_t s_flag = 0;
+	for(i = 0; i < 256; i++){
+		pass[i] = 0;								//pass配列の初期化
+	}
+	uint8_t p = 0;									//pass配列の配列番号用変数
+	i = 0;
+	uint8_t s = 0;									//a直線数カウント用変数
+	while(route[i-1] != 0xff){
+		s = 0;
+		if(route[i] == 0x44){
+			pass[p] = -1;
+			i++;
+		}else if(route[i] == 0x11){
+			pass[p] = -2;
+			i++;
+		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x77){
+			s_flag = 0;
+			pass[p] = -3;
+			i = i + 3;
+		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x77){
+			s_flag = 0;
+			pass[p] = -4;
+			i = i + 3;
+		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x44 && route[i+3] == 0x77){
+			s_flag = 0;
+			pass[p] = -5;
+			i = i + 4;
+		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x11 && route[i+3] == 0x77){
+			s_flag = 0;
+			pass[p] = -6;
+			i = i + 4;
+		}else if(route[i] == 0xff){
+			pass[p] = -114;
+			i++;
+		}else if(route[i] == 0x77){
+			if(s_flag){
+				pass[p-1]++;
+				p--;
+				s_flag = 0;
+				i++;
+			}else{
+				s++;
+				pass[p] = s;
+				while(route[i+1] == 0x77){
+					s_flag = 1;
+					pass[p] = s;
+					i++;
+					s++;
+				}
+				if(!s_flag){
+					i++;
+				}
+			}
+		}
+		p++;
 	}
 }
 

@@ -128,8 +128,9 @@ void v_L135(void);				//V135左
 void test_select(void);			//aテスト走行選択
 
 void init_test(void);			//a初期基幹関数走行テスト
-void slalom_test(void);			//aスラロームによるテスト走行
-void v_test(void);			//a直線優先や全面探索のテスト走行
+void slalom_test(void);			//aスラローム走行テスト
+void v_test(void);				//a斜め走行テス
+void pass_test(void);			//pass圧縮走行テスト
 
 void simple_run(void);			//a超信地走行
 void slalom_run(void);			//aスラローム走行
