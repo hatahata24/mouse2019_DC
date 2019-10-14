@@ -24,6 +24,15 @@ struct coordinate_and_direction{
 #define DIR_TURN_L90	0xff	//左90度回転
 #define DIR_TURN_180	0x02	//180度回転
 
+#define DIR_TURN_R45_8	0x01	//右90度回転
+#define DIR_TURN_R90_8	0x02	//左90度回転
+#define DIR_TURN_R135_8	0x03	//180度回転
+#define DIR_TURN_R180_8	0x04	//右90度回転
+#define DIR_TURN_L45_8	0xff	//右90度回転
+#define DIR_TURN_L90_8	0xfe	//左90度回転
+#define DIR_TURN_L135_8	0xfd	//180度回転
+#define DIR_TURN_L180_8	0xfc	//右90度回転
+
 //====変数====
 #ifdef MAIN_C_											//main.cからこのファイルが呼ばれている場合
 	/*グローバル変数の定義*/
@@ -46,6 +55,9 @@ struct coordinate_and_direction{
 	int8_t pass[256];									//pass圧縮後のルート保存用配列
 	uint8_t p_cnt;										//pass経路カウンタ
 	uint8_t pass_mode;									//pass圧縮モード選択
+
+	uint8_t v_flag;										//V斜め状態フラグ
+
 #else													//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
 	extern uint8_t map[16][16];							//aマップ格納配列
@@ -67,6 +79,9 @@ struct coordinate_and_direction{
 	extern int8_t pass[256];							//pass圧縮後のルート保存用配列
 	extern uint8_t p_cnt;								//pass経路カウンタ
 	extern uint8_t pass_mode;							//pass圧縮モード選択
+
+	extern uint8_t v_flag;								//V斜め状態フラグ
+
 #endif
 
 
@@ -87,6 +102,7 @@ void searchE();											//aスラローム全面探索走行
 void searchF();											//aスラローム(+既知区間加速探索走行)+pass圧縮
 void searchF2();										//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新
 void searchF3();										//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新+半区画ベース
+void searchF4();										//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新+半区画ベース+斜め
 
 
 void adv_pos();											//aマウスの位置情報を前進
@@ -94,7 +110,7 @@ void adv_pos2(int8_t);										//aマウスの位置情報を前進(pass圧縮�
 void conf_route();										//a次ルートの確認
 void map_Init();										//aマップデータ初期化
 void write_map();										//aマップ書き込み
-void turn_dir(uint8_t, uint8_t);									//a自機方向情報変更
+void turn_dir(uint8_t, uint8_t);						//a自機方向情報変更
 void make_smap();										//a歩数マップ作成
 void make_route();										//a最短経路検索
 
@@ -103,6 +119,7 @@ void make_smap2();										//a仮goalまでの歩数マップ作成
 
 void pass_route();										//pass圧縮関数
 void pass_route2();										//pass圧縮関数2(半区画ベース)
+void pass_route3();										//pass圧縮関数2(半区画ベース+斜めあり)
 
 void store_map_in_eeprom(void);
 void load_map_from_eeprom(void);

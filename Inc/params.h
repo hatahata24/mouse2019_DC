@@ -12,9 +12,10 @@
 
 //drive params
 #define SEC_HALF 90
+#define SEC_HALF_V 127
 #define SEC_START 125
 #define SPEED_RUN 400
-#define SPEED_MIN 100
+#define SPEED_MIN 10
 #define SPEED_HIGH 800
 #define SPEED_HIGH_HIGH 1200
 
@@ -61,7 +62,7 @@
 #define DOO 2093
 
 //----goal point---
-#define GOAL_X 0	//7
-#define GOAL_Y 8	//7
+#define GOAL_X 9	//7
+#define GOAL_Y 6	//7
 
 #endif /* INC_PARAMS_H_ */

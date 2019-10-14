@@ -230,7 +230,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		  case 2:
 				//
-				if(MF.FLAG.WCTRL){
+				if(MF.FLAG.WCTRL && v_flag == 0){
 					int16_t dwl_tmp = 0, dwr_tmp = 0;
 					dif_l = (int32_t) ad_l - base_l;
 					dif_r = (int32_t) ad_r - base_r;

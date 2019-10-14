@@ -29,7 +29,7 @@ typedef union {					//
 		uint16_t ACCL2:1;		//accel ++ flag(B9)
 		uint16_t STRAIGHT:1;	//straight flag(B10)
 		uint16_t WEDGE:1;		//壁切れフラグ(B11)
-		uint16_t RSV12:1;		//予備ビット(B12)
+		uint16_t XDIR:1;		//8方向移動フラグ(B12)
 		uint16_t RSV13:1;		//予備ビット(B13)
 		uint16_t RSV14:1;		//予備ビット(B14)
 		uint16_t RSV15:1;		//予備ビット(B15)

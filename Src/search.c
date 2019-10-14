@@ -1015,6 +1015,147 @@ void searchF3(){
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
+//searchF4
+//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新+半区画ベース+斜め走行でgoal座標に進む
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchF4(){
+
+	if(MF.FLAG.SCND){
+		load_map_from_eeprom();
+	}
+
+	//====a1区画前進====
+	adv_pos();
+
+	//====a歩数マップ・経路作成====
+	make_smap();											//a歩数マップ作成
+	full_led_write(3);
+	make_route();											//a最短経路探索（route配列に動作が格納される）
+
+	//====pass圧縮====
+	p_cnt = 0;												//a経路カウンタの初期化
+	full_led_write(4);
+	pass_route3();
+
+	//====a前に壁が無い想定で問答無用で前進====
+	start_sectionA();
+
+	H_accel_flag = 0;
+
+	//====a探索走行====
+	do{
+		//----a進行----
+		switch(pass[p_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
+			//----a右スラローム----
+			case -1:
+				slalom_R90();
+				break;
+
+			//----a左スラローム----
+			case -2:
+				slalom_L90();
+				break;
+
+			//----a大回り右90----
+			case -3:
+				Lslalom_R90();
+				break;
+
+			//----a大回り左90----
+			case -4:
+				Lslalom_L90();
+				break;
+
+			//----a大回り右180----
+			case -5:
+				Lslalom_R180();
+				break;
+
+			//----a大回り左180----
+			case -6:
+				Lslalom_L180();
+				break;
+
+			//----a斜め右V45----
+			case -7:
+				v_R45();
+				v_flag = (v_flag + 1) % 2;
+				break;
+
+			//----a斜め左V45----
+			case -8:
+				v_L45();
+				v_flag = (v_flag + 1) % 2;
+				break;
+
+			//----a斜め右V90----
+			case -9:
+				v_R90();
+				break;
+
+			//----a斜め左V90----
+			case -10:
+				v_L90();
+				break;
+
+			//----a斜め右V135----
+			case -11:
+				v_R135();
+				v_flag = (v_flag + 1) % 2;
+				break;
+
+			//----a斜め左V135----
+			case -12:
+				v_L135();
+				v_flag = (v_flag + 1) % 2;
+				break;
+
+			//----pass配列最後(なお本来呼び出される前にゴールする)----
+			case -114:
+				rotate_180();
+				rotate_180();
+				while(1);
+				break;
+
+			//----a前進----
+			default:
+				if(pass[p_cnt-1] < 4){
+					for(int k = 0; k < pass[p_cnt-1]; k++){
+						half_sectionU();
+					}
+				}else if(pass[p_cnt-1] < 64){
+					one_sectionA();
+					H_accel_flag = 1;
+					int k;
+					for(k = 0; k < pass[p_cnt-1]-4; k++){
+						half_sectionU();
+					}
+					one_sectionD();
+					H_accel_flag = 0;
+				}else{
+					half_sectionV();
+				}
+				break;
+		}
+
+	}while(pass[p_cnt] != -114);
+
+	mouse.x = goal_x;
+	mouse.y = goal_y;
+
+	half_sectionD();
+
+	HAL_Delay(500);
+	rotate_180();											//180度回転
+
+	mouse.dir = mouse.dir / 2;
+
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
 //adv_pos
 //aマイクロマウス内部位置情報で前進させる
 //a引数：なし
@@ -1354,11 +1495,25 @@ void write_map(){
 void turn_dir(uint8_t t_pat, uint8_t t_mode){
 
 	//====a方向を変更====
-	mouse.dir = (mouse.dir + t_pat) & 0x03;					//a指定された分mouse.dirを回転させる
-	if(t_mode == 1){
-		if(t_pat == 0x01) target_degree_z -= 90.4;				//目標角度+右90度
-		if(t_pat == 0xff) target_degree_z += 90.4;				//目標角度+左90度
-		if(t_pat == 0x02) target_degree_z -= 180.8;				//目標角度+右180度
+	if(t_mode < 2){												//4方位モード
+		mouse.dir = (mouse.dir + t_pat) & 0x03;					//a指定された分mouse.dirを回転させる
+		if(t_mode == 1){
+			if(t_pat == 0x01) target_degree_z -= 90.5;			//a目標角度+右90度
+			if(t_pat == 0xff) target_degree_z += 90.5;			//a目標角度+左90度
+			if(t_pat == 0x02) target_degree_z -= 181;			//a目標角度+右180度
+		}
+	}else{														//8方位モード
+		mouse.dir = (mouse.dir + t_pat) & 0x07;					//a指定された分mouse.dirを回転させる
+		if(t_mode == 3){
+			if(t_pat == 0x01) target_degree_z -= 45.25;			//a目標角度+右90度
+			if(t_pat == 0x02) target_degree_z -= 90.5;			//a目標角度+左90度
+			if(t_pat == 0x03) target_degree_z -= 135.75;		//a目標角度+右180度
+			if(t_pat == 0x04) target_degree_z -= 181;			//a目標角度+右180度
+			if(t_pat == 0xff) target_degree_z += 45.25;			//a目標角度+右90度
+			if(t_pat == 0xfe) target_degree_z += 90.5;			//a目標角度+左90度
+			if(t_pat == 0xfd) target_degree_z += 135.75;		//a目標角度+右180度
+			if(t_pat == 0xfc) target_degree_z += 181;			//a目標角度+右180度
+		}
 	}
 }
 
@@ -1573,7 +1728,7 @@ void make_route(){
 		//----a格納データ形式変更----
 		switch(route[i]){										//route配列に格納した要素値で分岐
 		case 0x00:												//a前進する場合
-			if(pass_mode != 3){
+			if(pass_mode < 3){
 				route[i] = 0x88;									//a格納データ形式を変更
 			}else{
 				route[i] = 0x77;
@@ -2010,7 +2165,7 @@ void pass_route(void){
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //pass_route2
-// route配列をpass圧縮する
+// route配列をpass圧縮する(半区画ベース)
 //a引数：なし
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -2062,6 +2217,134 @@ void pass_route2(void){
 				while(route[i+1] == 0x77){
 					s_flag = 1;
 					pass[p] = s;
+					i++;
+					s++;
+				}
+				if(!s_flag){
+					i++;
+				}
+			}
+		}
+		p++;
+	}
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//pass_route3
+// route配列をpass圧縮する(半区画ベース+斜めあり)
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void pass_route3(void){
+	int i;
+	uint8_t s_flag = 0;
+	v_flag = 0;										//a斜めフラグの初期化
+	for(i = 0; i < 256; i++){
+		pass[i] = 0;								//pass配列の初期化
+	}
+	uint8_t p = 0;									//pass配列の配列番号用変数
+	i = 0;
+	uint8_t s = 0;									//a直線数カウント用変数
+	while(route[i-1] != 0xff){
+		s = 0;
+		if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x77){
+			s_flag = 0;
+			pass[p] = -3;							//a大回り右90
+			i = i + 3;
+		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x77){
+			s_flag = 0;
+			pass[p] = -4;							//a大回り左90
+			i = i + 3;
+		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x44 && route[i+3] == 0x77){
+			s_flag = 0;
+			pass[p] = -5;							//a大回り右180
+			i = i + 4;
+		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x11 && route[i+3] == 0x77){
+			s_flag = 0;
+			pass[p] = -6;							//a大回り左180
+			i = i + 4;
+		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x11){
+			s_flag = 0;
+			pass[p] = -7;							//a斜め右V45in
+			v_flag = 1;
+			i = i + 2;
+		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x77){
+			s_flag = 0;
+			pass[p] = -7;							//a斜め右V45out
+			v_flag = 0;
+			i = i + 2;
+		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x44){
+			s_flag = 0;
+			pass[p] = -8;							//a斜め左V45in
+			v_flag = 1;
+			i = i + 2;
+		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x77){
+			s_flag = 0;
+			pass[p] = -8;							//a斜め左V45out
+			v_flag = 0;
+			i = i + 2;
+		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x44 && route[i+2] == 0x11){
+			s_flag = 0;
+			pass[p] = -9;							//a斜め右V90
+			v_flag = 1;
+			i = i + 2;
+		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x11 && route[i+2] == 0x44){
+			s_flag = 0;
+			pass[p] = -10;							//a斜め左V90
+			v_flag = 1;
+			i = i + 2;
+		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x44 && route[i+3] == 0x11){
+			s_flag = 0;
+			pass[p] = -11;							//a斜め右V135in
+			v_flag = 1;
+			i = i + 3;
+		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x44 && route[i+2] == 0x11){
+			s_flag = 0;
+			pass[p] = -11;							//a斜め右V135out
+			v_flag = 0;
+			i = i + 3;
+		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x11 && route[i+3] == 0x44){
+			s_flag = 0;
+			pass[p] = -12;							//a斜め左V135in
+			v_flag = 1;
+			i = i + 3;
+		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x11 && route[i+2] == 0x44){
+			s_flag = 0;
+			pass[p] = -12;							//a斜め左V135out
+			v_flag = 0;
+			i = i + 3;
+		}else if(route[i] == 0xff){
+			pass[p] = -114;							//a終了用配列
+			i++;
+		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x11){
+			s_flag = 0;
+			pass[p] = 64;							//a斜め半直線
+			v_flag = 1;
+			i++;
+		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x44){
+			s_flag = 0;
+			pass[p] = 64;							//a斜め半直線
+			v_flag = 1;
+			i++;
+		}else if(route[i] == 0x44){
+			pass[p] = -1;							//a右スラローム
+			i++;
+		}else if(route[i] == 0x11){
+			pass[p] = -2;							//a左スラローム
+			i++;
+		}else if(route[i] == 0x77){
+			if(s_flag){
+				pass[p-1]++;						//aスラローム前半直線追加
+				p--;
+				s_flag = 0;
+				i++;
+			}else{
+				s++;
+				pass[p] = s;						//aもし半直線1つだけの場合whileには入らない
+				while(route[i+1] == 0x77){
+					s_flag = 1;
+					pass[p] = s;					//a半直線2つ以上続く場合、最後半直線は大回り用に残す
 					i++;
 					s++;
 				}

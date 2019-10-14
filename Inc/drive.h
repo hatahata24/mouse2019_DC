@@ -91,6 +91,7 @@ void half_sectionD(void);		//a減速半区画
 void half_sectionD2(void);		//a減速半区画High Speed
 void half_sectionD3(void);		//a減速半区画High High Speed
 void half_sectionU(void);		//a等速半区画
+void half_sectionV(void);		//a等速斜め半区画
 void one_section(void);			//a加減速一区画
 void one_sectionA(void);		//a加減速一区画
 void one_sectionA2(void);		//a加減速一区画High Speed
@@ -114,6 +115,8 @@ void Lslalom_R903(void);		//a大回りスラローム右90度High High Speed
 void Lslalom_L903(void);		//a大回りスラローム左90度High High Speed
 void Lslalom_R180(void);		//a大回りスラローム右180度
 void Lslalom_L180(void);		//a大回りスラローム左180度
+void Lslalom_R1802(void);		//a大回りスラローム右180度 High Speed
+void Lslalom_L1802(void);		//a大回りスラローム左180度 High Speed
 
 
 void v_R45(void);				//V45右
