@@ -111,7 +111,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		cnt_r = TIM8 -> CNT;
 		if(cnt_l > 40000) cnt_l = cnt_l - 65535;		//0=>65505の値飛び検出用
 		if(cnt_r > 40000) cnt_r = cnt_r - 65535;		//0=>65505の値飛び検出用
-		cnt_r = cnt_r * -1;								//回転方向合わせ
+		cnt_r = cnt_r * -1;								//a回転方向合わせ
 
 		dist_l = dist_l + cnt_l * (DIAMETER * M_PI * 11 / 40 / 4096 / 4);
 		dist_r = dist_r + cnt_r * (DIAMETER * M_PI * 11 / 40 / 4096 / 4);
@@ -238,11 +238,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					if(CTRL_BASE_L < dif_l || CTRL_BASE_R < dif_r){
 						if(CTRL_BASE_L < dif_l){
 							dwl_tmp += CTRL_CONT_W * 0.5 * dif_l;				//a比例制御値を決定
-							dwr_tmp += -1 * CTRL_CONT_W * dif_l;		//a比例制御値を決定
+							dwr_tmp += -1 * CTRL_CONT_W * dif_l;				//a比例制御値を決定
 						}
 						else if(CTRL_BASE_R < dif_r){
-							dwl_tmp += -1 * CTRL_CONT_W * dif_r;		//a比例制御値を決定
-							dwr_tmp += CTRL_CONT_W * dif_r;				//a比例制御値を決定
+							dwl_tmp += -1 * CTRL_CONT_W * 0.5 * dif_r;			//a比例制御値を決定
+							dwr_tmp += CTRL_CONT_W * dif_r;						//a比例制御値を決定
 						}
 						W_G_flag = 1;
 					}else{
@@ -276,7 +276,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
 					dg = CTRL_CONT_G * degree_z;				//a角度制御
 */
-					dg = CTRL_CONT_G * (degree_z - target_degree_z);		//角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
+					dg = CTRL_CONT_G * (degree_z - target_degree_z);		//a角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
 
 					dg = max(min(CTRL_MAX_G, dg), -1 * CTRL_MAX_G);
 					dgl = dg;
@@ -325,20 +325,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_ConfigChannel(&htim2, &ConfigOC, TIM_CHANNEL_4);
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
 			}
-/*			//wall check
-			//----look right----
-			if(ad_r > WALL_BASE_R){
-				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
-			}else{
-				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
-			}
-			//----look left----
-			if(ad_l > WALL_BASE_L){
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_SET);
-			}else{
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
-			}
-*/			//----look forward----
+			//wall check
+			//----look forward----
 			if(ad_fr > WALL_BASE_FR || ad_fl > WALL_BASE_FL){
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
 			}else{

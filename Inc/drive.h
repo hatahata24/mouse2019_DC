@@ -121,10 +121,24 @@ void Lslalom_L1802(void);		//a大回りスラローム左180度 High Speed
 
 void v_R45(void);				//V45右
 void v_L45(void);				//V45左
+void v_R45D(void);				//V45右ゴール用
+void v_L45D(void);				//V45左ゴール用
+void v_R452(void);				//V45右 High Speed
+void v_L452(void);				//V45左 High Speed
+void v_R45D2(void);				//V45右ゴール用 High Speed
+void v_L45D2(void);				//V45左ゴール用 High Speed
 void v_R90(void);				//V90右
 void v_L90(void);				//V90左
+void v_R902(void);				//V90右 High Speed
+void v_L902(void);				//V90左 High Speed
 void v_R135(void);				//V135右
 void v_L135(void);				//V135左
+void v_R135D(void);				//V135右ゴール用
+void v_L135D(void);				//V135左ゴール用
+void v_R1352(void);				//V135右 High Speed
+void v_L1352(void);				//V135左 High Speed
+void v_R135D2(void);			//V135右ゴール用 High Speed
+void v_L135D2(void);			//V135左ゴール用 High Speed
 
 
 //----a走行関数----

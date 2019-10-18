@@ -206,10 +206,11 @@ void searchC(){
 			case 0x22:
 				half_sectionD();
 				rotate_180();
-				if(wall_info & 0x88 && MF.FLAG.SCND == 0){
+				if(wall_info & 0x88){
 					set_position();
+				}else{
+					half_sectionA();
 				}
-				half_sectionA();
 				break;
 			//----a左折スラローム----
 			case 0x11:
@@ -270,7 +271,6 @@ void searchC2(){
 			//----a右折スラローム----
 			case 0x44:
 				slalom_R902();
-
 				break;
 			//----180回転----
 			case 0x22:
@@ -278,8 +278,9 @@ void searchC2(){
 				rotate_180();
 				if(wall_info & 0x88){
 					set_position();
+				}else{
+					half_sectionA2();
 				}
-				half_sectionA2();
 				break;
 			//----a左折スラローム----
 			case 0x11:
@@ -358,16 +359,16 @@ void searchD(){
 			//----a右折スラローム----
 			case 0x44:
 				slalom_R90();
-
 				break;
 			//----180回転----
 			case 0x22:
 				half_sectionD();
 				rotate_180();
-/*				if(wall_info & 0x88){
-					set_position2(0);
+				if(wall_info & 0x88){
+					set_position();
+				}else{
+					half_sectionA();
 				}
-*/				half_sectionA();
 				break;
 			//----a左折スラローム----
 			case 0x11:
@@ -515,10 +516,11 @@ void searchE(){
 			case 0x22:
 				half_sectionD();
 				rotate_180();
-/*				if(wall_info & 0x88){
-					set_position2(0);
+				if(wall_info & 0x88){
+					set_position();
+				}else{
+					half_sectionA();
 				}
-*/				half_sectionA();
 				break;
 				//----a左折----
 			case 0x11:
@@ -1015,6 +1017,108 @@ void searchF3(){
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
+//searchF32
+//aスラローム+既知区間加速+pass圧縮+機体方向&位置未更新+半区画ベース High Speedでgoal座標に進む
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchF32(){
+
+	if(MF.FLAG.SCND){
+		load_map_from_eeprom();
+	}
+
+	//====a1区画前進====
+	adv_pos();
+
+	//====a歩数マップ・経路作成====
+	make_smap();											//a歩数マップ作成
+	make_route();											//a最短経路探索（route配列に動作が格納される）
+
+	//====pass圧縮====
+	p_cnt = 0;												//a経路カウンタの初期化
+	pass_route2();
+
+	//====a前に壁が無い想定で問答無用で前進====
+	start_sectionA2();
+
+	H_accel_flag = 0;
+
+	//====a探索走行====
+	do{
+		//----a進行----
+		switch(pass[p_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
+			//----a右スラローム----
+			case -1:
+				slalom_R902();
+				break;
+
+			//----a左スラローム----
+			case -2:
+				slalom_L902();
+				break;
+
+			//----a大回り右90----
+			case -3:
+				Lslalom_R902();
+				break;
+
+			//----a大回り左90----
+			case -4:
+				Lslalom_L902();
+				break;
+
+			//----a大回り右180----
+			case -5:
+				Lslalom_R1802();
+				break;
+
+			//----a大回り左180----
+			case -6:
+				Lslalom_L1802();
+				break;
+
+			//----pass配列最後(なお本来呼び出される前にゴールする)----
+			case -114:
+				rotate_180();
+				rotate_180();
+				while(1);
+				break;
+
+			//----a前進----
+			default:
+				if(pass[p_cnt-1] < 4){
+					for(int k = 0; k < pass[p_cnt-1]; k++){
+						half_sectionU();
+					}
+				}else{
+					one_sectionA2();
+					H_accel_flag = 1;
+					int k;
+					for(k = 0; k < pass[p_cnt-1]-4; k++){
+						half_sectionU();
+					}
+					one_sectionD2();
+					H_accel_flag = 0;
+				}
+				break;
+		}
+//		adv_pos2(pass[p_cnt-1]);
+
+	}while(pass[p_cnt] != -114);
+
+	mouse.x = goal_x;
+	mouse.y = goal_y;
+
+	half_sectionD2();
+
+	HAL_Delay(500);
+	rotate_180();											//180度回転
+
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
 //searchF4
 //aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新+半区画ベース+斜め走行でgoal座標に進む
 //a引数：なし
@@ -1031,19 +1135,21 @@ void searchF4(){
 
 	//====a歩数マップ・経路作成====
 	make_smap();											//a歩数マップ作成
-	full_led_write(3);
 	make_route();											//a最短経路探索（route配列に動作が格納される）
 
 	//====pass圧縮====
 	p_cnt = 0;												//a経路カウンタの初期化
-	full_led_write(4);
 	pass_route3();
+
+	if(start_flag == 0){									//a大回りではない場合、先頭の半区画直進をスキップ
+		p_cnt++;
+	}
 
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
 
 	H_accel_flag = 0;
-
+	MF.FLAG.XDIR = 1;
 	//====a探索走行====
 	do{
 		//----a進行----
@@ -1081,13 +1187,11 @@ void searchF4(){
 			//----a斜め右V45----
 			case -7:
 				v_R45();
-				v_flag = (v_flag + 1) % 2;
 				break;
 
 			//----a斜め左V45----
 			case -8:
 				v_L45();
-				v_flag = (v_flag + 1) % 2;
 				break;
 
 			//----a斜め右V90----
@@ -1103,13 +1207,31 @@ void searchF4(){
 			//----a斜め右V135----
 			case -11:
 				v_R135();
-				v_flag = (v_flag + 1) % 2;
 				break;
 
 			//----a斜め左V135----
 			case -12:
 				v_L135();
-				v_flag = (v_flag + 1) % 2;
+				break;
+
+			//----a斜め右V45Goal----
+			case -13:
+				v_R45D();
+				break;
+
+			//----a斜め左V45Goal----
+			case -14:
+				v_L45D();
+				break;
+
+			//----a斜め右V135Goal----
+			case -15:
+				v_R135D();
+				break;
+
+			//----a斜め左V135Goal----
+			case -16:
+				v_L135D();
 				break;
 
 			//----pass配列最後(なお本来呼び出される前にゴールする)----
@@ -1145,7 +1267,11 @@ void searchF4(){
 	mouse.x = goal_x;
 	mouse.y = goal_y;
 
-	half_sectionD();
+	if(pass[p_cnt-1] != -13 && pass[p_cnt-1] != -14 && pass[p_cnt-1] != -15 && pass[p_cnt-1] != -16){
+		full_led_write(1);
+		half_sectionD();
+		full_led_write(3);
+	}
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
@@ -1542,7 +1668,7 @@ void make_smap(void){
 	smap[goal_y][goal_x] = 0;
 
 	//====a歩数カウンタの重みづけ====
-	int straight = 3;
+	int straight = 1;
 	int turn = 5;
 
 	//====a自分の座標にたどり着くまでループ====
@@ -1659,6 +1785,7 @@ void make_route(){
 		route[i] = 0xff;										//routeを0xffで初期化
 	}
 
+
 	//====a歩数カウンタをセット====
 	uint16_t m_step = smap[mouse.y][mouse.x];					//a現在座標の歩数マップ値を取得
 
@@ -1667,7 +1794,13 @@ void make_route(){
 	y = mouse.y;
 
 	//====a最短経路を導出====
-	i = 0;
+	if(pass_mode == 4){
+		route[0] = 0x77;
+		i = 1;
+	}else{
+		i = 0;
+	}
+
 	do{
 		uint8_t m_temp = map[y][x];								//a比較用マップ情報の格納
 		if(MF.FLAG.SCND){										//a二次走行用のマップを作成する場合（二次走行時はMF.FLAG.SCNDが立っている）
@@ -2243,6 +2376,12 @@ void pass_route3(void){
 	for(i = 0; i < 256; i++){
 		pass[i] = 0;								//pass配列の初期化
 	}
+/*
+	for(i = 255; i > 0; i--){						//aroute配列を1つ後ろにずらし、最初に半区画を追加
+		route[i+1] = route[i];
+	}
+	route[0] = 0x77;
+*/
 	uint8_t p = 0;									//pass配列の配列番号用変数
 	i = 0;
 	uint8_t s = 0;									//a直線数カウント用変数
@@ -2251,10 +2390,16 @@ void pass_route3(void){
 		if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x77){
 			s_flag = 0;
 			pass[p] = -3;							//a大回り右90
+			if(i == 0){								//aスタート時の走行モード切り替えフラグ
+				start_flag = 2;
+			}
 			i = i + 3;
 		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x77){
 			s_flag = 0;
 			pass[p] = -4;							//a大回り左90
+			if(i == 0){								//aスタート時の走行モード切り替えフラグ
+				start_flag = 2;
+			}
 			i = i + 3;
 		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x44 && route[i+3] == 0x77){
 			s_flag = 0;
@@ -2268,6 +2413,9 @@ void pass_route3(void){
 			s_flag = 0;
 			pass[p] = -7;							//a斜め右V45in
 			v_flag = 1;
+			if(i == 0){								//aスタート時の走行モード切り替えフラグ
+				start_flag = 2;
+			}
 			i = i + 2;
 		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x77){
 			s_flag = 0;
@@ -2298,8 +2446,11 @@ void pass_route3(void){
 			s_flag = 0;
 			pass[p] = -11;							//a斜め右V135in
 			v_flag = 1;
+			if(i == 0){								//aスタート時の走行モード切り替えフラグ
+				start_flag = 2;
+			}
 			i = i + 3;
-		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x44 && route[i+2] == 0x11){
+		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x44 && route[i+2] == 0x77){
 			s_flag = 0;
 			pass[p] = -11;							//a斜め右V135out
 			v_flag = 0;
@@ -2309,12 +2460,27 @@ void pass_route3(void){
 			pass[p] = -12;							//a斜め左V135in
 			v_flag = 1;
 			i = i + 3;
-		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x11 && route[i+2] == 0x44){
+		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x11 && route[i+2] == 0x77){
 			s_flag = 0;
 			pass[p] = -12;							//a斜め左V135out
 			v_flag = 0;
 			i = i + 3;
 		}else if(route[i] == 0xff){
+			if(v_flag == 1){
+				if(pass[p-1] == -1 && pass[p-2] == -1){
+					pass[p-2] = -15;
+					pass[p-1] = -114;
+				}else if(pass[p-1] == -2 && pass[p-2] == -2){
+					pass[p-2] = -16;
+					pass[p-1] = -114;
+				}else if(pass[p-1] == -1){
+					pass[p-1] = -13;
+					pass[p] = -114;
+				}else if(pass[p-1] == -2){
+					pass[p-1] = -14;
+					pass[p] = -114;
+				}
+			}
 			pass[p] = -114;							//a終了用配列
 			i++;
 		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x11){
