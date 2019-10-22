@@ -89,8 +89,8 @@
 #define sensor_wait 2500//2000//3500
 
 //----wall 判断----
-#define WALL_BASE_FR 	130//70//30				//FR
-#define WALL_BASE_FL 	230//80//75//80//70				//FL
+#define WALL_BASE_FR 	90//100//70//30				//FR
+#define WALL_BASE_FL 	200//230//80//75//80//70				//FL
 #define WALL_BASE_R		90//100//55				//R
 #define WALL_BASE_L 	90//100//45	     		//L
 

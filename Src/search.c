@@ -1142,7 +1142,7 @@ void searchF4(){
 	pass_route3();
 
 	if(start_flag == 0){									//a大回りではない場合、先頭の半区画直進をスキップ
-		p_cnt++;
+		pass[p_cnt]--;;
 	}
 
 	//====a前に壁が無い想定で問答無用で前進====
@@ -2376,12 +2376,6 @@ void pass_route3(void){
 	for(i = 0; i < 256; i++){
 		pass[i] = 0;								//pass配列の初期化
 	}
-/*
-	for(i = 255; i > 0; i--){						//aroute配列を1つ後ろにずらし、最初に半区画を追加
-		route[i+1] = route[i];
-	}
-	route[0] = 0x77;
-*/
 	uint8_t p = 0;									//pass配列の配列番号用変数
 	i = 0;
 	uint8_t s = 0;									//a直線数カウント用変数

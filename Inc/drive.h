@@ -156,5 +156,6 @@ void sample_course_run(void);	//a試験コース走行
 
 void perfect_run(void);			//a本番用走行
 void perfect_slalom(void);		//a本番用スラローム走行
+void perfect_pass(void);		//a本番用pass圧縮走行
 
 #endif /* DRIVE_H_ */

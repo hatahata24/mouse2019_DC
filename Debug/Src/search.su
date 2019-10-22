@@ -24,5 +24,5 @@ search.c:2004:6:make_smap2	24	static
 search.c:2074:6:pass_route	16	static
 search.c:2305:6:pass_route2	16	static
 search.c:2372:6:pass_route3	16	static
-search.c:2533:6:store_map_in_eeprom	16	static
-search.c:2554:6:load_map_from_eeprom	16	static
+search.c:2527:6:store_map_in_eeprom	16	static
+search.c:2548:6:load_map_from_eeprom	16	static

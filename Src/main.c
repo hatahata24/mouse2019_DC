@@ -539,10 +539,10 @@ int main(void)
 		  	  case 7:
 		  		  //----a本番走行用----
 		  		  //MF.FLAG.WEDGE = 1;
-		  		  for(int i=0; i<m_select; i++){
+/*		  		  for(int i=0; i<m_select; i++){
 		  			  buzzer(mario_select[i][0], mario_select[i][1]);
 		  		  }
-		  		  perfect_run();
+*/		  		  perfect_run();
 		  		  break;
 		  }
 	  }
