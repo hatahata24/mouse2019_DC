@@ -1625,7 +1625,8 @@ void turn_dir(uint8_t t_pat, uint8_t t_mode){
 		mouse.dir = (mouse.dir + t_pat) & 0x03;					//a指定された分mouse.dirを回転させる
 		if(t_mode == 1){
 			if(t_pat == 0x01) target_degree_z -= 90.5;			//a目標角度+右90度
-			if(t_pat == 0xff) target_degree_z += 90.5;			//a目標角度+左90度
+//			if(t_pat == 0xff) target_degree_z += 90.5;			//a目標角度+左90度
+			if(t_pat == 0xff) target_degree_z += 90.3;			//a目標角度+左90度
 			if(t_pat == 0x02) target_degree_z -= 181;			//a目標角度+右180度
 		}
 	}else{														//8方位モード

@@ -6,9 +6,12 @@
 #define TREAD 66
 
 //PID パラメータ
-#define Kp 2.5
+#define Kp 3
 #define Ti 1000
 #define Td 0
+#define Kp_o 3
+#define Ti_o 1000
+#define Td_o 0
 
 //====a走行系パラメータ====
 #define SEC_HALF 90.5
@@ -112,7 +115,7 @@
 #define DOO 2093
 
 //----goal 座標---
-#define GOAL_X 6	//7
-#define GOAL_Y 15	//7
+#define GOAL_X 9	//7
+#define GOAL_Y 6	//7
 
 #endif /* INC_PARAMS_H_ */

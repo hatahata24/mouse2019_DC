@@ -141,6 +141,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			if(get_cnt < log_allay){
 				get_speed_l[get_cnt] = speed_l;
 				get_speed_r[get_cnt] = speed_r;
+				get_omega[get_cnt] = gyro_read_z();
 				get_cnt++;
 			}
 		}
@@ -191,6 +192,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			target_omega_z = max(min(target_omega_z, omega_max), omega_min);
 			target_speed_l = speed_G + target_omega_z/180*M_PI*TREAD/2;
 			target_speed_r = speed_G - target_omega_z/180*M_PI*TREAD/2;
+
+			epsilon_l = target_speed_l - speed_l;
+			pulse_l = Kp * epsilon_l;
+			epsilon_r = target_speed_r - speed_r;
+			pulse_r = Kp * epsilon_r;
+		}
+
+		if(MF.FLAG.GYRO2){
+			target_omega_z += target_degaccel_z * 0.001;
+			target_omega_z = max(min(target_omega_z, omega_max), omega_min);
+
+			epsilon_omega = target_omega_z - gyro_read_z();
+
+			target_speed_l = speed_G - (target_omega_z + Kp_o*epsilon_omega)/180*M_PI*TREAD/2;
+			target_speed_r = speed_G + (target_omega_z + Kp_o*epsilon_omega)/180*M_PI*TREAD/2;
 
 			epsilon_l = target_speed_l - speed_l;
 			pulse_l = Kp * epsilon_l;

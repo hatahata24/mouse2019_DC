@@ -27,6 +27,10 @@
 
 	volatile int get_speed_l[log_allay];
 	volatile int get_speed_r[log_allay];
+	volatile int get_omega[log_allay];
+
+	volatile float epsilon_omega;
+
 #else												//main.c以外からこのファイルが呼ばれている場合
 	/*aグローバル変数の宣言*/
 	//====a物理量走行関連====
@@ -51,6 +55,9 @@
 
 	extern volatile int get_speed_l[log_allay];
 	extern volatile int get_speed_r[log_allay];
+	extern volatile int get_omega[log_allay];
+
+	extern volatile float epsilon_omega;
 #endif
 
 
