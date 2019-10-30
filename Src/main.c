@@ -159,12 +159,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			gyro_cnt ++;
 			if(gyro_cnt >= 2)dif_omega_z += old_omega_z - gyro_read_z();
 			old_omega_z = gyro_read_z();
-			full_led_write(6);
+			full_led_write(YELLOW);
 			if(gyro_cnt >= 1001) {
 				gyro_drift_flag = 0;
 				gyro_drift_value = dif_omega_z / gyro_cnt-1;
 				gyro_cnt = 0;
-				full_led_write(4);
+				full_led_write(BLUEGREEN);
 			}
 			degree_z = 0;
 			target_degree_z = 0;
@@ -190,8 +190,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		if(MF.FLAG.GYRO){
 			target_omega_z += target_degaccel_z * 0.001;
 			target_omega_z = max(min(target_omega_z, omega_max), omega_min);
-			target_speed_l = speed_G + target_omega_z/180*M_PI*TREAD/2;
-			target_speed_r = speed_G - target_omega_z/180*M_PI*TREAD/2;
+			target_speed_l = speed_G - target_omega_z/180*M_PI*TREAD/2;
+			target_speed_r = speed_G + target_omega_z/180*M_PI*TREAD/2;
 
 			epsilon_l = target_speed_l - speed_l;
 			pulse_l = Kp * epsilon_l;
@@ -394,7 +394,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			while(1){
 			   drive_dir(0, 2);
 			   drive_dir(1, 2);
-			   full_led_write(1);
+			   full_led_write(RED);
 		   }
 		}
 	}

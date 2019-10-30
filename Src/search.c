@@ -190,13 +190,40 @@ void searchC(){
 	make_smap();											//a歩数マップ作成
 	make_route();											//a最短経路探索（route配列に動作が格納される）
 
+	//====aマウス位置保存用変数を宣言
+	uint8_t x, y;											//X，Y座標
+
 	//====a探索走行====
 	do{
 		//----a進行----
 		switch(route[r_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
 			//----a前進----
 			case 0x88:
-				one_sectionU();
+				if(route[r_cnt] == 0x88 && MF.FLAG.ACCL2){
+					x = mouse.x;
+					y = mouse.y;
+					adv_pos();
+					if((map[mouse.y][mouse.x] & 0x0f) == (map[mouse.y][mouse.x]>>4)){
+						if(!H_accel_flag){
+							one_sectionA();
+							H_accel_flag = 1;
+						}else{
+							one_sectionU();
+						}
+					}else if(H_accel_flag){
+						one_sectionD();
+						H_accel_flag = 0;
+					}else{
+						one_sectionU();
+					}
+					mouse.x = x;
+					mouse.y = y;
+				}else if(H_accel_flag){
+					one_sectionD();
+					H_accel_flag = 0;
+				}else{
+					one_sectionU();
+				}
 				break;
 			//----a右折スラローム----
 			case 0x44:
@@ -226,6 +253,9 @@ void searchC(){
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
+	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+	degree_z = target_degree_z;
+	start_flag = 0;
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -296,6 +326,9 @@ void searchC2(){
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
+	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+	degree_z = target_degree_z;
+	start_flag = 0;
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -384,6 +417,9 @@ void searchD(){
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
+	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+	degree_z = target_degree_z;
+	start_flag = 0;
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -469,6 +505,9 @@ void searchD2(){
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
+	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+	degree_z = target_degree_z;
+	start_flag = 0;
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -725,7 +764,7 @@ void searchF(){
 					}
 					one_sectionD();
 					H_accel_flag = 0;
-					full_led_write(3);
+					full_led_write(BLUE);
 				}
 				break;
 		}
@@ -895,7 +934,7 @@ void searchF2(){
 					}
 					one_sectionD();
 					H_accel_flag = 0;
-					full_led_write(3);
+					full_led_write(BLUE);
 				}
 				break;
 		}
@@ -1012,6 +1051,9 @@ void searchF3(){
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
+	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+	degree_z = target_degree_z;
+	start_flag = 0;
 
 }
 
@@ -1114,6 +1156,9 @@ void searchF32(){
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
+	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+	degree_z = target_degree_z;
+	start_flag = 0;
 
 }
 
@@ -1141,8 +1186,8 @@ void searchF4(){
 	p_cnt = 0;												//a経路カウンタの初期化
 	pass_route3();
 
-	if(start_flag == 0){									//a大回りではない場合、先頭の半区画直進をスキップ
-		pass[p_cnt]--;;
+	if(start_flag == 0 || start_flag == 1){									//a大回りではない場合、先頭の半区画直進をスキップ
+		pass[p_cnt]--;
 	}
 
 	//====a前に壁が無い想定で問答無用で前進====
@@ -1268,13 +1313,15 @@ void searchF4(){
 	mouse.y = goal_y;
 
 	if(pass[p_cnt-1] != -13 && pass[p_cnt-1] != -14 && pass[p_cnt-1] != -15 && pass[p_cnt-1] != -16){
-		full_led_write(1);
 		half_sectionD();
-		full_led_write(3);
+		full_led_write(BLUE);
 	}
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
+	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+	degree_z = target_degree_z;
+	start_flag = 0;
 
 	mouse.dir = mouse.dir / 2;
 
@@ -1670,7 +1717,7 @@ void make_smap(void){
 
 	//====a歩数カウンタの重みづけ====
 	int straight = 1;
-	int turn = 5;
+	int turn = 10;
 
 	//====a自分の座標にたどり着くまでループ====
 	do{
