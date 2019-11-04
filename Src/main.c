@@ -155,7 +155,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		degree_z += gyro_read_z() * 0.001;
 
 		//gyro ドリフト量計算
-		if(gyro_drift_flag == 1){
+		if(gyro_drift_flag){
 			gyro_cnt ++;
 			if(gyro_cnt >= 2)dif_omega_z += old_omega_z - gyro_read_z();
 			old_omega_z = gyro_read_z();
@@ -171,7 +171,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 
-		if(MF.FLAG.ENKAI){
+		if(enkai_flag){
 			target_dist = TREAD*M_PI/360*(degree_z-target_degree_z);
 			if(target_dist > 0){
 				target_speed_l = sqrt(2*accel_l*target_dist);
@@ -187,6 +187,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			pulse_r = Kp * epsilon_r;
 		}
 
+
+		if(MF.FLAG.FWALL){
+			pulse_l = (OFFSET_FWALL_L - ad_fl) * 0.04;
+			pulse_r = (OFFSET_FWALL_R - ad_fr) * 0.08;
+			pulse_l = min(max(pulse_l, -100), 100);
+			pulse_r = min(max(pulse_r, -100), 100);
+
+		}
+
+
 		if(MF.FLAG.GYRO){
 			target_omega_z += target_degaccel_z * 0.001;
 			target_omega_z = max(min(target_omega_z, omega_max), omega_min);
@@ -198,6 +208,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			epsilon_r = target_speed_r - speed_r;
 			pulse_r = Kp * epsilon_r;
 		}
+
 
 		if(MF.FLAG.GYRO2){
 			target_omega_z += target_degaccel_z * 0.001;
@@ -246,26 +257,48 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		  case 2:
 				//
-				if(MF.FLAG.WCTRL && v_flag == 0){
-					int16_t dwl_tmp = 0, dwr_tmp = 0;
-					dif_l = (int32_t) ad_l - base_l;
-					dif_r = (int32_t) ad_r - base_r;
+				if(MF.FLAG.WCTRL){
+					if(!v_flag){
+						int16_t dwl_tmp = 0, dwr_tmp = 0;
+						dif_l = (int32_t) ad_l - base_l;
+						dif_r = (int32_t) ad_r - base_r;
 
-					if(CTRL_BASE_L < dif_l || CTRL_BASE_R < dif_r){
-						if(CTRL_BASE_L < dif_l){
-							dwl_tmp += CTRL_CONT_W * 0.5 * dif_l;				//a比例制御値を決定
-							dwr_tmp += -1 * CTRL_CONT_W * dif_l;				//a比例制御値を決定
+						if(CTRL_BASE_L < dif_l || CTRL_BASE_R < dif_r){
+							if(CTRL_BASE_L < dif_l){
+								dwl_tmp += CTRL_CONT_W * 0.5 * dif_l;				//a比例制御値を決定
+								dwr_tmp += -1 * CTRL_CONT_W * 0.5 * dif_l;			//a比例制御値を決定
+							}
+							else if(CTRL_BASE_R < dif_r){
+								dwl_tmp += -1 * CTRL_CONT_W * dif_r;				//a比例制御値を決定
+								dwr_tmp += CTRL_CONT_W * dif_r;						//a比例制御値を決定
+							}
+							W_G_flag = 1;
+						}else{
+							W_G_flag = 0;
 						}
-						else if(CTRL_BASE_R < dif_r){
-							dwl_tmp += -1 * CTRL_CONT_W * 0.5 * dif_r;			//a比例制御値を決定
-							dwr_tmp += CTRL_CONT_W * dif_r;						//a比例制御値を決定
-						}
-						W_G_flag = 1;
+						dwl = max(min(CTRL_MAX_W, dwl_tmp), -1 * CTRL_MAX_W);
+						dwr = max(min(CTRL_MAX_W, dwr_tmp), -1 * CTRL_MAX_W);
 					}else{
-						W_G_flag = 0;
+						int16_t dwl_tmp = 0, dwr_tmp = 0;
+						dif_l = (int32_t) ad_fl - BASE_FL;
+						dif_r = (int32_t) ad_fr - BASE_FR;
+
+						if(CTRL_BASE_FL < dif_l || CTRL_BASE_FR < dif_r){
+							if(CTRL_BASE_FL < dif_l){
+								dwl_tmp += CTRL_CONT_W * 0.1 * dif_l;				//a比例制御値を決定
+								dwr_tmp += -1 * CTRL_CONT_W * 0.1 * dif_l;				//a比例制御値を決定
+							}
+							else if(CTRL_BASE_FR < dif_r){
+								dwl_tmp += -1 * CTRL_CONT_W * 0.2 * dif_r;			//a比例制御値を決定
+								dwr_tmp += CTRL_CONT_W * 0.2 * dif_r;						//a比例制御値を決定
+							}
+							W_G_flag = 1;
+						}else{
+							W_G_flag = 0;
+						}
+						dwl = max(min(CTRL_MAX_W, dwl_tmp), -1 * CTRL_MAX_W);
+						dwr = max(min(CTRL_MAX_W, dwr_tmp), -1 * CTRL_MAX_W);
 					}
-					dwl = max(min(CTRL_MAX_W, dwl_tmp), -1 * CTRL_MAX_W);
-					dwr = max(min(CTRL_MAX_W, dwr_tmp), -1 * CTRL_MAX_W);
 				}else{
 					//a制御フラグがなければ壁制御値0
 					dwl = dwr = 0;
@@ -558,7 +591,8 @@ int main(void)
 /*		  		  for(int i=0; i<m_select; i++){
 		  			  buzzer(mario_select[i][0], mario_select[i][1]);
 		  		  }
-*/		  		  perfect_run();
+*///		  		  perfect_run();
+		  		  perfect_slalom();
 		  		  break;
 		  }
 	  }

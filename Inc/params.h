@@ -14,7 +14,7 @@
 #define Td_o 0
 
 //====a走行系パラメータ====
-#define SEC_HALF 90.5
+#define SEC_HALF 91//90.5
 #define SEC_HALF_V 130
 #define SEC_START 125
 #define SEC_START_HALF 35.5
@@ -24,6 +24,11 @@
 #define SPEED_MIN 50
 #define SPEED_HIGH 800
 #define SPEED_HIGH_HIGH 1200
+
+#define SLOW 1
+#define MIDDLE 2
+#define HIGH 3
+
 
 //aセットポジション距離
 #define SETPOS_BACK 100
@@ -84,31 +89,31 @@
 #define V_DEG (V_OMEGA*V_OMEGA/V_DEGACCEL/2)
 
 #define V_H_OFFSET_F 23
-#define V_H_OFFSET_B 60
+#define V_H_OFFSET_B 80//60
 #define V_H_DEGACCEL 8000
 #define V_H_OMEGA 400
 #define V_H_DEG (V_H_OMEGA*V_H_OMEGA/V_H_DEGACCEL/2)
 
-#define VV_OFFSET_F 45
-#define VV_OFFSET_B 45
+#define VV_OFFSET_F 50//45//40
+#define VV_OFFSET_B 50//45//40
 #define VV_DEGACCEL 3500
 #define VV_OMEGA 350
 #define VV_DEG (VV_OMEGA*VV_OMEGA/VV_DEGACCEL/2)
 
 #define VV_H_OFFSET_F 35
-#define VV_H_OFFSET_B 35
+#define VV_H_OFFSET_B 65//35
 #define VV_H_DEGACCEL 10000
 #define VV_H_OMEGA 800
 #define VV_H_DEG (VV_H_OMEGA*VV_H_OMEGA/VV_H_DEGACCEL/2)
 
-#define VVV_OFFSET_F 65
-#define VVV_OFFSET_B 48
+#define VVV_OFFSET_F 70//65
+#define VVV_OFFSET_B 58//48
 #define VVV_DEGACCEL 3000
 #define VVV_OMEGA 300
 #define VVV_DEG (VVV_OMEGA*VVV_OMEGA/VVV_DEGACCEL/2)
 
-#define VVV_H_OFFSET_F 80
-#define VVV_H_OFFSET_B 65
+#define VVV_H_OFFSET_F 120//80
+#define VVV_H_OFFSET_B 70//65
 #define VVV_H_DEGACCEL 8000
 #define VVV_H_OMEGA 800
 #define VVV_H_DEG (VVV_H_OMEGA*VVV_H_OMEGA/VVV_H_DEGACCEL/2)
@@ -139,18 +144,28 @@
 #define CTRL_MAX_W		1000			//control value max
 #define CTRL_CONT_W		0.5F//0.1F//1//0.8F			//Proportional C
 
+//----a停止時前壁補正----
+#define OFFSET_FWALL_R 600
+#define OFFSET_FWALL_L 1200
+
 //----aスラローム前壁補正----
-#define SLALOM_WALL_R 225
-#define SLALOM_WALL_L 450
+#define SLALOM_WALL_FR 250//225
+#define SLALOM_WALL_FL 500//450
 
-#define SLALOM_H_WALL_R 195
-#define SLALOM_H_WALL_L 390
+#define SLALOM_H_WALL_R 400//190
+#define SLALOM_H_WALL_L 800//380
 
-#define LSLALOM_WALL_R 100//225
-#define LSLALOM_WALL_L 200//450
+#define LSLALOM_WALL_FR 100//225
+#define LSLALOM_WALL_FL 200//450
 
 #define LSLALOM_H_WALL_R 100//225
 #define LSLALOM_H_WALL_L 200//450
+
+//----斜め時柱補正----
+#define BASE_FR 300
+#define BASE_FL 600
+#define CTRL_BASE_FR 200
+#define CTRL_BASE_FL 400
 
 //----a壁切れ後長さ----
 #define W_DIST 70
@@ -178,7 +193,7 @@
 
 
 //----goal 座標---
-#define GOAL_X 9	//7
-#define GOAL_Y 6	//7
+#define GOAL_X 7	//7
+#define GOAL_Y 7	//7
 
 #endif /* INC_PARAMS_H_ */

@@ -24,12 +24,15 @@
 	volatile int16_t accel_hs, speed_max_hs;		//a既知区間加速時使用
 
 	volatile uint8_t start_flag;
+	volatile uint8_t enkai_flag;
 
 	volatile int get_speed_l[log_allay];
 	volatile int get_speed_r[log_allay];
 	volatile int get_omega[log_allay];
 
 	volatile float epsilon_omega;
+
+	volatile uint8_t run_mode;
 
 #else												//main.c以外からこのファイルが呼ばれている場合
 	/*aグローバル変数の宣言*/
@@ -52,12 +55,15 @@
 	extern volatile int16_t accel_hs, speed_max_hs;	//a既知区間加速時使用
 
 	extern volatile uint8_t start_flag;
+	extern volatile uint8_t enkai_flag;
 
 	extern volatile int get_speed_l[log_allay];
 	extern volatile int get_speed_r[log_allay];
 	extern volatile int get_omega[log_allay];
 
 	extern volatile float epsilon_omega;
+
+	extern volatile uint8_t run_mode;
 #endif
 
 
@@ -106,6 +112,10 @@ void one_sectionA3(void);		//a加減速一区画High High Speed
 void one_sectionD(void);		//a加減速一区画
 void one_sectionD2(void);		//a加減速一区画High Speed
 void one_sectionD3(void);		//a加減速一区画High High Speed
+void one_sectionVA(void);		//a加速斜め一区画
+void one_sectionVA2(void);		//a加速斜め一区画 High Speed
+void one_sectionVD(void);		//a減速斜め一区画
+void one_sectionVD2(void);		//a減速斜め一区画 High Speed
 void one_sectionU(void);		//a等速一区画
 void rotate_R90(void);			//a右90回転
 void rotate_L90(void);			//a左90回転

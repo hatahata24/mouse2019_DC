@@ -24,7 +24,7 @@ typedef union {					//
 		uint16_t GCTRL:1;		//aジャイロ制御 flag(B4)
 		uint16_t SCND:1;		//a二次走行 flag(B5)
 		uint16_t LOG:1;			//aログ flag(B6)
-		uint16_t ENKAI:1;		//a宴会芸 flag(B7)
+		uint16_t FWALL:1;		//a停止時前壁減製 flag(B7)
 		uint16_t GYRO:1;		//a旋回角速度計算 flag(B8)
 		uint16_t ACCL2:1;		//a既知区間加速 flag(B9)
 		uint16_t STRAIGHT:1;	//a直線優先 flag(B10)

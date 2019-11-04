@@ -104,6 +104,7 @@ void searchF2();										//aスラローム+既知区間加速+pass圧縮+機�
 void searchF3();										//aスラローム+既知区間加速探索走行+pass圧縮+機体方向&位置未更新+半区画ベース
 void searchF32();										//aスラローム+既知区間加速探索走行+pass圧縮+機体方向&位置未更新+半区画ベース HighSpeed
 void searchF4();										//aスラローム+既知区間加速探索走行+pass圧縮+機体方向&位置未更新+半区画ベース+斜め
+void searchF42();										//aスラローム+既知区間加速探索走行+pass圧縮+機体方向&位置未更新+半区画ベース+斜め HighSpeed
 
 
 void adv_pos();											//aマウスの位置情報を前進

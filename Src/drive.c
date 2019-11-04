@@ -444,6 +444,32 @@ void one_sectionD(void){
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
+//one_sectionVA
+// 等速で斜め半区画分進む
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_sectionVA(void){
+	full_led_write(BLUEGREEN);
+	control_start();
+	driveA(accel_hs, SPEED_RUN, speed_max_hs, SEC_HALF_V*2);				//1区画分加速走行。走行後は停止しない
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//one_sectionVD
+// 等速で斜め半区画分進む
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_sectionVD(void){
+	full_led_write(BLUE);
+	control_start();
+	driveD(-1*accel_hs, SPEED_RUN, speed_max_hs, SEC_HALF_V*2);			//1区画分減速走行。走行後は停止しない
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
 //one_sectionA2
 // 1区画分加速する
 // 引数：なし
@@ -468,6 +494,32 @@ void one_sectionD2(void){
 	control_start();
 	driveD(-1*accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF*2);			//1区画分減速走行。走行後は停止しない
 	if(MF.FLAG.SCND == 0)get_wall_info();								//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//one_sectionVA2
+// 等速で斜め半区画分進む
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_sectionVA2(void){
+	full_led_write(BLUEGREEN);
+	control_start();
+	driveA(accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF_V*2);				//1区画分加速走行。走行後は停止しない
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//one_sectionVD2
+// 等速で斜め半区画分進む
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void one_sectionVD2(void){
+	full_led_write(BLUE);
+	control_start();
+	driveD(-1*accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF_V*2);			//1区画分減速走行。走行後は停止しない
 }
 
 
@@ -606,7 +658,10 @@ void slalom_R90(void){
 	dist_l = dist_r = 0;
 //	while(dist_l < SLALOM_OFFSET_F && dist_r < SLALOM_OFFSET_F);
 	while(dist_l < SLALOM_OFFSET_F && dist_r < SLALOM_OFFSET_F){
-		if(ad_fl > SLALOM_WALL_L && ad_fr > SLALOM_WALL_R) break;
+		if(ad_fl > SLALOM_WALL_FL && ad_fr > SLALOM_WALL_FR){
+			full_led_write(RED);
+			break;
+		}
 	}
 	drive_stop();
 	control_stop();
@@ -672,7 +727,10 @@ void slalom_L90(void){
 	dist_l = dist_r = 0;
 //	while(dist_l < SLALOM_OFFSET_F && dist_r < SLALOM_OFFSET_F);
 	while(dist_l < SLALOM_OFFSET_F && dist_r < SLALOM_OFFSET_F){
-		if(ad_fl > SLALOM_WALL_L && ad_fr > SLALOM_WALL_R) break;
+		if(ad_fl > SLALOM_WALL_FL && ad_fr > SLALOM_WALL_FR){
+			full_led_write(RED);
+			break;
+		}
 	}
 	drive_stop();
 	control_stop();
@@ -737,7 +795,10 @@ void slalom_R902(void){
 	dist_l = dist_r = 0;
 //	while(dist_l < SLALOM_H_OFFSET_F && dist_r < SLALOM_H_OFFSET_F);
 	while(dist_l < SLALOM_H_OFFSET_F && dist_r < SLALOM_H_OFFSET_F){
-		if(ad_fl > SLALOM_H_WALL_L && ad_fr > SLALOM_H_WALL_R) break;
+		if(ad_fl > SLALOM_H_WALL_L && ad_fr > SLALOM_H_WALL_R){
+			full_led_write(RED);
+			break;
+		}
 	}
 	drive_stop();
 	control_stop();
@@ -803,7 +864,10 @@ void slalom_L902(void){
 	dist_l = dist_r = 0;
 //	while(dist_l < SLALOM_H_OFFSET_F && dist_r < SLALOM_H_OFFSET_F);
 	while(dist_l < SLALOM_OFFSET_F && dist_r < SLALOM_OFFSET_F){
-		if(ad_l > SLALOM_WALL_L && ad_r > SLALOM_WALL_R) break;
+		if(ad_l > SLALOM_WALL_FL && ad_r > SLALOM_WALL_FR) {
+			full_led_write(RED);
+			break;
+		}
 	}
 	drive_stop();
 	control_stop();
@@ -1709,9 +1773,9 @@ void v_L45D(void){
 	control_start();
 	dist_l = dist_r = 0;
 	if(v_flag == 0){
-		while(dist_l < V_OFFSET_F && dist_r < V_OFFSET_F);
+		while(dist_l < V_OFFSET_F+15 && dist_r < V_OFFSET_F+15);
 	}else{
-		while(dist_l < V_OFFSET_B && dist_r < V_OFFSET_B);
+		while(dist_l < V_OFFSET_B+5 && dist_r < V_OFFSET_B+5);
 	}
 	drive_stop();
 	control_stop();
@@ -1750,9 +1814,9 @@ void v_L45D(void){
 	MF.FLAG.SPD = 1;
 	control_start();
 	if(v_flag == 0){
-		while(dist_l < V_OFFSET_F-10 && dist_r < V_OFFSET_F-10);
+		while(dist_l < V_OFFSET_F+5 && dist_r < V_OFFSET_F+5);
 	}else{
-		while(dist_l < V_OFFSET_B-10 && dist_r < V_OFFSET_B-10);
+		while(dist_l < V_OFFSET_B-5 && dist_r < V_OFFSET_B-5);
 	}
 
 	control_start();
@@ -1790,7 +1854,7 @@ void v_R452(void){
 	if(v_flag == 0){
 		while(dist_l < V_H_OFFSET_F && dist_r < V_H_OFFSET_F);
 	}else{
-		while(dist_l < V_H_OFFSET_B && dist_r < V_H_OFFSET_B);
+		while(dist_l < V_H_OFFSET_B-18 && dist_r < V_H_OFFSET_B-18);
 	}
 	drive_stop();
 	control_stop();
@@ -1810,7 +1874,7 @@ void v_R452(void){
 	target_degaccel_z = 0;
 
 //	while(degree_z > target_degree_z-40);
-	while(degree_z > target_degree_z-(45-V_DEG+2));
+	while(degree_z > target_degree_z-(45-V_H_DEG+2));
 
 	target_degaccel_z = V_H_DEGACCEL;
 
@@ -1829,7 +1893,7 @@ void v_R452(void){
 	MF.FLAG.SPD = 1;
 	control_start();
 	if(v_flag == 0){
-		while(dist_l < V_H_OFFSET_F && dist_r < V_H_OFFSET_F);
+		while(dist_l < V_H_OFFSET_F+10 && dist_r < V_H_OFFSET_F+10);
 	}else{
 		while(dist_l < V_H_OFFSET_B && dist_r < V_H_OFFSET_B);
 	}
@@ -1857,7 +1921,7 @@ void v_L452(void){
 	if(v_flag == 0){
 		while(dist_l < V_H_OFFSET_F && dist_r < V_H_OFFSET_F);
 	}else{
-		while(dist_l < V_H_OFFSET_B && dist_r < V_H_OFFSET_B);
+		while(dist_l < V_H_OFFSET_B-12 && dist_r < V_H_OFFSET_B-12);
 	}
 	drive_stop();
 	control_stop();
@@ -1877,7 +1941,7 @@ void v_L452(void){
 	target_degaccel_z = 0;
 
 //	while(degree_z < target_degree_z+40);
-	while(degree_z < target_degree_z+(45-V_DEG+2));
+	while(degree_z < target_degree_z+(45-V_H_DEG+2));
 
 	target_degaccel_z = -V_H_DEGACCEL;
 
@@ -1896,9 +1960,9 @@ void v_L452(void){
 	MF.FLAG.SPD = 1;
 	control_start();
 	if(v_flag == 0){
-		while(dist_l < V_H_OFFSET_F && dist_r < V_H_OFFSET_F);
+		while(dist_l < V_H_OFFSET_F+35 && dist_r < V_H_OFFSET_F+35);
 	}else{
-		while(dist_l < V_H_OFFSET_B && dist_r < V_H_OFFSET_B);
+		while(dist_l < V_H_OFFSET_B+20 && dist_r < V_H_OFFSET_B+20);
 	}
 }
 
@@ -1924,7 +1988,7 @@ void v_R45D2(void){
 	if(v_flag == 0){
 		while(dist_l < V_H_OFFSET_F && dist_r < V_H_OFFSET_F);
 	}else{
-		while(dist_l < V_H_OFFSET_B && dist_r < V_H_OFFSET_B);
+		while(dist_l < V_H_OFFSET_B-18 && dist_r < V_H_OFFSET_B-18);
 	}
 	drive_stop();
 	control_stop();
@@ -1963,9 +2027,9 @@ void v_R45D2(void){
 	MF.FLAG.SPD = 1;
 	control_start();
 	if(v_flag == 0){
-		while(dist_l < V_OFFSET_F-10 && dist_r < V_OFFSET_F-10);
+		while(dist_l < V_H_OFFSET_F+20 && dist_r < V_H_OFFSET_F+20);
 	}else{
-		while(dist_l < V_OFFSET_B-10 && dist_r < V_OFFSET_B-10);
+		while(dist_l < V_H_OFFSET_B-10 && dist_r < V_H_OFFSET_B-10);
 	}
 
 	control_start();
@@ -2001,9 +2065,9 @@ void v_L45D2(void){
 	control_start();
 	dist_l = dist_r = 0;
 	if(v_flag == 0){
-		while(dist_l < V_OFFSET_F && dist_r < V_OFFSET_F);
+		while(dist_l < V_H_OFFSET_F && dist_r < V_H_OFFSET_F);
 	}else{
-		while(dist_l < V_OFFSET_B && dist_r < V_OFFSET_B);
+		while(dist_l < V_H_OFFSET_B-12 && dist_r < V_H_OFFSET_B-12);
 	}
 	drive_stop();
 	control_stop();
@@ -2011,9 +2075,9 @@ void v_L45D2(void){
 //	MF.FLAG.GYRO = 1;
 	MF.FLAG.GYRO2 = 1;
 
-	target_degaccel_z = V_DEGACCEL;
+	target_degaccel_z = V_H_DEGACCEL;
 	target_omega_z = 0;
-	omega_max = V_OMEGA;
+	omega_max = V_H_OMEGA;
 	speed_G = SPEED_HIGH;
 
 	MF.FLAG.DRV = 1;
@@ -2025,7 +2089,7 @@ void v_L45D2(void){
 //	while(degree_z < target_degree_z+40);
 	while(degree_z < target_degree_z+(45-V_H_DEG+2));
 
-	target_degaccel_z = -V_DEGACCEL;
+	target_degaccel_z = -V_H_DEGACCEL;
 
 	while(degree_z > target_degree_z+45);
 	turn_dir(DIR_TURN_L45_8, 3);									//aマイクロマウス内部位置情報でも左回転処理
@@ -2042,9 +2106,9 @@ void v_L45D2(void){
 	MF.FLAG.SPD = 1;
 	control_start();
 	if(v_flag == 0){
-		while(dist_l < V_OFFSET_F-10 && dist_r < V_OFFSET_F-10);
+		while(dist_l < V_H_OFFSET_F+25 && dist_r < V_H_OFFSET_F+25);
 	}else{
-		while(dist_l < V_OFFSET_B-10 && dist_r < V_OFFSET_B-10);
+		while(dist_l < V_H_OFFSET_B+10 && dist_r < V_H_OFFSET_B+10);
 	}
 
 	control_start();
@@ -2185,7 +2249,7 @@ void v_L90(void){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void v_R902(void){
 
-	full_led_write(PURPLE);
+	full_led_write(YELLOW);
 	MF.FLAG.GYRO = 0;
 
 	accel_l = 10000;
@@ -2202,9 +2266,9 @@ void v_R902(void){
 //	MF.FLAG.GYRO = 1;
 	MF.FLAG.GYRO2 = 1;
 
-	target_degaccel_z = -VV_DEGACCEL;
+	target_degaccel_z = -VV_H_DEGACCEL;
 	target_omega_z = 0;
-	omega_min = -VV_OMEGA;
+	omega_min = -VV_H_OMEGA;
 	speed_G = SPEED_HIGH;
 
 	MF.FLAG.DRV = 1;
@@ -2216,10 +2280,10 @@ void v_R902(void){
 //	while(degree_z > target_degree_z-75);
 	while(degree_z > target_degree_z-(90-VV_H_DEG+2));
 
-	target_degaccel_z = VV_DEGACCEL;
+	target_degaccel_z = VV_H_DEGACCEL;
 
 	while(degree_z > target_degree_z-90);
-	turn_dir(DIR_TURN_R90_8, 3);									//aマイクロマウス内部位置情報でも左回転処理
+	turn_dir(DIR_TURN_R90_8, 3);									//マイクロマウス内部位置情報でも左回転処理
 
 //	MF.FLAG.GYRO = 0;
 	MF.FLAG.GYRO2 = 0;
@@ -2243,7 +2307,7 @@ void v_R902(void){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void v_L902(void){
 
-	full_led_write(YELLOW);
+	full_led_write(PURPLE);
 	MF.FLAG.GYRO = 0;
 
 	accel_l = 10000;
@@ -2260,9 +2324,9 @@ void v_L902(void){
 //	MF.FLAG.GYRO = 1;
 	MF.FLAG.GYRO2 = 1;
 
-	target_degaccel_z = VV_DEGACCEL;
+	target_degaccel_z = VV_H_DEGACCEL;
 	target_omega_z = 0;
-	omega_max = VV_OMEGA;
+	omega_max = VV_H_OMEGA;
 	speed_G = SPEED_HIGH;
 
 	MF.FLAG.DRV = 1;
@@ -2274,7 +2338,7 @@ void v_L902(void){
 //	while(degree_z < target_degree_z+75);
 	while(degree_z < target_degree_z+(90-VV_H_DEG+2));
 
-	target_degaccel_z = -VV_DEGACCEL;
+	target_degaccel_z = -VV_H_DEGACCEL;
 
 	while(degree_z < target_degree_z+90);
 	turn_dir(DIR_TURN_L90_8, 3);									//aマイクロマウス内部位置情報でも左回転処理
@@ -2435,7 +2499,7 @@ void v_L135(void){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void v_R135D(void){
 
-	full_led_write(PURPLE);
+	full_led_write(YELLOW);
 	MF.FLAG.GYRO = 0;
 
 	accel_l = 10000;
@@ -2514,7 +2578,7 @@ void v_R135D(void){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void v_L135D(void){
 
-	full_led_write(YELLOW);
+	full_led_write(PURPLE);
 	MF.FLAG.GYRO = 0;
 
 	accel_l = 10000;
@@ -2727,7 +2791,7 @@ void v_L1352(void){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void v_R135D2(void){
 
-	full_led_write(PURPLE);
+	full_led_write(YELLOW);
 	MF.FLAG.GYRO = 0;
 
 	accel_l = 10000;
@@ -2806,7 +2870,7 @@ void v_R135D2(void){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void v_L135D2(void){
 
-	full_led_write(YELLOW);
+	full_led_write(PURPLE);
 	MF.FLAG.GYRO = 0;
 
 	accel_l = 10000;
@@ -3017,14 +3081,18 @@ void init_test(void){
 					half_sectionD();				//半区画のパルス分減速しながら走行。走行後は停止する
 					break;
 				case 6:
-					set_position();
-					break;
-				case 7:
+					//----a宴会芸モード----
 					target_degree_z = degree_z;
 					accel_l = 5000;
 
-					MF.FLAG.ENKAI = 1;
+					enkai_flag = 1;
 
+					while(1);
+					break;
+				case 7:
+					//----a停止時前壁補正モード----
+					MF.FLAG.FWALL = 1;
+					MF.FLAG.DRV = 1;
 					while(1);
 					break;
 			}
@@ -3305,7 +3373,7 @@ void v_test(void){
 		  if(dist_r >= 20){
 			  mode++;
 			  dist_r = 0;
-			  if(mode > 15){
+			  if(mode > 23){
 				  mode = 0;
 			  }
 			  if(mode < 8){
@@ -3323,7 +3391,7 @@ void v_test(void){
 			  mode--;
 			  dist_r = 0;
 			  if(mode < 0){
-				  mode = 15;
+				  mode = 23;
 			  }
 			  if(mode < 8){
 				  full_led_write(WHITE);
@@ -3465,7 +3533,124 @@ void v_test(void){
 					}
 					full_led_write(BLUE);
 					break;
+				case 11:
+					//----V右45 High Speed----
+					printf("V 45 right .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					for(int i = 0; i < 1; i++){
+						v_R452();
+					}
+					full_led_write(BLUE);
+					half_sectionD2();
+					break;
+				case 12:
+					//----V左45 High Speed----
+					printf("V 45 left .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					for(int i = 0; i < 1; i++){
+						v_L452();
+					}
+					full_led_write(BLUE);
+					half_sectionD2();
+					break;
+				case 13:
+					//----V右90 High Speed----
+					printf("V 90 right .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					v_R452();
+					for(int i = 0; i < 1; i++){
+						v_R902();
+					}
+					v_R452();
+					full_led_write(BLUE);
+					half_sectionD2();
+					break;
+				case 14:
+					//----V左90 High Speed----
+					printf("V 90 left .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					v_L452();
+					for(int i = 0; i < 1; i++){
+						v_L902();
+					}
+					v_L452();
+					full_led_write(BLUE);
+					half_sectionD2();
+					break;
+				case 15:
+					//----V右135 High Speed----
+					printf("V 135 right .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					v_R452();
+					for(int i = 0; i < 1; i++){
+						v_R1352();
+					}
+					v_R452();
+					full_led_write(BLUE);
+					half_sectionD2();
+					break;
+				case 16:
+					//----V左135 High Speed----
+					printf("V 135 left .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					v_L452();
+					for(int i = 0; i < 1; i++){
+						v_L1352();
+					}
+					v_L452();
+					full_led_write(BLUE);
+					half_sectionD2();
+					break;
+				case 17:
+					//----V右45D High Speed----
+					printf("V 45 right .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					for(int i = 0; i < 1; i++){
+						v_R45D2();
+					}
+					full_led_write(BLUE);
+					break;
+				case 18:
+					//----V左45D High Speed----
+					printf("V 45 left .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					for(int i = 0; i < 1; i++){
+						v_L45D2();
+					}
+					full_led_write(BLUE);
+					break;
+				case 19:
+					//----V右135D High Speed----
+					printf("V 135 right .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					v_R452();
+					for(int i = 0; i < 1; i++){
+						v_R135D2();
+					}
+					full_led_write(BLUE);
+					break;
+				case 20:
+					//----V左135D High Speed----
+					printf("V 135 left .\n");
+					full_led_write(WHITE);
+					half_sectionA2();
+					v_L452();
+					for(int i = 0; i < 1; i++){
+						v_L135D2();
+					}
+					full_led_write(BLUE);
+					break;
 			}
+		full_led_write(RED);
 		}
 	}
 }
@@ -3519,7 +3704,7 @@ void pass_test(void){
 					MF.FLAG.ACCL2 = 1;
 					start_flag = 0;
 					accel_hs = 5000;
-					speed_max_hs = 1000;
+					speed_max_hs = 800;
 					start_flag = 0;
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -3592,7 +3777,7 @@ void pass_test(void){
 					MF.FLAG.ACCL2 = 1;
 					start_flag = 0;
 					accel_hs = 5000;
-					speed_max_hs = 800;
+					speed_max_hs = 1000;
 
 					pass_mode = 4;
 
@@ -3611,6 +3796,29 @@ void pass_test(void){
 					goal_y = GOAL_Y;
 					break;
 				case 4:
+					//----a直線と大回り圧縮と斜め High Speedｰｰｰｰ
+					printf("pass press 4.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					start_flag = 0;
+					accel_hs = 5000;
+					speed_max_hs = 1000;
+
+					pass_mode = 4;
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF42();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF42();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 				case 5:
 					break;
@@ -4093,6 +4301,12 @@ void sample_course_run(void){
 					printf("Slalom Run & All Map Run.\n");
 
 					MF.FLAG.SCND = 0;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					start_flag = 0;
+					accel_hs = 5000;
+					speed_max_hs = 800;
+
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 
@@ -4115,6 +4329,11 @@ void sample_course_run(void){
 					printf("Slalom Run & All Map Run.\n");
 
 					MF.FLAG.SCND = 0;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					start_flag = 0;
+					accel_hs = 5000;
+					speed_max_hs = 800;
 					goal_x = 7;
 					goal_y = 7;
 
