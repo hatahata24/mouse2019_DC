@@ -269,7 +269,7 @@ void searchC(){
 //a引数：なし
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void searchC2(){
+/*void searchC2(){
 
 	if(MF.FLAG.SCND){
 		load_map_from_eeprom();
@@ -281,7 +281,7 @@ void searchC2(){
 	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
-	start_sectionA2();
+	start_sectionA();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====
@@ -300,21 +300,21 @@ void searchC2(){
 				break;
 			//----a右折スラローム----
 			case 0x44:
-				slalom_R902();
+				slalom_R90();
 				break;
 			//----180回転----
 			case 0x22:
-				half_sectionD2();
+				half_sectionD();
 				rotate_180();
 				if(wall_info & 0x88){
 					set_position();
 				}else{
-					half_sectionA2();
+					half_sectionA();
 				}
 				break;
 			//----a左折スラローム----
 			case 0x11:
-				slalom_L902();
+				slalom_L90();
 				break;
 		}
 		adv_pos();
@@ -322,7 +322,7 @@ void searchC2(){
 
 	}while((mouse.x != goal_x) || (mouse.y != goal_y));
 
-	half_sectionD2();
+	half_sectionD();
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
@@ -334,7 +334,7 @@ void searchC2(){
 		store_map_in_eeprom();
 	}
 }
-
+*/
 
 /*-----------------------------------------------------------
 		足立法探索走行D（スラローム+既知区間加速走行）
@@ -433,7 +433,7 @@ void searchD(){
 //a引数：なし
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void searchD2(){
+/*void searchD2(){
 
 	if(MF.FLAG.SCND){
 		load_map_from_eeprom();
@@ -445,7 +445,7 @@ void searchD2(){
 	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
-	start_sectionA2();
+	start_sectionA();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====
@@ -479,21 +479,18 @@ void searchD2(){
 				break;
 			//----a右折スラローム----
 			case 0x44:
-				slalom_R902();
+				slalom_R90();
 
 				break;
 			//----180回転----
 			case 0x22:
-				half_sectionD2();
+				half_sectionD();
 				rotate_180();
-/*				if(wall_info & 0x88){
-					set_position2(0);
-				}
-*/				half_sectionA2();
+				half_sectionA();
 				break;
 			//----a左折スラローム----
 			case 0x11:
-				slalom_L902();
+				slalom_L90();
 				break;
 		}
 		adv_pos();
@@ -501,7 +498,7 @@ void searchD2(){
 
 	}while((mouse.x != goal_x) || (mouse.y != goal_y));
 
-	half_sectionD2();
+	half_sectionD();
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
@@ -513,7 +510,7 @@ void searchD2(){
 		store_map_in_eeprom();
 	}
 }
-
+*/
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //searchE
@@ -1059,111 +1056,6 @@ void searchF3(){
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
-//searchF32
-//aスラローム+既知区間加速+pass圧縮+機体方向&位置未更新+半区画ベース High Speedでgoal座標に進む
-//a引数：なし
-//a戻り値：なし
-//+++++++++++++++++++++++++++++++++++++++++++++++
-void searchF32(){
-
-	if(MF.FLAG.SCND){
-		load_map_from_eeprom();
-	}
-
-	//====a1区画前進====
-	adv_pos();
-
-	//====a歩数マップ・経路作成====
-	make_smap();											//a歩数マップ作成
-	make_route();											//a最短経路探索（route配列に動作が格納される）
-
-	//====pass圧縮====
-	p_cnt = 0;												//a経路カウンタの初期化
-	pass_route2();
-
-	//====a前に壁が無い想定で問答無用で前進====
-	start_sectionA2();
-
-	H_accel_flag = 0;
-
-	//====a探索走行====
-	do{
-		//----a進行----
-		switch(pass[p_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
-			//----a右スラローム----
-			case -1:
-				slalom_R902();
-				break;
-
-			//----a左スラローム----
-			case -2:
-				slalom_L902();
-				break;
-
-			//----a大回り右90----
-			case -3:
-				Lslalom_R902();
-				break;
-
-			//----a大回り左90----
-			case -4:
-				Lslalom_L902();
-				break;
-
-			//----a大回り右180----
-			case -5:
-				Lslalom_R1802();
-				break;
-
-			//----a大回り左180----
-			case -6:
-				Lslalom_L1802();
-				break;
-
-			//----pass配列最後(なお本来呼び出される前にゴールする)----
-			case -114:
-				rotate_180();
-				rotate_180();
-				while(1);
-				break;
-
-			//----a前進----
-			default:
-				if(pass[p_cnt-1] < 4){
-					for(int k = 0; k < pass[p_cnt-1]; k++){
-						half_sectionU();
-					}
-				}else{
-					one_sectionA2();
-					H_accel_flag = 1;
-					int k;
-					for(k = 0; k < pass[p_cnt-1]-4; k++){
-						half_sectionU();
-					}
-					one_sectionD2();
-					H_accel_flag = 0;
-				}
-				break;
-		}
-//		adv_pos2(pass[p_cnt-1]);
-
-	}while(pass[p_cnt] != -114);
-
-	mouse.x = goal_x;
-	mouse.y = goal_y;
-
-	half_sectionD2();
-
-	HAL_Delay(500);
-	rotate_180();											//180度回転
-	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
-	degree_z = target_degree_z;
-	start_flag = 0;
-
-}
-
-
-//+++++++++++++++++++++++++++++++++++++++++++++++
 //searchF4
 //aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新+半区画ベース+斜め走行でgoal座標に進む
 //a引数：なし
@@ -1326,182 +1218,6 @@ void searchF4(){
 
 	if(pass[p_cnt-1] != -13 && pass[p_cnt-1] != -14 && pass[p_cnt-1] != -15 && pass[p_cnt-1] != -16){
 		half_sectionD();
-		full_led_write(BLUE);
-	}
-
-	HAL_Delay(500);
-	rotate_180();											//180度回転
-	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
-	degree_z = target_degree_z;
-	start_flag = 0;
-
-	mouse.dir = mouse.dir / 2;
-
-}
-
-
-//+++++++++++++++++++++++++++++++++++++++++++++++
-//searchF42
-//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新+半区画ベース+斜め走行 High Speedでgoal座標に進む
-//a引数：なし
-//a戻り値：なし
-//+++++++++++++++++++++++++++++++++++++++++++++++
-void searchF42(){
-
-	if(MF.FLAG.SCND){
-		load_map_from_eeprom();
-	}
-
-	//====a1区画前進====
-	adv_pos();
-
-	//====a歩数マップ・経路作成====
-	make_smap();											//a歩数マップ作成
-	make_route();											//a最短経路探索（route配列に動作が格納される）
-
-	//====pass圧縮====
-	p_cnt = 0;												//a経路カウンタの初期化
-	pass_route3();
-
-	if(start_flag == 0 || start_flag == 1){									//a大回りではない場合、先頭の半区画直進をスキップ
-		pass[p_cnt]--;
-	}
-
-	//====a前に壁が無い想定で問答無用で前進====
-	start_sectionA2();
-
-	H_accel_flag = 0;
-	MF.FLAG.XDIR = 1;
-	//====a探索走行====
-	do{
-		//----a進行----
-		switch(pass[p_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
-			//----a右スラローム----
-			case -1:
-				slalom_R902();
-				break;
-
-			//----a左スラローム----
-			case -2:
-				slalom_L902();
-				break;
-
-			//----a大回り右90----
-			case -3:
-				Lslalom_R902();
-				break;
-
-			//----a大回り左90----
-			case -4:
-				Lslalom_L902();
-				break;
-
-			//----a大回り右180----
-			case -5:
-				Lslalom_R1802();
-				break;
-
-			//----a大回り左180----
-			case -6:
-				Lslalom_L1802();
-				break;
-
-			//----a斜め右V45----
-			case -7:
-				v_R452();
-				break;
-
-			//----a斜め左V45----
-			case -8:
-				v_L452();
-				break;
-
-			//----a斜め右V90----
-			case -9:
-				v_R902();
-				break;
-
-			//----a斜め左V90----
-			case -10:
-				v_L902();
-				break;
-
-			//----a斜め右V135----
-			case -11:
-				v_R1352();
-				break;
-
-			//----a斜め左V135----
-			case -12:
-				v_L1352();
-				break;
-
-			//----a斜め右V45Goal----
-			case -13:
-				v_R45D2();
-				break;
-
-			//----a斜め左V45Goal----
-			case -14:
-				v_L45D2();
-				break;
-
-			//----a斜め右V135Goal----
-			case -15:
-				v_R135D2();
-				break;
-
-			//----a斜め左V135Goal----
-			case -16:
-				v_L135D2();
-				break;
-
-			//----pass配列最後(なお本来呼び出される前にゴールする)----
-			case -114:
-				rotate_180();
-				rotate_180();
-				while(1);
-				break;
-
-			//----a前進----
-			default:
-				if(pass[p_cnt-1] < 4){
-					for(int k = 0; k < pass[p_cnt-1]; k++){
-						half_sectionU();
-					}
-				}else if(pass[p_cnt-1] < 64){
-					one_sectionA2();
-					H_accel_flag = 1;
-					int k;
-					for(k = 0; k < pass[p_cnt-1]-4; k++){
-						half_sectionU();
-					}
-					one_sectionD2();
-					H_accel_flag = 0;
-				}else{
-					if((pass[p_cnt] == 64) && (pass[p_cnt+1] == 64) && (pass[p_cnt+2] == 64) && (H_accel_flag == 0)){
-						one_sectionVA2();
-						H_accel_flag = 1;
-						p_cnt++;
-					}
-					else if((pass[p_cnt] == 64) && (pass[p_cnt+1] != 64) && (H_accel_flag == 1)){
-						one_sectionVD2();
-						H_accel_flag = 0;
-						p_cnt++;
-					}else{
-						half_sectionV();
-					}
-				}
-				break;
-		}
-
-	}while(pass[p_cnt] != -114);
-
-	mouse.x = goal_x;
-	mouse.y = goal_y;
-
-	if(pass[p_cnt-1] != -13 && pass[p_cnt-1] != -14 && pass[p_cnt-1] != -15 && pass[p_cnt-1] != -16){
-		half_sectionD2();
 		full_led_write(BLUE);
 	}
 

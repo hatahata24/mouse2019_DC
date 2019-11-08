@@ -95,16 +95,12 @@ void search_init(void);
 void searchA();											//1区画停止型探索走行
 void searchB();											//a連続探索走行
 void searchC();											//aスラローム走行
-void searchC2();										//aスラロームHighSpeed走行
 void searchD();											//aスラローム+既知区間加速探索走行
-void searchD2();										//aスラロームHighSpeed+既知区間加速探索走行
 void searchE();											//aスラローム全面探索走行
 void searchF();											//aスラローム+既知区間加速+pass圧縮
 void searchF2();										//aスラローム+既知区間加速+pass圧縮+機体方向 &位置未更新
 void searchF3();										//aスラローム+既知区間加速探索走行+pass圧縮+機体方向&位置未更新+半区画ベース
-void searchF32();										//aスラローム+既知区間加速探索走行+pass圧縮+機体方向&位置未更新+半区画ベース HighSpeed
 void searchF4();										//aスラローム+既知区間加速探索走行+pass圧縮+機体方向&位置未更新+半区画ベース+斜め
-void searchF42();										//aスラローム+既知区間加速探索走行+pass圧縮+機体方向&位置未更新+半区画ベース+斜め HighSpeed
 
 
 void adv_pos();											//aマウスの位置情報を前進

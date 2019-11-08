@@ -200,19 +200,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		if(MF.FLAG.GYRO){
 			target_omega_z += target_degaccel_z * 0.001;
 			target_omega_z = max(min(target_omega_z, omega_max), omega_min);
-			target_speed_l = speed_G - target_omega_z/180*M_PI*TREAD/2;
-			target_speed_r = speed_G + target_omega_z/180*M_PI*TREAD/2;
-
-			epsilon_l = target_speed_l - speed_l;
-			pulse_l = Kp * epsilon_l;
-			epsilon_r = target_speed_r - speed_r;
-			pulse_r = Kp * epsilon_r;
-		}
-
-
-		if(MF.FLAG.GYRO2){
-			target_omega_z += target_degaccel_z * 0.001;
-			target_omega_z = max(min(target_omega_z, omega_max), omega_min);
 
 			epsilon_omega = target_omega_z - gyro_read_z();
 
@@ -265,8 +252,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 						if(CTRL_BASE_L < dif_l || CTRL_BASE_R < dif_r){
 							if(CTRL_BASE_L < dif_l){
-								dwl_tmp += CTRL_CONT_W * 0.5 * dif_l;				//a比例制御値を決定
-								dwr_tmp += -1 * CTRL_CONT_W * 0.5 * dif_l;			//a比例制御値を決定
+								dwl_tmp += CTRL_CONT_W * dif_l;				//a比例制御値を決定
+								dwr_tmp += -1 * CTRL_CONT_W * dif_l;			//a比例制御値を決定
 							}
 							else if(CTRL_BASE_R < dif_r){
 								dwl_tmp += -1 * CTRL_CONT_W * dif_r;				//a比例制御値を決定
