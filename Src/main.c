@@ -250,12 +250,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 						dif_l = (int32_t) ad_l - base_l;
 						dif_r = (int32_t) ad_r - base_r;
 
-						if(CTRL_BASE_L < dif_l || CTRL_BASE_R < dif_r){
-							if(CTRL_BASE_L < dif_l){
-								dwl_tmp += CTRL_CONT_W * dif_l;				//a比例制御値を決定
+						if(dif_l > CTRL_BASE_L || dif_r > CTRL_BASE_R){
+							if(dif_l > CTRL_BASE_L){
+								dwl_tmp += CTRL_CONT_W * dif_l;					//a比例制御値を決定
 								dwr_tmp += -1 * CTRL_CONT_W * dif_l;			//a比例制御値を決定
 							}
-							else if(CTRL_BASE_R < dif_r){
+							else if(dif_r > CTRL_BASE_R){
 								dwl_tmp += -1 * CTRL_CONT_W * dif_r;				//a比例制御値を決定
 								dwr_tmp += CTRL_CONT_W * dif_r;						//a比例制御値を決定
 							}
@@ -270,14 +270,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 						dif_l = (int32_t) ad_fl - BASE_FL;
 						dif_r = (int32_t) ad_fr - BASE_FR;
 
-						if(CTRL_BASE_FL < dif_l || CTRL_BASE_FR < dif_r){
-							if(CTRL_BASE_FL < dif_l){
+						if(dif_l > CTRL_BASE_FL || dif_r > CTRL_BASE_FR){
+							if(dif_l > CTRL_BASE_FL){
 								dwl_tmp += CTRL_CONT_W * 0.1 * dif_l;				//a比例制御値を決定
-								dwr_tmp += -1 * CTRL_CONT_W * 0.1 * dif_l;				//a比例制御値を決定
+								dwr_tmp += -1 * CTRL_CONT_W * 0.1 * dif_l;			//a比例制御値を決定
 							}
-							else if(CTRL_BASE_FR < dif_r){
+							else if(dif_r > CTRL_BASE_FR){
 								dwl_tmp += -1 * CTRL_CONT_W * 0.2 * dif_r;			//a比例制御値を決定
-								dwr_tmp += CTRL_CONT_W * 0.2 * dif_r;						//a比例制御値を決定
+								dwr_tmp += CTRL_CONT_W * 0.2 * dif_r;				//a比例制御値を決定
 							}
 							W_G_flag = 1;
 						}else{
@@ -312,11 +312,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
 					dg = CTRL_CONT_G * degree_z;				//a角度制御
 */
-					dg = CTRL_CONT_G * (degree_z - target_degree_z);		//a角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
+					dg = CTRL_CONT_G * (target_degree_z - degree_z);		//a角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
 
 					dg = max(min(CTRL_MAX_G, dg), -1 * CTRL_MAX_G);
-					dgl = dg;
-					dgr = -1*dg;
+					dgl = -1*dg;
+					dgr = dg;
 				}else{
 					//a制御フラグがなければ壁制御値0
 					dgl = dgr = 0;
@@ -326,9 +326,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		if(MF.FLAG.DRV){
-			if(W_G_flag == 0){
-				pulse_l = pulse_l + dgl + dwl;
-				pulse_r = pulse_r + dgr + dwr;
+			if(!W_G_flag){
+//				pulse_l = pulse_l + dgl + dwl;
+//				pulse_r = pulse_r + dgr + dwr;
+				pulse_l = pulse_l + dgl;
+				pulse_r = pulse_r + dgr;
 			}else{
 				pulse_l = pulse_l + dwl;
 				pulse_r = pulse_r + dwr;
@@ -362,24 +364,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
 			}
 			//wall check
-			//----look forward----
-			if(ad_fr > WALL_BASE_FR || ad_fl > WALL_BASE_FL){
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
-			}else{
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
-			}
-			//----look forwardL----
-			if(ad_fl > WALL_BASE_FL){
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-			}else{
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-			}
-			//----look forward-R---
-			if(ad_fr > WALL_BASE_FR){
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-			}else{
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-			}
+//			if(!MF.FLAG.SCND){
+				//----look forward----
+				if(ad_fr > WALL_BASE_FR || ad_fl > WALL_BASE_FL){
+					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+				}else{
+					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+				}
+				//----look forwardL----
+				if(ad_fl > WALL_BASE_FL){
+					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+				}else{
+					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+				}
+				//----look forward-R---
+				if(ad_fr > WALL_BASE_FR){
+					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+				}else{
+					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+				}
 		}else{
 			drive_dir(0, 2);
 			drive_dir(1, 2);
@@ -410,7 +413,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		//fail safe
-		if(degree_z >= target_degree_z+360 || degree_z <= target_degree_z-360 || dist_r > 360*2 || dist_l > 360*2){	//360度以上回転発生でFail Safe
+		if(degree_z >= target_degree_z+270 || degree_z <= target_degree_z-270 || dist_r > 500 || dist_l > 500){	//270度以上回転発生でFail Safe
 			while(1){
 			   drive_dir(0, 2);
 			   drive_dir(1, 2);
