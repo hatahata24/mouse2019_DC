@@ -25,7 +25,7 @@
 #define SEC_START_HALF 35.5
 
 //a走行速度
-#define SPEED_MIN 50
+#define SPEED_MIN 20//50
 #define SPEED_LOW 400
 #define SPEED_MIDDLE 600
 #define SPEED_HIGH 800
@@ -203,10 +203,10 @@
 #define sensor_wait 2500//2000//3500
 
 //----wall 判断----
-#define WALL_BASE_FR 	90//100//70//30				//FR
-#define WALL_BASE_FL 	200//230//80//75//			//FL
+#define WALL_BASE_FR 	110//100					//FR
+#define WALL_BASE_FL 	200					//FL
 #define WALL_BASE_R		120//55				//R
-#define WALL_BASE_L 	140//90	     		//L
+#define WALL_BASE_L 	150//140     		//L
 
 //----wall 制御判断----
 #define CTRL_BASE_R		30//50				//R
@@ -289,7 +289,7 @@
 
 
 //----goal 座標---
-#define GOAL_X 0	//7
-#define GOAL_Y 2	//7
+#define GOAL_X 9	//7
+#define GOAL_Y 6	//7
 
 #endif /* INC_PARAMS_H_ */

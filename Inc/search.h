@@ -87,6 +87,7 @@ void search_init(void);
 void searchA();											//1区画停止型探索走行
 void searchB();											//a連続探索走行
 void searchC();											//aスラローム走行
+void searchC2();										//aスラローム走行　重ね探索用
 void searchD();											//aスラローム+既知区間加速探索走行
 void searchE();											//aスラローム全面探索走行
 void searchF();											//aスラローム+既知区間加速+pass圧縮

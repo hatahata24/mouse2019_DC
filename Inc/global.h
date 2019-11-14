@@ -23,7 +23,7 @@ typedef union {					//aタイマ割り込みや走行に影響を与えるフラ
 		uint16_t WCTRL:1;		//a壁制御 flag(B3)
 		uint16_t GCTRL:1;		//aジャイロ制御 flag(B4)
 		uint16_t SCND:1;		//a二次走行 flag(B5)
-		uint16_t RSV6:1;		//aログ flag(B6)
+		uint16_t SRC2:1;		//a重ね探索 flag(B6)
 		uint16_t FWALL:1;		//a停止時前壁補正 flag(B7)
 		uint16_t GYRO:1;		//a旋回角速度計算 flag(B8)
 		uint16_t ACCL2:1;		//a既知区間加速 flag(B9)

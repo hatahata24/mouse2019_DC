@@ -10,6 +10,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void drive_init(void){
 	MF.FLAGS = 0;
+	MF2.FLAGS2 = 0;
 }
 
 
@@ -383,7 +384,6 @@ void set_position(){
   degree_z = target_degree_z;
   start_mode = 0;
   start_sectionA();
-  //driveC(SETPOS_SET);           //aデフォルト速度で区画中心になる分回転。回転後に停止する
 }
 
 
@@ -398,13 +398,9 @@ void set_positionF(){
 	full_led_write(RED);
 	HAL_Delay(500);
 
-	target_speed_l = target_speed_r = 150;
 	MF.FLAG.DRV = 1;
 	MF.FLAG.FWALL = 1;
-	MF.FLAG.GCTRL = 1;
 	while(MF.FLAG.FWALL);
-	MF.FLAG.FWALL = 0;
-	MF.FLAG.GCTRL = 0;
 
 	drive_stop();
 }

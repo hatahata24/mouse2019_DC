@@ -265,6 +265,108 @@ void searchC(){
 }
 
 
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//searchC2
+//aスラローム走行でgoal座標に進む　重ね探索用
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchC2(){
+
+	if(MF.FLAG.SRC2){
+		load_map_from_eeprom();
+	}
+
+	//====aスタート位置壁情報取得====
+	if(!MF.FLAG.SCND)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
+	if(!MF.FLAG.SCND)wall_info &= ~0x88;									//a前壁は存在するはずがないので削除する
+	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
+
+	//====a前に壁が無い想定で問答無用で前進====
+	start_sectionA();
+	adv_pos();
+
+	//====a歩数マップ・経路作成====
+	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
+	r_cnt = 0;																//a経路カウンタの初期化
+	make_smap();															//a歩数マップ作成
+	make_route();															//a最短経路探索（route配列に動作が格納される）
+
+	//====aマウス位置保存用変数を宣言
+	uint8_t x, y;															//X，Y座標
+
+	//====a探索走行====
+	do{
+		//----a進行----
+		switch(route[r_cnt++]){												//route配列によって進行を決定。経路カウンタを進める
+			//----a前進----
+			case 0x88:
+				if(route[r_cnt] == 0x88 && MF.FLAG.ACCL2){
+					x = mouse.x;
+					y = mouse.y;
+					adv_pos();
+					if((map[mouse.y][mouse.x] & 0x0f) == (map[mouse.y][mouse.x]>>4)){
+						if(!MF2.FLAG.HACCEL){
+							one_sectionA();
+							MF2.FLAG.HACCEL = 1;
+						}else{
+							one_sectionU();
+						}
+					}else if(MF2.FLAG.HACCEL){
+						one_sectionD();
+						MF2.FLAG.HACCEL = 0;
+					}else{
+						one_sectionU();
+					}
+					mouse.x = x;
+					mouse.y = y;
+				}else if(MF2.FLAG.HACCEL){
+					one_sectionD();
+					MF2.FLAG.HACCEL = 0;
+				}else{
+					one_sectionU();
+				}
+				break;
+			//----a右折スラローム----
+			case 0x44:
+				slalom_R90();
+				break;
+			//----180回転----
+			case 0x22:
+				half_sectionD();
+				rotate_180();
+				if(wall_info & 0x88){
+					set_position();
+				}else{
+					half_sectionA();
+				}
+				break;
+			//----a左折スラローム----
+			case 0x11:
+				slalom_L90();
+				break;
+		}
+		adv_pos();
+		if(!MF.FLAG.SCND)conf_route();
+
+	}while((mouse.x != goal_x) || (mouse.y != goal_y));
+
+	half_sectionD();
+
+	set_positionF();
+
+	HAL_Delay(500);
+	rotate_180();											//180度回転
+	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+	degree_z = target_degree_z;
+	start_mode = 0;
+
+	if(!MF.FLAG.SCND){
+		store_map_in_eeprom();
+	}
+}
+
+
 /*-----------------------------------------------------------
 		足立法探索走行D（スラローム+既知区間加速走行）
 -----------------------------------------------------------*/
@@ -303,12 +405,12 @@ void searchD(){
 		switch(route[r_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
 			//----a前進----
 			case 0x88:
-				if(MF.FLAG.SCND == 1 && MF.FLAG.ACCL2 == 1){
+				if(MF.FLAG.SCND && MF.FLAG.ACCL2){
 					if(((route[r_cnt-1] & route[r_cnt]) == 0x88) && (route[r_cnt] != 0xff) && (MF2.FLAG.HACCEL == 0)){
 						one_sectionA();
 						MF2.FLAG.HACCEL = 1;
 					}
-					else if((route[r_cnt] & 0x55) && (MF2.FLAG.HACCEL == 1)){
+					else if((route[r_cnt] & 0x55) && (MF2.FLAG.HACCEL)){
 						one_sectionD();
 						MF2.FLAG.HACCEL = 0;
 					}else{

@@ -189,8 +189,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		if(MF.FLAG.FWALL){
-			target_speed_l = (int16_t)(OFFSET_FWALL_L - ad_fl)*0.75;
-			target_speed_r = (int16_t)(OFFSET_FWALL_R - ad_fr)*1.5;
+			target_speed_l = (int16_t)(OFFSET_FWALL_L - ad_fl)*0.5;//0.75;
+			target_speed_r = (int16_t)(OFFSET_FWALL_R - ad_fr);//*1.5;
 
 			if(target_speed_l*target_speed_l < 2500)target_speed_l = 0;
 			if(target_speed_r*target_speed_r < 2500)target_speed_r = 0;
@@ -324,7 +324,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
 					dg = CTRL_CONT_G * degree_z;				//a角度制御
 */
-					dg = CTRL_CONT_G * (target_degree_z - degree_z);		//a角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
+					if(MF.FLAG.FWALL){
+						dg = CTRL_CONT_G*4 * (target_degree_z - degree_z);		//a角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
+					}else{
+						dg = CTRL_CONT_G * (target_degree_z - degree_z);		//a角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
+					}
 
 					dg = max(min(CTRL_MAX_G, dg), -1 * CTRL_MAX_G);
 					dgl = -1*dg;

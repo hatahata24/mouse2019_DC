@@ -3404,6 +3404,8 @@ Discarded input sections
  .text          0x0000000000000000        0x0 Src/search.o
  .data          0x0000000000000000        0x0 Src/search.o
  .bss           0x0000000000000000        0x0 Src/search.o
+ .text.searchC2
+                0x0000000000000000      0x264 Src/search.o
  .text.searchF  0x0000000000000000      0x358 Src/search.o
  .text.searchF2
                 0x0000000000000000      0x34c Src/search.o
@@ -4650,272 +4652,273 @@ LOAD c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .text.UART_SetConfig
                 0x0000000008004848      0x414 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o
  .text.drive_init
-                0x0000000008004c5c       0x18 Src/drive.o
+                0x0000000008004c5c       0x24 Src/drive.o
                 0x0000000008004c5c                drive_init
  .text.drive_ready
-                0x0000000008004c74       0x58 Src/drive.o
-                0x0000000008004c74                drive_ready
+                0x0000000008004c80       0x58 Src/drive.o
+                0x0000000008004c80                drive_ready
  .text.drive_start
-                0x0000000008004ccc       0x60 Src/drive.o
-                0x0000000008004ccc                drive_start
+                0x0000000008004cd8       0x60 Src/drive.o
+                0x0000000008004cd8                drive_start
  .text.drive_stop
-                0x0000000008004d2c       0x50 Src/drive.o
-                0x0000000008004d2c                drive_stop
+                0x0000000008004d38       0x50 Src/drive.o
+                0x0000000008004d38                drive_stop
  .text.control_start
-                0x0000000008004d7c       0x28 Src/drive.o
-                0x0000000008004d7c                control_start
+                0x0000000008004d88       0x28 Src/drive.o
+                0x0000000008004d88                control_start
  .text.control_stop
-                0x0000000008004da4       0x28 Src/drive.o
-                0x0000000008004da4                control_stop
+                0x0000000008004db0       0x28 Src/drive.o
+                0x0000000008004db0                control_stop
  .text.drive_dir
-                0x0000000008004dcc      0x128 Src/drive.o
-                0x0000000008004dcc                drive_dir
+                0x0000000008004dd8      0x128 Src/drive.o
+                0x0000000008004dd8                drive_dir
  .text.run_select
-                0x0000000008004ef4       0xcc Src/drive.o
-                0x0000000008004ef4                run_select
- .text.driveA   0x0000000008004fc0       0xf4 Src/drive.o
-                0x0000000008004fc0                driveA
- .text.driveD   0x00000000080050b4      0x1b4 Src/drive.o
-                0x00000000080050b4                driveD
- .text.driveU   0x0000000008005268       0xd0 Src/drive.o
-                0x0000000008005268                driveU
- .text.driveC   0x0000000008005338       0x94 Src/drive.o
-                0x0000000008005338                driveC
- .text.driveC2  0x00000000080053cc       0x98 Src/drive.o
-                0x00000000080053cc                driveC2
- .text.slalomF  0x0000000008005464       0xf8 Src/drive.o
-                0x0000000008005464                slalomF
- .text.slalomR  0x000000000800555c      0x248 Src/drive.o
-                0x000000000800555c                slalomR
- .text.slalomB  0x00000000080057a4       0xc4 Src/drive.o
-                0x00000000080057a4                slalomB
+                0x0000000008004f00       0xcc Src/drive.o
+                0x0000000008004f00                run_select
+ .text.driveA   0x0000000008004fcc       0xf4 Src/drive.o
+                0x0000000008004fcc                driveA
+ .text.driveD   0x00000000080050c0      0x1b4 Src/drive.o
+                0x00000000080050c0                driveD
+ .text.driveU   0x0000000008005274       0xd0 Src/drive.o
+                0x0000000008005274                driveU
+ .text.driveC   0x0000000008005344       0x94 Src/drive.o
+                0x0000000008005344                driveC
+ .text.driveC2  0x00000000080053d8       0x98 Src/drive.o
+                0x00000000080053d8                driveC2
+ .text.slalomF  0x0000000008005470       0xf8 Src/drive.o
+                0x0000000008005470                slalomF
+ .text.slalomR  0x0000000008005568      0x248 Src/drive.o
+                0x0000000008005568                slalomR
+ .text.slalomB  0x00000000080057b0       0xc4 Src/drive.o
+                0x00000000080057b0                slalomB
  .text.set_position
-                0x0000000008005868       0x2c Src/drive.o
-                0x0000000008005868                set_position
+                0x0000000008005874       0x2c Src/drive.o
+                0x0000000008005874                set_position
  .text.set_positionF
-                0x0000000008005894       0x78 Src/drive.o
-                0x0000000008005894                set_positionF
+                0x00000000080058a0       0x44 Src/drive.o
+                0x00000000080058a0                set_positionF
  .text.start_sectionA
-                0x000000000800590c      0x1a8 Src/drive.o
-                0x000000000800590c                start_sectionA
+                0x00000000080058e4      0x1a8 Src/drive.o
+                0x00000000080058e4                start_sectionA
  .text.half_sectionA
-                0x0000000008005ab4       0x94 Src/drive.o
-                0x0000000008005ab4                half_sectionA
+                0x0000000008005a8c       0x94 Src/drive.o
+                0x0000000008005a8c                half_sectionA
  .text.half_sectionD
-                0x0000000008005b48       0x8c Src/drive.o
-                0x0000000008005b48                half_sectionD
+                0x0000000008005b20       0x8c Src/drive.o
+                0x0000000008005b20                half_sectionD
  .text.half_sectionU
-                0x0000000008005bd4       0x18 Src/drive.o
-                0x0000000008005bd4                half_sectionU
+                0x0000000008005bac       0x18 Src/drive.o
+                0x0000000008005bac                half_sectionU
  .text.half_sectionV
-                0x0000000008005bec       0x18 Src/drive.o
-                0x0000000008005bec                half_sectionV
+                0x0000000008005bc4       0x18 Src/drive.o
+                0x0000000008005bc4                half_sectionV
  .text.one_section
-                0x0000000008005c04       0x10 Src/drive.o
-                0x0000000008005c04                one_section
+                0x0000000008005bdc       0x10 Src/drive.o
+                0x0000000008005bdc                one_section
  .text.one_sectionA
-                0x0000000008005c14       0xcc Src/drive.o
-                0x0000000008005c14                one_sectionA
+                0x0000000008005bec       0xcc Src/drive.o
+                0x0000000008005bec                one_sectionA
  .text.one_sectionD
-                0x0000000008005ce0       0xe4 Src/drive.o
-                0x0000000008005ce0                one_sectionD
+                0x0000000008005cb8       0xe4 Src/drive.o
+                0x0000000008005cb8                one_sectionD
  .text.one_sectionVA
-                0x0000000008005dc4       0xbc Src/drive.o
-                0x0000000008005dc4                one_sectionVA
+                0x0000000008005d9c       0xbc Src/drive.o
+                0x0000000008005d9c                one_sectionVA
  .text.one_sectionVD
-                0x0000000008005e80       0xd4 Src/drive.o
-                0x0000000008005e80                one_sectionVD
+                0x0000000008005e58       0xd4 Src/drive.o
+                0x0000000008005e58                one_sectionVD
  .text.one_sectionU
-                0x0000000008005f54       0x30 Src/drive.o
-                0x0000000008005f54                one_sectionU
- *fill*         0x0000000008005f84        0x4 
+                0x0000000008005f2c       0x30 Src/drive.o
+                0x0000000008005f2c                one_sectionU
+ *fill*         0x0000000008005f5c        0x4 
  .text.rotate_R90
-                0x0000000008005f88      0x1b4 Src/drive.o
-                0x0000000008005f88                rotate_R90
- *fill*         0x000000000800613c        0x4 
+                0x0000000008005f60      0x1b4 Src/drive.o
+                0x0000000008005f60                rotate_R90
+ *fill*         0x0000000008006114        0x4 
  .text.rotate_L90
-                0x0000000008006140      0x1b4 Src/drive.o
-                0x0000000008006140                rotate_L90
- *fill*         0x00000000080062f4        0x4 
+                0x0000000008006118      0x1b4 Src/drive.o
+                0x0000000008006118                rotate_L90
+ *fill*         0x00000000080062cc        0x4 
  .text.rotate_180
-                0x00000000080062f8      0x1b0 Src/drive.o
-                0x00000000080062f8                rotate_180
+                0x00000000080062d0      0x1b0 Src/drive.o
+                0x00000000080062d0                rotate_180
  .text.slalom_R90
-                0x00000000080064a8      0x1c8 Src/drive.o
-                0x00000000080064a8                slalom_R90
+                0x0000000008006480      0x1c8 Src/drive.o
+                0x0000000008006480                slalom_R90
  .text.slalom_L90
-                0x0000000008006670      0x1b4 Src/drive.o
-                0x0000000008006670                slalom_L90
+                0x0000000008006648      0x1b4 Src/drive.o
+                0x0000000008006648                slalom_L90
  .text.Lslalom_R90
-                0x0000000008006824      0x1b0 Src/drive.o
-                0x0000000008006824                Lslalom_R90
+                0x00000000080067fc      0x1b0 Src/drive.o
+                0x00000000080067fc                Lslalom_R90
  .text.Lslalom_L90
-                0x00000000080069d4      0x198 Src/drive.o
-                0x00000000080069d4                Lslalom_L90
+                0x00000000080069ac      0x198 Src/drive.o
+                0x00000000080069ac                Lslalom_L90
  .text.Lslalom_R180
-                0x0000000008006b6c      0x1cc Src/drive.o
-                0x0000000008006b6c                Lslalom_R180
+                0x0000000008006b44      0x1cc Src/drive.o
+                0x0000000008006b44                Lslalom_R180
  .text.Lslalom_L180
-                0x0000000008006d38      0x1b8 Src/drive.o
-                0x0000000008006d38                Lslalom_L180
- .text.v_R45    0x0000000008006ef0      0x308 Src/drive.o
-                0x0000000008006ef0                v_R45
- .text.v_L45    0x00000000080071f8      0x2f8 Src/drive.o
-                0x00000000080071f8                v_L45
- .text.v_R45D   0x00000000080074f0      0x1b4 Src/drive.o
-                0x00000000080074f0                v_R45D
- .text.v_L45D   0x00000000080076a4      0x1a8 Src/drive.o
-                0x00000000080076a4                v_L45D
- .text.v_R90    0x000000000800784c      0x150 Src/drive.o
-                0x000000000800784c                v_R90
- .text.v_L90    0x000000000800799c      0x144 Src/drive.o
-                0x000000000800799c                v_L90
- .text.v_R135   0x0000000008007ae0      0x310 Src/drive.o
-                0x0000000008007ae0                v_R135
- .text.v_L135   0x0000000008007df0      0x2f8 Src/drive.o
-                0x0000000008007df0                v_L135
- .text.v_R135D  0x00000000080080e8      0x21c Src/drive.o
-                0x00000000080080e8                v_R135D
- .text.v_L135D  0x0000000008008304      0x26c Src/drive.o
-                0x0000000008008304                v_L135D
+                0x0000000008006d10      0x1b8 Src/drive.o
+                0x0000000008006d10                Lslalom_L180
+ .text.v_R45    0x0000000008006ec8      0x308 Src/drive.o
+                0x0000000008006ec8                v_R45
+ .text.v_L45    0x00000000080071d0      0x2f8 Src/drive.o
+                0x00000000080071d0                v_L45
+ .text.v_R45D   0x00000000080074c8      0x1b4 Src/drive.o
+                0x00000000080074c8                v_R45D
+ .text.v_L45D   0x000000000800767c      0x1a8 Src/drive.o
+                0x000000000800767c                v_L45D
+ .text.v_R90    0x0000000008007824      0x150 Src/drive.o
+                0x0000000008007824                v_R90
+ .text.v_L90    0x0000000008007974      0x144 Src/drive.o
+                0x0000000008007974                v_L90
+ .text.v_R135   0x0000000008007ab8      0x310 Src/drive.o
+                0x0000000008007ab8                v_R135
+ .text.v_L135   0x0000000008007dc8      0x2f8 Src/drive.o
+                0x0000000008007dc8                v_L135
+ .text.v_R135D  0x00000000080080c0      0x21c Src/drive.o
+                0x00000000080080c0                v_R135D
+ .text.v_L135D  0x00000000080082dc      0x26c Src/drive.o
+                0x00000000080082dc                v_L135D
  .text.test_select
-                0x0000000008008570      0x10c Src/drive.o
-                0x0000000008008570                test_select
+                0x0000000008008548      0x10c Src/drive.o
+                0x0000000008008548                test_select
  .text.init_test
-                0x000000000800867c      0x214 Src/drive.o
-                0x000000000800867c                init_test
+                0x0000000008008654      0x214 Src/drive.o
+                0x0000000008008654                init_test
  .text.slalom_test
-                0x0000000008008890      0x390 Src/drive.o
-                0x0000000008008890                slalom_test
- .text.v_test   0x0000000008008c20      0x458 Src/drive.o
-                0x0000000008008c20                v_test
+                0x0000000008008868      0x390 Src/drive.o
+                0x0000000008008868                slalom_test
+ .text.v_test   0x0000000008008bf8      0x458 Src/drive.o
+                0x0000000008008bf8                v_test
  .text.pass_test
-                0x0000000008009078      0x3c4 Src/drive.o
-                0x0000000008009078                pass_test
+                0x0000000008009050      0x3c4 Src/drive.o
+                0x0000000008009050                pass_test
  .text.simple_run
-                0x000000000800943c      0x21c Src/drive.o
-                0x000000000800943c                simple_run
+                0x0000000008009414      0x21c Src/drive.o
+                0x0000000008009414                simple_run
  .text.slalom_run
-                0x0000000008009658      0x4ec Src/drive.o
-                0x0000000008009658                slalom_run
+                0x0000000008009630      0x4ec Src/drive.o
+                0x0000000008009630                slalom_run
  .text.sample_course_run
-                0x0000000008009b44      0x278 Src/drive.o
-                0x0000000008009b44                sample_course_run
+                0x0000000008009b1c      0x278 Src/drive.o
+                0x0000000008009b1c                sample_course_run
  .text.perfect_slalom
-                0x0000000008009dbc      0x430 Src/drive.o
-                0x0000000008009dbc                perfect_slalom
+                0x0000000008009d94      0x430 Src/drive.o
+                0x0000000008009d94                perfect_slalom
  .text.perfect_pass
-                0x000000000800a1ec      0x870 Src/drive.o
-                0x000000000800a1ec                perfect_pass
+                0x000000000800a1c4      0x870 Src/drive.o
+                0x000000000800a1c4                perfect_pass
  .text.eeprom_enable_write
-                0x000000000800aa5c       0x48 Src/eeprom.o
-                0x000000000800aa5c                eeprom_enable_write
+                0x000000000800aa34       0x48 Src/eeprom.o
+                0x000000000800aa34                eeprom_enable_write
  .text.eeprom_disable_write
-                0x000000000800aaa4        0xe Src/eeprom.o
-                0x000000000800aaa4                eeprom_disable_write
+                0x000000000800aa7c        0xe Src/eeprom.o
+                0x000000000800aa7c                eeprom_disable_write
  .text.eeprom_write_halfword
-                0x000000000800aab2       0x3a Src/eeprom.o
-                0x000000000800aab2                eeprom_write_halfword
+                0x000000000800aa8a       0x3a Src/eeprom.o
+                0x000000000800aa8a                eeprom_write_halfword
  .text.eeprom_read_halfword
-                0x000000000800aaec       0x2e Src/eeprom.o
-                0x000000000800aaec                eeprom_read_halfword
- *fill*         0x000000000800ab1a        0x2 
+                0x000000000800aac4       0x2e Src/eeprom.o
+                0x000000000800aac4                eeprom_read_halfword
+ *fill*         0x000000000800aaf2        0x2 
  .text.gyro_init
-                0x000000000800ab1c       0x70 Src/gyro.o
-                0x000000000800ab1c                gyro_init
+                0x000000000800aaf4       0x70 Src/gyro.o
+                0x000000000800aaf4                gyro_init
  .text.read_byte
-                0x000000000800ab8c       0x58 Src/gyro.o
-                0x000000000800ab8c                read_byte
+                0x000000000800ab64       0x58 Src/gyro.o
+                0x000000000800ab64                read_byte
  .text.write_byte
-                0x000000000800abe4       0x58 Src/gyro.o
-                0x000000000800abe4                write_byte
+                0x000000000800abbc       0x58 Src/gyro.o
+                0x000000000800abbc                write_byte
  .text.accel_read_x
-                0x000000000800ac3c       0x4c Src/gyro.o
-                0x000000000800ac3c                accel_read_x
+                0x000000000800ac14       0x4c Src/gyro.o
+                0x000000000800ac14                accel_read_x
  .text.accel_read_y
-                0x000000000800ac88       0x4c Src/gyro.o
-                0x000000000800ac88                accel_read_y
+                0x000000000800ac60       0x4c Src/gyro.o
+                0x000000000800ac60                accel_read_y
  .text.accel_read_z
-                0x000000000800acd4       0x4e Src/gyro.o
-                0x000000000800acd4                accel_read_z
- *fill*         0x000000000800ad22        0x6 
+                0x000000000800acac       0x4e Src/gyro.o
+                0x000000000800acac                accel_read_z
+ *fill*         0x000000000800acfa        0x6 
  .text.gyro_read_x
-                0x000000000800ad28       0x78 Src/gyro.o
-                0x000000000800ad28                gyro_read_x
+                0x000000000800ad00       0x78 Src/gyro.o
+                0x000000000800ad00                gyro_read_x
  .text.gyro_read_y
-                0x000000000800ada0       0x74 Src/gyro.o
-                0x000000000800ada0                gyro_read_y
- *fill*         0x000000000800ae14        0x4 
+                0x000000000800ad78       0x74 Src/gyro.o
+                0x000000000800ad78                gyro_read_y
+ *fill*         0x000000000800adec        0x4 
  .text.gyro_read_z
-                0x000000000800ae18       0x84 Src/gyro.o
-                0x000000000800ae18                gyro_read_z
+                0x000000000800adf0       0x84 Src/gyro.o
+                0x000000000800adf0                gyro_read_z
  .text.__io_putchar
-                0x000000000800ae9c       0x3c Src/main.o
-                0x000000000800ae9c                __io_putchar
+                0x000000000800ae74       0x3c Src/main.o
+                0x000000000800ae74                __io_putchar
  .text.HAL_TIM_PeriodElapsedCallback
-                0x000000000800aed8     0x15d8 Src/main.o
-                0x000000000800aed8                HAL_TIM_PeriodElapsedCallback
- .text.main     0x000000000800c4b0      0x23c Src/main.o
-                0x000000000800c4b0                main
+                0x000000000800aeb0     0x15fc Src/main.o
+                0x000000000800aeb0                HAL_TIM_PeriodElapsedCallback
+ .text.main     0x000000000800c4ac      0x23c Src/main.o
+                0x000000000800c4ac                main
  .text.SystemClock_Config
-                0x000000000800c6ec       0xd4 Src/main.o
-                0x000000000800c6ec                SystemClock_Config
+                0x000000000800c6e8       0xd4 Src/main.o
+                0x000000000800c6e8                SystemClock_Config
  .text.MX_ADC1_Init
-                0x000000000800c7c0       0xa4 Src/main.o
+                0x000000000800c7bc       0xa4 Src/main.o
  .text.MX_SPI3_Init
-                0x000000000800c864       0x6c Src/main.o
+                0x000000000800c860       0x6c Src/main.o
  .text.MX_TIM2_Init
-                0x000000000800c8d0      0x100 Src/main.o
+                0x000000000800c8cc      0x100 Src/main.o
  .text.MX_TIM3_Init
-                0x000000000800c9d0       0xec Src/main.o
+                0x000000000800c9cc       0xec Src/main.o
  .text.MX_TIM4_Init
-                0x000000000800cabc       0xa8 Src/main.o
+                0x000000000800cab8       0xa8 Src/main.o
  .text.MX_TIM6_Init
-                0x000000000800cb64       0x6c Src/main.o
+                0x000000000800cb60       0x6c Src/main.o
  .text.MX_TIM8_Init
-                0x000000000800cbd0       0xb0 Src/main.o
+                0x000000000800cbcc       0xb0 Src/main.o
  .text.MX_USART1_UART_Init
-                0x000000000800cc80       0x54 Src/main.o
+                0x000000000800cc7c       0x54 Src/main.o
  .text.MX_GPIO_Init
-                0x000000000800ccd4      0x17c Src/main.o
- .text.buzzer   0x000000000800ce50       0x80 Src/main.o
-                0x000000000800ce50                buzzer
+                0x000000000800ccd0      0x17c Src/main.o
+ .text.buzzer   0x000000000800ce4c       0x80 Src/main.o
+                0x000000000800ce4c                buzzer
  .text.get_adc_value
-                0x000000000800ced0       0x52 Src/main.o
-                0x000000000800ced0                get_adc_value
+                0x000000000800cecc       0x52 Src/main.o
+                0x000000000800cecc                get_adc_value
  .text.Error_Handler
-                0x000000000800cf22        0xe Src/main.o
-                0x000000000800cf22                Error_Handler
+                0x000000000800cf1e        0xe Src/main.o
+                0x000000000800cf1e                Error_Handler
  .text.search_init
-                0x000000000800cf30       0x38 Src/search.o
-                0x000000000800cf30                search_init
- .text.searchA  0x000000000800cf68      0x104 Src/search.o
-                0x000000000800cf68                searchA
- .text.searchB  0x000000000800d06c      0x114 Src/search.o
-                0x000000000800d06c                searchB
- .text.searchC  0x000000000800d180      0x264 Src/search.o
-                0x000000000800d180                searchC
- .text.searchD  0x000000000800d3e4      0x21c Src/search.o
-                0x000000000800d3e4                searchD
- .text.searchE  0x000000000800d600      0x158 Src/search.o
-                0x000000000800d600                searchE
+                0x000000000800cf2c       0x38 Src/search.o
+                0x000000000800cf2c                search_init
+ .text.searchA  0x000000000800cf64      0x104 Src/search.o
+                0x000000000800cf64                searchA
+ .text.searchB  0x000000000800d068      0x114 Src/search.o
+                0x000000000800d068                searchB
+ .text.searchC  0x000000000800d17c      0x264 Src/search.o
+                0x000000000800d17c                searchC
+ .text.searchD  0x000000000800d3e0      0x21c Src/search.o
+                0x000000000800d3e0                searchD
+ .text.searchE  0x000000000800d5fc      0x158 Src/search.o
+                0x000000000800d5fc                searchE
  .text.searchF3
-                0x000000000800d758      0x194 Src/search.o
-                0x000000000800d758                searchF3
+                0x000000000800d754      0x194 Src/search.o
+                0x000000000800d754                searchF3
  .text.searchF4
-                0x000000000800d8ec      0x4c4 Src/search.o
-                0x000000000800d8ec                searchF4
- .text.adv_pos  0x000000000800ddb0       0x74 Src/search.o
-                0x000000000800ddb0                adv_pos
+                0x000000000800d8e8      0x4c4 Src/search.o
+                0x000000000800d8e8                searchF4
+ .text.adv_pos  0x000000000800ddac       0x74 Src/search.o
+                0x000000000800ddac                adv_pos
  .text.conf_route
-                0x000000000800de24       0x3c Src/search.o
-                0x000000000800de24                conf_route
+                0x000000000800de20       0x3c Src/search.o
+                0x000000000800de20                conf_route
  .text.map_Init
-                0x000000000800de60       0xd8 Src/search.o
-                0x000000000800de60                map_Init
+                0x000000000800de5c       0xd8 Src/search.o
+                0x000000000800de5c                map_Init
  .text.write_map
-                0x000000000800df38      0x250 Src/search.o
-                0x000000000800df38                write_map
+                0x000000000800df34      0x250 Src/search.o
+                0x000000000800df34                write_map
+ *fill*         0x000000000800e184        0x4 
  .text.turn_dir
                 0x000000000800e188      0x1b0 Src/search.o
                 0x000000000800e188                turn_dir
@@ -5648,7 +5651,7 @@ LOAD c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000000000d75       0x22 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
 OUTPUT(mouse2019.elf elf32-littlearm)
 
-.debug_info     0x0000000000000000    0x16d02
+.debug_info     0x0000000000000000    0x16d33
  .debug_info    0x0000000000000000      0x90f Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
  .debug_info    0x000000000000090f      0xc9c Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
  .debug_info    0x00000000000015ab      0xdc4 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
@@ -5664,14 +5667,14 @@ OUTPUT(mouse2019.elf elf32-littlearm)
  .debug_info    0x000000000000b8be     0x123d Src/eeprom.o
  .debug_info    0x000000000000cafb     0x17df Src/gyro.o
  .debug_info    0x000000000000e2da     0x2883 Src/main.o
- .debug_info    0x0000000000010b5d     0x1665 Src/search.o
- .debug_info    0x00000000000121c2     0x128c Src/sensor.o
- .debug_info    0x000000000001344e     0x151e Src/stm32f4xx_hal_msp.o
- .debug_info    0x000000000001496c      0x699 Src/stm32f4xx_it.o
- .debug_info    0x0000000000015005      0xebd Src/syscalls.o
- .debug_info    0x0000000000015ec2      0x91c Src/sysmem.o
- .debug_info    0x00000000000167de      0x502 Src/system_stm32f4xx.o
- .debug_info    0x0000000000016ce0       0x22 Startup/startup_stm32f405rgtx.o
+ .debug_info    0x0000000000010b5d     0x1696 Src/search.o
+ .debug_info    0x00000000000121f3     0x128c Src/sensor.o
+ .debug_info    0x000000000001347f     0x151e Src/stm32f4xx_hal_msp.o
+ .debug_info    0x000000000001499d      0x699 Src/stm32f4xx_it.o
+ .debug_info    0x0000000000015036      0xebd Src/syscalls.o
+ .debug_info    0x0000000000015ef3      0x91c Src/sysmem.o
+ .debug_info    0x000000000001680f      0x502 Src/system_stm32f4xx.o
+ .debug_info    0x0000000000016d11       0x22 Startup/startup_stm32f405rgtx.o
 
 .debug_abbrev   0x0000000000000000     0x30ac
  .debug_abbrev  0x0000000000000000      0x1cb Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
@@ -5698,7 +5701,7 @@ OUTPUT(mouse2019.elf elf32-littlearm)
  .debug_abbrev  0x0000000000002f89      0x111 Src/system_stm32f4xx.o
  .debug_abbrev  0x000000000000309a       0x12 Startup/startup_stm32f405rgtx.o
 
-.debug_aranges  0x0000000000000000     0x13f0
+.debug_aranges  0x0000000000000000     0x13f8
  .debug_aranges
                 0x0000000000000000       0xf0 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
  .debug_aranges
@@ -5730,23 +5733,23 @@ OUTPUT(mouse2019.elf elf32-littlearm)
  .debug_aranges
                 0x0000000000001038       0x98 Src/main.o
  .debug_aranges
-                0x00000000000010d0       0xe0 Src/search.o
+                0x00000000000010d0       0xe8 Src/search.o
  .debug_aranges
-                0x00000000000011b0       0x48 Src/sensor.o
+                0x00000000000011b8       0x48 Src/sensor.o
  .debug_aranges
-                0x00000000000011f8       0x78 Src/stm32f4xx_hal_msp.o
+                0x0000000000001200       0x78 Src/stm32f4xx_hal_msp.o
  .debug_aranges
-                0x0000000000001270       0x68 Src/stm32f4xx_it.o
+                0x0000000000001278       0x68 Src/stm32f4xx_it.o
  .debug_aranges
-                0x00000000000012d8       0xa8 Src/syscalls.o
+                0x00000000000012e0       0xa8 Src/syscalls.o
  .debug_aranges
-                0x0000000000001380       0x20 Src/sysmem.o
+                0x0000000000001388       0x20 Src/sysmem.o
  .debug_aranges
-                0x00000000000013a0       0x28 Src/system_stm32f4xx.o
+                0x00000000000013a8       0x28 Src/system_stm32f4xx.o
  .debug_aranges
-                0x00000000000013c8       0x28 Startup/startup_stm32f405rgtx.o
+                0x00000000000013d0       0x28 Startup/startup_stm32f405rgtx.o
 
-.debug_ranges   0x0000000000000000     0x12a0
+.debug_ranges   0x0000000000000000     0x12a8
  .debug_ranges  0x0000000000000000       0xe0 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
  .debug_ranges  0x00000000000000e0       0xd8 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
  .debug_ranges  0x00000000000001b8      0x108 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
@@ -5762,14 +5765,14 @@ OUTPUT(mouse2019.elf elf32-littlearm)
  .debug_ranges  0x0000000000000ed0       0x38 Src/eeprom.o
  .debug_ranges  0x0000000000000f08       0x50 Src/gyro.o
  .debug_ranges  0x0000000000000f58       0xa0 Src/main.o
- .debug_ranges  0x0000000000000ff8       0xd0 Src/search.o
- .debug_ranges  0x00000000000010c8       0x38 Src/sensor.o
- .debug_ranges  0x0000000000001100       0x68 Src/stm32f4xx_hal_msp.o
- .debug_ranges  0x0000000000001168       0x58 Src/stm32f4xx_it.o
- .debug_ranges  0x00000000000011c0       0x98 Src/syscalls.o
- .debug_ranges  0x0000000000001258       0x10 Src/sysmem.o
- .debug_ranges  0x0000000000001268       0x18 Src/system_stm32f4xx.o
- .debug_ranges  0x0000000000001280       0x20 Startup/startup_stm32f405rgtx.o
+ .debug_ranges  0x0000000000000ff8       0xd8 Src/search.o
+ .debug_ranges  0x00000000000010d0       0x38 Src/sensor.o
+ .debug_ranges  0x0000000000001108       0x68 Src/stm32f4xx_hal_msp.o
+ .debug_ranges  0x0000000000001170       0x58 Src/stm32f4xx_it.o
+ .debug_ranges  0x00000000000011c8       0x98 Src/syscalls.o
+ .debug_ranges  0x0000000000001260       0x10 Src/sysmem.o
+ .debug_ranges  0x0000000000001270       0x18 Src/system_stm32f4xx.o
+ .debug_ranges  0x0000000000001288       0x20 Startup/startup_stm32f405rgtx.o
 
 .debug_macro    0x0000000000000000    0x22976
  .debug_macro   0x0000000000000000      0x251 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
@@ -5890,7 +5893,7 @@ OUTPUT(mouse2019.elf elf32-littlearm)
  .debug_macro   0x0000000000022544      0x23b Src/sysmem.o
  .debug_macro   0x000000000002277f      0x1f7 Src/system_stm32f4xx.o
 
-.debug_line     0x0000000000000000    0x10b54
+.debug_line     0x0000000000000000    0x10bd2
  .debug_line    0x0000000000000000      0x906 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
  .debug_line    0x0000000000000906      0xb6e Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
  .debug_line    0x0000000000001474      0xa2d Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
@@ -5902,20 +5905,20 @@ OUTPUT(mouse2019.elf elf32-littlearm)
  .debug_line    0x000000000000534f     0x196a Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o
  .debug_line    0x0000000000006cb9      0xd0d Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o
  .debug_line    0x00000000000079c6     0x1000 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o
- .debug_line    0x00000000000089c6     0x1a42 Src/drive.o
- .debug_line    0x000000000000a408      0x99b Src/eeprom.o
- .debug_line    0x000000000000ada3      0x9d4 Src/gyro.o
- .debug_line    0x000000000000b777      0xed6 Src/main.o
- .debug_line    0x000000000000c64d     0x1672 Src/search.o
- .debug_line    0x000000000000dcbf      0xa67 Src/sensor.o
- .debug_line    0x000000000000e726      0x842 Src/stm32f4xx_hal_msp.o
- .debug_line    0x000000000000ef68      0x7b5 Src/stm32f4xx_it.o
- .debug_line    0x000000000000f71d      0x73d Src/syscalls.o
- .debug_line    0x000000000000fe5a      0x559 Src/sysmem.o
- .debug_line    0x00000000000103b3      0x720 Src/system_stm32f4xx.o
- .debug_line    0x0000000000010ad3       0x81 Startup/startup_stm32f405rgtx.o
+ .debug_line    0x00000000000089c6     0x1a3f Src/drive.o
+ .debug_line    0x000000000000a405      0x99b Src/eeprom.o
+ .debug_line    0x000000000000ada0      0x9d4 Src/gyro.o
+ .debug_line    0x000000000000b774      0xed8 Src/main.o
+ .debug_line    0x000000000000c64c     0x16f1 Src/search.o
+ .debug_line    0x000000000000dd3d      0xa67 Src/sensor.o
+ .debug_line    0x000000000000e7a4      0x842 Src/stm32f4xx_hal_msp.o
+ .debug_line    0x000000000000efe6      0x7b5 Src/stm32f4xx_it.o
+ .debug_line    0x000000000000f79b      0x73d Src/syscalls.o
+ .debug_line    0x000000000000fed8      0x559 Src/sysmem.o
+ .debug_line    0x0000000000010431      0x720 Src/system_stm32f4xx.o
+ .debug_line    0x0000000000010b51       0x81 Startup/startup_stm32f405rgtx.o
 
-.debug_str      0x0000000000000000    0xc80a5
+.debug_str      0x0000000000000000    0xc80af
  .debug_str     0x0000000000000000    0xbcc5d Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
                                       0xbcfee (size before relaxing)
  .debug_str     0x00000000000bcc5d      0x665 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
@@ -5938,29 +5941,29 @@ OUTPUT(mouse2019.elf elf32-littlearm)
                                       0xbcdda (size before relaxing)
  .debug_str     0x00000000000bfcc7      0x677 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o
                                       0xbcd01 (size before relaxing)
- .debug_str     0x00000000000c033e     0x651c Src/drive.o
-                                      0xc2a79 (size before relaxing)
- .debug_str     0x00000000000c685a       0xa9 Src/eeprom.o
-                                      0xc1f87 (size before relaxing)
- .debug_str     0x00000000000c6903       0xb2 Src/gyro.o
-                                      0xc238b (size before relaxing)
- .debug_str     0x00000000000c69b5      0x154 Src/main.o
-                                      0xc35ff (size before relaxing)
- .debug_str     0x00000000000c6b09      0x165 Src/search.o
-                                      0xc1fc1 (size before relaxing)
- .debug_str     0x00000000000c6c6e       0x76 Src/sensor.o
-                                      0xc1f55 (size before relaxing)
- .debug_str     0x00000000000c6ce4       0x46 Src/stm32f4xx_hal_msp.o
+ .debug_str     0x00000000000c033e     0x651d Src/drive.o
+                                      0xc2a7a (size before relaxing)
+ .debug_str     0x00000000000c685b       0xa9 Src/eeprom.o
+                                      0xc1f88 (size before relaxing)
+ .debug_str     0x00000000000c6904       0xb2 Src/gyro.o
+                                      0xc238c (size before relaxing)
+ .debug_str     0x00000000000c69b6      0x154 Src/main.o
+                                      0xc3600 (size before relaxing)
+ .debug_str     0x00000000000c6b0a      0x16e Src/search.o
+                                      0xc1fcb (size before relaxing)
+ .debug_str     0x00000000000c6c78       0x76 Src/sensor.o
+                                      0xc1f56 (size before relaxing)
+ .debug_str     0x00000000000c6cee       0x46 Src/stm32f4xx_hal_msp.o
                                       0xbd3a6 (size before relaxing)
- .debug_str     0x00000000000c6d2a       0xcc Src/stm32f4xx_it.o
+ .debug_str     0x00000000000c6d34       0xcc Src/stm32f4xx_it.o
                                       0xbc83f (size before relaxing)
- .debug_str     0x00000000000c6df6     0x11f3 Src/syscalls.o
+ .debug_str     0x00000000000c6e00     0x11f3 Src/syscalls.o
                                        0x8895 (size before relaxing)
- .debug_str     0x00000000000c7fe9       0x31 Src/sysmem.o
+ .debug_str     0x00000000000c7ff3       0x31 Src/sysmem.o
                                        0x7aee (size before relaxing)
- .debug_str     0x00000000000c801a       0x5a Src/system_stm32f4xx.o
+ .debug_str     0x00000000000c8024       0x5a Src/system_stm32f4xx.o
                                       0xbc4c9 (size before relaxing)
- .debug_str     0x00000000000c8074       0x31 Startup/startup_stm32f405rgtx.o
+ .debug_str     0x00000000000c807e       0x31 Startup/startup_stm32f405rgtx.o
                                          0x70 (size before relaxing)
 
 .comment        0x0000000000000000       0x7b
@@ -5988,7 +5991,7 @@ OUTPUT(mouse2019.elf elf32-littlearm)
  .comment       0x000000000000007b       0x7c Src/sysmem.o
  .comment       0x000000000000007b       0x7c Src/system_stm32f4xx.o
 
-.debug_frame    0x0000000000000000     0x5d48
+.debug_frame    0x0000000000000000     0x5d70
  .debug_frame   0x0000000000000000      0x374 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
  .debug_frame   0x0000000000000374      0x3fc Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
  .debug_frame   0x0000000000000770      0x498 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
@@ -6004,49 +6007,49 @@ OUTPUT(mouse2019.elf elf32-littlearm)
  .debug_frame   0x00000000000042d0       0xf0 Src/eeprom.o
  .debug_frame   0x00000000000043c0      0x16c Src/gyro.o
  .debug_frame   0x000000000000452c      0x250 Src/main.o
- .debug_frame   0x000000000000477c      0x3ac Src/search.o
- .debug_frame   0x0000000000004b28       0xe0 Src/sensor.o
- .debug_frame   0x0000000000004c08      0x1c4 Src/stm32f4xx_hal_msp.o
- .debug_frame   0x0000000000004dcc      0x128 Src/stm32f4xx_it.o
- .debug_frame   0x0000000000004ef4      0x2ac Src/syscalls.o
- .debug_frame   0x00000000000051a0       0x34 Src/sysmem.o
- .debug_frame   0x00000000000051d4       0x58 Src/system_stm32f4xx.o
- .debug_frame   0x000000000000522c       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-errno.o)
- .debug_frame   0x000000000000524c       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-init.o)
- .debug_frame   0x0000000000005278       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-memset.o)
- .debug_frame   0x0000000000005298       0x74 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-printf.o)
- .debug_frame   0x000000000000530c       0x3c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-puts.o)
- .debug_frame   0x0000000000005348       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-setbuf.o)
- .debug_frame   0x0000000000005368       0x38 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-setvbuf.o)
- .debug_frame   0x00000000000053a0       0x40 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wbuf.o)
- .debug_frame   0x00000000000053e0       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wsetup.o)
- .debug_frame   0x000000000000540c       0x68 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fflush.o)
- .debug_frame   0x0000000000005474      0x11c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
- .debug_frame   0x0000000000005590       0x54 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fwalk.o)
- .debug_frame   0x00000000000055e4       0x58 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-makebuf.o)
- .debug_frame   0x000000000000563c       0x30 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-malloc.o)
- .debug_frame   0x000000000000566c       0x38 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-freer.o)
- .debug_frame   0x00000000000056a4       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-mallocr.o)
- .debug_frame   0x00000000000056d0       0xac c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-vfprintf.o)
- .debug_frame   0x000000000000577c       0x60 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-vfprintf_i.o)
- .debug_frame   0x00000000000057dc       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-sbrkr.o)
- .debug_frame   0x0000000000005808       0x88 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
- .debug_frame   0x0000000000005890       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-writer.o)
- .debug_frame   0x00000000000058bc       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-closer.o)
- .debug_frame   0x00000000000058e8       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fstatr.o)
- .debug_frame   0x0000000000005914       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-isattyr.o)
- .debug_frame   0x0000000000005940       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-lseekr.o)
- .debug_frame   0x000000000000596c       0x30 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-mlock.o)
- .debug_frame   0x000000000000599c       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-readr.o)
- .debug_frame   0x00000000000059c8       0x5c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-reent.o)
- .debug_frame   0x0000000000005a24       0x4c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libm.a(lib_a-w_sqrt.o)
- .debug_frame   0x0000000000005a70       0x30 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libm.a(lib_a-e_sqrt.o)
- .debug_frame   0x0000000000005aa0       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libm.a(lib_a-s_matherr.o)
- .debug_frame   0x0000000000005ac0       0xac c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_addsubdf3.o)
- .debug_frame   0x0000000000005b6c       0x50 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_muldivdf3.o)
- .debug_frame   0x0000000000005bbc       0xc4 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_cmpdf2.o)
- .debug_frame   0x0000000000005c80       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_unorddf2.o)
- .debug_frame   0x0000000000005ca0       0x24 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_fixdfsi.o)
- .debug_frame   0x0000000000005cc4       0x24 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_truncdfsf2.o)
- .debug_frame   0x0000000000005ce8       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
- .debug_frame   0x0000000000005d14       0x34 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+ .debug_frame   0x000000000000477c      0x3d4 Src/search.o
+ .debug_frame   0x0000000000004b50       0xe0 Src/sensor.o
+ .debug_frame   0x0000000000004c30      0x1c4 Src/stm32f4xx_hal_msp.o
+ .debug_frame   0x0000000000004df4      0x128 Src/stm32f4xx_it.o
+ .debug_frame   0x0000000000004f1c      0x2ac Src/syscalls.o
+ .debug_frame   0x00000000000051c8       0x34 Src/sysmem.o
+ .debug_frame   0x00000000000051fc       0x58 Src/system_stm32f4xx.o
+ .debug_frame   0x0000000000005254       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-errno.o)
+ .debug_frame   0x0000000000005274       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-init.o)
+ .debug_frame   0x00000000000052a0       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-memset.o)
+ .debug_frame   0x00000000000052c0       0x74 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-printf.o)
+ .debug_frame   0x0000000000005334       0x3c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-puts.o)
+ .debug_frame   0x0000000000005370       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-setbuf.o)
+ .debug_frame   0x0000000000005390       0x38 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-setvbuf.o)
+ .debug_frame   0x00000000000053c8       0x40 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wbuf.o)
+ .debug_frame   0x0000000000005408       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wsetup.o)
+ .debug_frame   0x0000000000005434       0x68 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fflush.o)
+ .debug_frame   0x000000000000549c      0x11c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+ .debug_frame   0x00000000000055b8       0x54 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fwalk.o)
+ .debug_frame   0x000000000000560c       0x58 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-makebuf.o)
+ .debug_frame   0x0000000000005664       0x30 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-malloc.o)
+ .debug_frame   0x0000000000005694       0x38 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-freer.o)
+ .debug_frame   0x00000000000056cc       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-mallocr.o)
+ .debug_frame   0x00000000000056f8       0xac c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-vfprintf.o)
+ .debug_frame   0x00000000000057a4       0x60 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-vfprintf_i.o)
+ .debug_frame   0x0000000000005804       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-sbrkr.o)
+ .debug_frame   0x0000000000005830       0x88 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
+ .debug_frame   0x00000000000058b8       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-writer.o)
+ .debug_frame   0x00000000000058e4       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-closer.o)
+ .debug_frame   0x0000000000005910       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fstatr.o)
+ .debug_frame   0x000000000000593c       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-isattyr.o)
+ .debug_frame   0x0000000000005968       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-lseekr.o)
+ .debug_frame   0x0000000000005994       0x30 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-mlock.o)
+ .debug_frame   0x00000000000059c4       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-readr.o)
+ .debug_frame   0x00000000000059f0       0x5c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-reent.o)
+ .debug_frame   0x0000000000005a4c       0x4c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libm.a(lib_a-w_sqrt.o)
+ .debug_frame   0x0000000000005a98       0x30 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libm.a(lib_a-e_sqrt.o)
+ .debug_frame   0x0000000000005ac8       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libm.a(lib_a-s_matherr.o)
+ .debug_frame   0x0000000000005ae8       0xac c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_addsubdf3.o)
+ .debug_frame   0x0000000000005b94       0x50 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_muldivdf3.o)
+ .debug_frame   0x0000000000005be4       0xc4 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_cmpdf2.o)
+ .debug_frame   0x0000000000005ca8       0x20 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_unorddf2.o)
+ .debug_frame   0x0000000000005cc8       0x24 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_fixdfsi.o)
+ .debug_frame   0x0000000000005cec       0x24 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_arm_truncdfsf2.o)
+ .debug_frame   0x0000000000005d10       0x2c c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .debug_frame   0x0000000000005d3c       0x34 c:/st/stm32cubeide_1.0.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
