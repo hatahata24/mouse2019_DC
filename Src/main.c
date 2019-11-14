@@ -136,7 +136,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		log_cnt ++;
 
-		if(log_cnt >= 5 && MF.FLAG.LOG){
+		if(log_cnt >= 5 && MF2.FLAG.LOG){
 			log_cnt = 0;
 			if(get_cnt < log_allay){
 				get_speed_l[get_cnt] = speed_l;
@@ -155,13 +155,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		degree_z += gyro_read_z() * 0.001;
 
 		//gyro ドリフト量計算
-		if(gyro_drift_flag){
+		if(MF2.FLAG.GDRIFT){
 			gyro_cnt ++;
 			if(gyro_cnt >= 2)dif_omega_z += old_omega_z - gyro_read_z();
 			old_omega_z = gyro_read_z();
 			full_led_write(YELLOW);
 			if(gyro_cnt >= 1001) {
-				gyro_drift_flag = 0;
+				MF2.FLAG.GDRIFT = 0;
 				gyro_drift_value = dif_omega_z / gyro_cnt-1;
 				gyro_cnt = 0;
 				full_led_write(BLUEGREEN);
@@ -171,7 +171,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 
-		if(enkai_flag){
+		if(MF2.FLAG.ENKAI){
 			target_dist = TREAD*M_PI/360*(degree_z-target_degree_z);
 			if(target_dist > 0){
 				target_speed_l = sqrt(2*accel_l*target_dist);
@@ -189,11 +189,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		if(MF.FLAG.FWALL){
-			pulse_l = (OFFSET_FWALL_L - ad_fl) * 0.04;
-			pulse_r = (OFFSET_FWALL_R - ad_fr) * 0.08;
+			target_speed_l = (int16_t)(OFFSET_FWALL_L - ad_fl)*0.75;
+			target_speed_r = (int16_t)(OFFSET_FWALL_R - ad_fr)*1.5;
+
+			if(target_speed_l*target_speed_l < 2500)target_speed_l = 0;
+			if(target_speed_r*target_speed_r < 2500)target_speed_r = 0;
+			if(target_speed_l == 0 && target_speed_r == 0){
+				MF.FLAG.FWALL = 0;
+				MF.FLAG.DRV = 0;
+			}
+
+			epsilon_l = target_speed_l - speed_l;
+			pulse_l = Kp * epsilon_l;
+			epsilon_r = target_speed_r - speed_r;
+			pulse_r = Kp * epsilon_r;
+
 			pulse_l = min(max(pulse_l, -100), 100);
 			pulse_r = min(max(pulse_r, -100), 100);
-
 		}
 
 
@@ -245,7 +257,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		  case 2:
 				//
 				if(MF.FLAG.WCTRL){
-					if(!v_flag){
+					if(!MF2.FLAG.V){
 						int16_t dwl_tmp = 0, dwr_tmp = 0;
 						dif_l = (int32_t) ad_l - base_l;
 						dif_r = (int32_t) ad_r - base_r;
@@ -256,12 +268,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 								dwr_tmp += -1 * CTRL_CONT_W * dif_l;			//a比例制御値を決定
 							}
 							else if(dif_r > CTRL_BASE_R){
-								dwl_tmp += -1 * CTRL_CONT_W * dif_r;				//a比例制御値を決定
-								dwr_tmp += CTRL_CONT_W * dif_r;						//a比例制御値を決定
+								dwl_tmp += -1 * CTRL_CONT_W * dif_r;			//a比例制御値を決定
+								dwr_tmp += CTRL_CONT_W * dif_r;					//a比例制御値を決定
 							}
-							W_G_flag = 1;
+							MF2.FLAG.WG = 1;
 						}else{
-							W_G_flag = 0;
+							MF2.FLAG.WG = 0;
 						}
 						dwl = max(min(CTRL_MAX_W, dwl_tmp), -1 * CTRL_MAX_W);
 						dwr = max(min(CTRL_MAX_W, dwr_tmp), -1 * CTRL_MAX_W);
@@ -279,9 +291,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 								dwl_tmp += -1 * CTRL_CONT_W * 0.2 * dif_r;			//a比例制御値を決定
 								dwr_tmp += CTRL_CONT_W * 0.2 * dif_r;				//a比例制御値を決定
 							}
-							W_G_flag = 1;
+							MF2.FLAG.WG = 1;
 						}else{
-							W_G_flag = 0;
+							MF2.FLAG.WG = 0;
 						}
 						dwl = max(min(CTRL_MAX_W, dwl_tmp), -1 * CTRL_MAX_W);
 						dwr = max(min(CTRL_MAX_W, dwr_tmp), -1 * CTRL_MAX_W);
@@ -326,7 +338,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 		if(MF.FLAG.DRV){
-			if(!W_G_flag){
+			if(!MF2.FLAG.WG){
 //				pulse_l = pulse_l + dgl + dwl;
 //				pulse_r = pulse_r + dgr + dwr;
 				pulse_l = pulse_l + dgl;

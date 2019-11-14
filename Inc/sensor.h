@@ -10,8 +10,6 @@
 	int16_t dif_l, dif_r;									//a基準値とAD変換値の偏差
 	volatile int16_t dwl, dwr;								//a比例制御量
 
-	uint8_t W_G_flag;
-
 #else														//main.c以外からこのファイルが呼ばれている場合
 	extern uint8_t tp;
 	extern uint32_t ad_r, ad_fr, ad_fl, ad_l;
@@ -19,7 +17,6 @@
 	extern int16_t dif_l, dif_r;
 	extern volatile int16_t	dl, dr;
 
-	extern uint8_t W_G_flag;
 #endif
 
 void sensor_init(void);

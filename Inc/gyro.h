@@ -13,7 +13,6 @@
 	volatile float omega_min, omega_max;
 	volatile int16_t dg, dgl, dgr;								//a比例制御量
 	volatile float dif_omega_z, old_omega_z, gyro_drift_value;	//a偏差と積分
-	volatile uint8_t gyro_drift_flag;							//ジャイロドリフト計算開始フラグ
 #else												//main.c以外からこのファイルが呼ばれている場合
 	/*aグローバル変数の宣言*/
 
@@ -25,7 +24,6 @@
 	extern volatile int16_t dg, dgl, dgr;							//a比例制御量
 	extern int16_t dif_g;
 	extern volatile float dif_omega_z, old_omega_z, gyro_drift_value;	//a偏差と積分
-	extern volatile uint8_t gyro_drift_flag;						//ジャイロドリフト計算開始フラグ
 #endif
 
 

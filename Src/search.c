@@ -177,7 +177,7 @@ void searchC(){
 
 	//====aスタート位置壁情報取得====
 	if(!MF.FLAG.SCND)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
-	if(!MF.FLAG.SCND)wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
+	if(!MF.FLAG.SCND)wall_info &= ~0x88;									//a前壁は存在するはずがないので削除する
 	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
@@ -186,17 +186,17 @@ void searchC(){
 
 	//====a歩数マップ・経路作成====
 	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
-	r_cnt = 0;												//a経路カウンタの初期化
-	make_smap();											//a歩数マップ作成
-	make_route();											//a最短経路探索（route配列に動作が格納される）
+	r_cnt = 0;																//a経路カウンタの初期化
+	make_smap();															//a歩数マップ作成
+	make_route();															//a最短経路探索（route配列に動作が格納される）
 
 	//====aマウス位置保存用変数を宣言
-	uint8_t x, y;											//X，Y座標
+	uint8_t x, y;															//X，Y座標
 
 	//====a探索走行====
 	do{
 		//----a進行----
-		switch(route[r_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
+		switch(route[r_cnt++]){												//route配列によって進行を決定。経路カウンタを進める
 			//----a前進----
 			case 0x88:
 				if(route[r_cnt] == 0x88 && MF.FLAG.ACCL2){
@@ -204,23 +204,23 @@ void searchC(){
 					y = mouse.y;
 					adv_pos();
 					if((map[mouse.y][mouse.x] & 0x0f) == (map[mouse.y][mouse.x]>>4)){
-						if(!H_accel_flag){
+						if(!MF2.FLAG.HACCEL){
 							one_sectionA();
-							H_accel_flag = 1;
+							MF2.FLAG.HACCEL = 1;
 						}else{
 							one_sectionU();
 						}
-					}else if(H_accel_flag){
+					}else if(MF2.FLAG.HACCEL){
 						one_sectionD();
-						H_accel_flag = 0;
+						MF2.FLAG.HACCEL = 0;
 					}else{
 						one_sectionU();
 					}
 					mouse.x = x;
 					mouse.y = y;
-				}else if(H_accel_flag){
+				}else if(MF2.FLAG.HACCEL){
 					one_sectionD();
-					H_accel_flag = 0;
+					MF2.FLAG.HACCEL = 0;
 				}else{
 					one_sectionU();
 				}
@@ -251,11 +251,13 @@ void searchC(){
 
 	half_sectionD();
 
+	set_positionF();
+
 	HAL_Delay(500);
 	rotate_180();											//180度回転
 	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 	degree_z = target_degree_z;
-	start_flag = 0;
+	start_mode = 0;
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -293,7 +295,7 @@ void searchD(){
 	make_smap();											//a歩数マップ作成
 	make_route();											//a最短経路探索（route配列に動作が格納される）
 
-	H_accel_flag = 0;
+	MF2.FLAG.HACCEL = 0;
 
 	//====a探索走行====
 	do{
@@ -302,13 +304,13 @@ void searchD(){
 			//----a前進----
 			case 0x88:
 				if(MF.FLAG.SCND == 1 && MF.FLAG.ACCL2 == 1){
-					if(((route[r_cnt-1] & route[r_cnt]) == 0x88) && (route[r_cnt] != 0xff) && (H_accel_flag == 0)){
+					if(((route[r_cnt-1] & route[r_cnt]) == 0x88) && (route[r_cnt] != 0xff) && (MF2.FLAG.HACCEL == 0)){
 						one_sectionA();
-						H_accel_flag = 1;
+						MF2.FLAG.HACCEL = 1;
 					}
-					else if((route[r_cnt] & 0x55) && (H_accel_flag == 1)){
+					else if((route[r_cnt] & 0x55) && (MF2.FLAG.HACCEL == 1)){
 						one_sectionD();
-						H_accel_flag = 0;
+						MF2.FLAG.HACCEL = 0;
 					}else{
 						one_sectionU();
 					}
@@ -346,7 +348,7 @@ void searchD(){
 	rotate_180();											//180度回転
 	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 	degree_z = target_degree_z;
-	start_flag = 0;
+	start_mode = 0;
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -419,8 +421,8 @@ void searchE(){
 		m_step = r_cnt = 0;													//a歩数と経路カウンタの初期化
 
 		find_pregoal();														//a仮goalまでの歩数マップの初期化
-		if (allmap_comp_flag) {
-			//printf("get allmap_comp_flag\n");
+		if(MF2.FLAG.ALLMAP) {
+			//printf("get MF2.FLAG.ALLMAP\n");
 			half_sectionD();
 			break;
 		}
@@ -428,15 +430,11 @@ void searchE(){
 		make_route();														//a最短経路探索(route配列に動作が格納される)
 
 		if (j > 150) {
-			//printf("j = %d\n", j);
 			break;															//a移動マス数が250以上になった場合全面探索を中止
 		}
 		i++;
-		//printf("i = %d\n", i);
 
 	} while (i < 150);														//a仮goalへの到着が130回以上になった場合全面探索を中止
-	//printf("i = %d\n", i);
-	//printf("fin\n");
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
@@ -476,7 +474,7 @@ void searchF(){
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
 
-	H_accel_flag = 0;
+	MF2.FLAG.HACCEL = 0;
 
 	//====a探索走行====
 	do{
@@ -596,13 +594,13 @@ void searchF(){
 					one_sectionU();
 				}else{
 					one_sectionA();
-					H_accel_flag = 1;
+					MF2.FLAG.HACCEL = 1;
 					int k;
 					for(k = 0; k < pass[p_cnt-1]-2; k++){
 						one_sectionU();
 					}
 					one_sectionD();
-					H_accel_flag = 0;
+					MF2.FLAG.HACCEL = 0;
 					full_led_write(BLUE);
 				}
 				break;
@@ -645,7 +643,7 @@ void searchF2(){
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
 
-	H_accel_flag = 0;
+	MF2.FLAG.HACCEL = 0;
 
 	//====a探索走行====
 	do{
@@ -766,13 +764,13 @@ void searchF2(){
 					one_sectionU();
 				}else{
 					one_sectionA();
-					H_accel_flag = 1;
+					MF2.FLAG.HACCEL = 1;
 					int k;
 					for(k = 0; k < pass[p_cnt-1]-2; k++){
 						one_sectionU();
 					}
 					one_sectionD();
-					H_accel_flag = 0;
+					MF2.FLAG.HACCEL = 0;
 					full_led_write(BLUE);
 				}
 				break;
@@ -818,7 +816,7 @@ void searchF3(){
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
 
-	H_accel_flag = 0;
+	MF2.FLAG.HACCEL = 0;
 
 	//====a探索走行====
 	do{
@@ -869,13 +867,13 @@ void searchF3(){
 					}
 				}else{
 					one_sectionA();
-					H_accel_flag = 1;
+					MF2.FLAG.HACCEL = 1;
 					int k;
 					for(k = 0; k < pass[p_cnt-1]-4; k++){
 						half_sectionU();
 					}
 					one_sectionD();
-					H_accel_flag = 0;
+					MF2.FLAG.HACCEL = 0;
 				}
 				break;
 		}
@@ -892,7 +890,7 @@ void searchF3(){
 	rotate_180();											//180度回転
 	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 	degree_z = target_degree_z;
-	start_flag = 0;
+	start_mode = 0;
 
 }
 
@@ -921,14 +919,14 @@ void searchF4(){
 	p_cnt = 0;												//a経路カウンタの初期化
 	pass_route3();
 
-	if(start_flag == 0 || start_flag == 1){									//a大回りではない場合、先頭の半区画直進をスキップ
+	if(start_mode == 0 || start_mode == 1){					//a大回りではない場合、先頭の半区画直進をスキップ
 		pass[p_cnt]--;
 	}
 
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
 
-	H_accel_flag = 0;
+	MF2.FLAG.HACCEL = 0;
 	MF.FLAG.XDIR = 1;
 	//====a探索走行====
 	do{
@@ -1029,22 +1027,22 @@ void searchF4(){
 					}
 				}else if(pass[p_cnt-1] < 64){
 					one_sectionA();
-					H_accel_flag = 1;
+					MF2.FLAG.HACCEL = 1;
 					int k;
 					for(k = 0; k < pass[p_cnt-1]-4; k++){
 						half_sectionU();
 					}
 					one_sectionD();
-					H_accel_flag = 0;
+					MF2.FLAG.HACCEL = 0;
 				}else{
-					if((pass[p_cnt] == 64) && (pass[p_cnt+1] == 64) && (pass[p_cnt+2] == 64) && (H_accel_flag == 0)){
+					if((pass[p_cnt] == 64) && (pass[p_cnt+1] == 64) && (pass[p_cnt+2] == 64) && (MF2.FLAG.HACCEL == 0)){
 						one_sectionVA();
-						H_accel_flag = 1;
+						MF2.FLAG.HACCEL = 1;
 						p_cnt++;
 					}
-					else if((pass[p_cnt] == 64) && (pass[p_cnt+1] != 64) && (H_accel_flag == 1)){
+					else if((pass[p_cnt] == 64) && (pass[p_cnt+1] != 64) && (MF2.FLAG.HACCEL == 1)){
 						one_sectionVD();
-						H_accel_flag = 0;
+						MF2.FLAG.HACCEL = 0;
 						p_cnt++;
 					}else{
 						half_sectionV();
@@ -1068,7 +1066,7 @@ void searchF4(){
 	rotate_180();											//180度回転
 	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 	degree_z = target_degree_z;
-	start_flag = 0;
+	start_mode = 0;
 
 	mouse.dir = mouse.dir / 2;
 
@@ -1463,8 +1461,8 @@ void make_smap(void){
 	smap[goal_y][goal_x] = 0;
 
 	//====a歩数カウンタの重みづけ====
-	int straight = 1;
-	int turn = 10;
+	int straight = 3;
+	int turn = 5;
 
 	//====a自分の座標にたどり着くまでループ====
 	do{
@@ -1479,16 +1477,18 @@ void make_smap(void){
 					}
 					//----a北壁についての処理----
 					if(!(m_temp & 0x08) && y != 15){		//a北壁がなく現在最北端でないとき
-						if(smap[y+1][x] == 0x03e7){			//a北側が未記入なら
+//						if(smap[y+1][x] == 0x03e7){			//a北側が未記入なら
+						if(smap[y+1][x] >= (smap[y][x]+turn)){		//a北側が記入後より大きいなら
 							smap[y+1][x] = smap[y][x] + turn;		//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
 								//----a直線優先処理----
-								for (int k = 1; k < 16-y; k++) {					//a現在座標から見て北のマスすべてにおいて
-									m_temp_sample[k] = map[y + k][x];				//map配列からマップデータを取り出す
-									if (MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
-									if (!(m_temp_sample[k] & 0x08) && (y + k) != 0x0f) {		//a北壁がなく現在最北端でないとき
-										if (smap[y + k + 1][x] == 0x03e7) {						//a北側が未記入なら
-											smap[y + k + 1][x] = smap[y + k][x] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
+								for(int k=1; k<16-y; k++) {					//a現在座標から見て北のマスすべてにおいて
+									m_temp_sample[k] = map[y+k][x];				//map配列からマップデータを取り出す
+									if(MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
+									if(!(m_temp_sample[k] & 0x08) && (y+k) != 15) {		//a北壁がなく現在最北端でないとき
+//										if(smap[y+k+1][x] == 0x03e7) {						//a北側が未記入なら
+										if(smap[y+k+1][x] >= (smap[y+k][x]+straight)){		//a北側が記入後より大きいなら
+											smap[y+k+1][x] = smap[y+k][x] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
 										}
 									}
 									else break;
@@ -1498,16 +1498,18 @@ void make_smap(void){
 					}
 					//----a東壁についての処理----
 					if(!(m_temp & 0x04) && x != 15){		//a東壁がなく現在最東端でないとき
-						if(smap[y][x+1] == 0x03e7){			//a東側が未記入なら
+//						if(smap[y][x+1] == 0x03e7){			//a東側が未記入なら
+						if(smap[y][x+1] >= (smap[y][x]+turn)){	//a東側が記入後より大きいなら
 							smap[y][x+1] = smap[y][x] + turn;	//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
 								//----a直線優先処理----
-								for (int k = 1; k < 16 - x; k++) {					//a現在座標から見て東のマスすべてにおいて
-									m_temp_sample[k] = map[y][x + k];				//map配列からマップデータを取り出す
-									if (MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
-									if (!(m_temp_sample[k] & 0x04) && (x + k) != 0x0f) {		//a東壁がなく現在最東端でないとき
-										if (smap[y][x + k + 1] == 0x03e7) {						//a東側が未記入なら
-											smap[y][x + k + 1] = smap[y][x + k] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
+								for(int k=1; k<16-x; k++) {					//a現在座標から見て東のマスすべてにおいて
+									m_temp_sample[k] = map[y][x+k];				//map配列からマップデータを取り出す
+									if(MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
+									if(!(m_temp_sample[k] & 0x04) && (x+k) != 15) {		//a東壁がなく現在最東端でないとき
+//										if(smap[y][x+k+1] == 0x03e7) {						//a東側が未記入なら
+										if(smap[y][x+k+1] >= (smap[y][x+k]+straight)){		//a東側が記入後より大きいなら
+											smap[y][x+k+1] = smap[y][x+k] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
 										}
 									}
 									else break;
@@ -1517,16 +1519,18 @@ void make_smap(void){
 					}
 					//----a南壁についての処理----
 					if(!(m_temp & 0x02) && y != 0){			//a南壁がなく現在最南端でないとき
-						if(smap[y-1][x] == 0x03e7){			//a南側が未記入なら
+//						if(smap[y-1][x] == 0x03e7){			//a南側が未記入なら
+						if(smap[y-1][x] >= (smap[y][x]+turn)){	//a南側が記入後より大きいなら
 							smap[y-1][x] = smap[y][x] + turn;	//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
 								//----a直線優先処理----
-								for (int k = 1; k < y; k++) {						//a現在座標から見て南のマスすべてにおいて
-									m_temp_sample[k] = map[y - k][x];				//map配列からマップデータを取り出す
-									if (MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
-									if (!(m_temp_sample[k] & 0x02) && (y - k) != 0x0f) {		//a南壁がなく現在最南端でないとき
-										if (smap[y - k - 1][x] == 0x03e7) {						//a南側が未記入なら
-											smap[y - k - 1][x] = smap[y - k][x] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
+								for(int k=1; k<y; k++) {						//a現在座標から見て南のマスすべてにおいて
+									m_temp_sample[k] = map[y-k][x];				//map配列からマップデータを取り出す
+									if(MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
+									if(!(m_temp_sample[k] & 0x02) && (y-k) != 0) {		//a南壁がなく現在最南端でないとき
+//										if (smap[y-k-1][x] == 0x03e7) {						//a南側が未記入なら
+										if(smap[y-k-1][x] >= (smap[y-k][x]+straight)){		//a南側が記入後より大きいなら
+											smap[y-k-1][x] = smap[y-k][x] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
 										}
 									}
 									else break;
@@ -1536,16 +1540,18 @@ void make_smap(void){
 					}
 					//----a西壁についての処理----
 					if(!(m_temp & 0x01) && x != 0){			//a西壁がなく現在最西端でないとき
-						if(smap[y][x-1] == 0x03e7){			//a西側が未記入なら
+//						if(smap[y][x-1] == 0x03e7){			//a西側が未記入なら
+						if(smap[y][x-1] >= (smap[y][x]+turn)){	//a西側が記入後より大きいなら
 							smap[y][x-1] = smap[y][x] + turn;	//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
 								//----a直線優先処理----
-								for (int k = 1; k < x; k++) {						//a現在座標から見て西のマスすべてにおいて
-									m_temp_sample[k] = map[y][x - k];				//map配列からマップデータを取り出す
-									if (MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
-									if (!(m_temp_sample[k] & 0x01) && (x - k) != 0x0f) {		//a西壁がなく現在最西端でないとき
-										if (smap[y][x - k - 1] == 0x03e7) {						//a西側が未記入なら
-											smap[y][x - k - 1] = smap[y][x - k] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
+								for(int k=1; k<x; k++) {						//a現在座標から見て西のマスすべてにおいて
+									m_temp_sample[k] = map[y][x-k];				//map配列からマップデータを取り出す
+									if(MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
+									if(!(m_temp_sample[k] & 0x01) && (x-k) != 0) {		//a西壁がなく現在最西端でないとき
+//										if (smap[y][x-k-1] == 0x03e7) {						//a西側が未記入なら
+										if(smap[y][x-k-1] >= (smap[y][x-k]+straight)){		//a西側が記入後より大きいなら
+											smap[y][x-k-1] = smap[y][x-k] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
 										}
 									}
 									else break;
@@ -1579,7 +1585,6 @@ void make_route(){
 	for(i = 0; i < 256; i++){
 		route[i] = 0xff;										//routeを0xffで初期化
 	}
-
 
 	//====a歩数カウンタをセット====
 	uint16_t m_step = smap[mouse.y][mouse.x];					//a現在座標の歩数マップ値を取得
@@ -1708,7 +1713,7 @@ void find_pregoal()
 	}
 
 	//====探索完了フラグのクリア====
-	allmap_comp_flag = 0;
+	MF2.FLAG.ALLMAP = 0;
 
 	//====現在座標を0にする====
 	smap[mouse.y][mouse.x] = 0;
@@ -1785,8 +1790,8 @@ void find_pregoal()
 		}
 		//====歩数カウンタのインクリメント====
 		m_step++;
-		if (m_step > 500) allmap_comp_flag = 1;
-	} while (break_flag == 0 && allmap_comp_flag != 1);		//未探索壁ありマスを見つけるまで実行
+		if(m_step > 500) MF2.FLAG.ALLMAP = 1;
+	} while(break_flag == 0 && MF2.FLAG.ALLMAP != 1);		//未探索壁ありマスを見つけるまで実行
 }
 
 
@@ -2167,7 +2172,7 @@ void pass_route2(void){
 void pass_route3(void){
 	int i;
 	uint8_t s_flag = 0;
-	v_flag = 0;										//a斜めフラグの初期化
+	MF2.FLAG.V = 0;										//a斜めフラグの初期化
 	for(i = 0; i < 256; i++){
 		pass[i] = 0;								//pass配列の初期化
 	}
@@ -2180,14 +2185,14 @@ void pass_route3(void){
 			s_flag = 0;
 			pass[p] = -3;							//a大回り右90
 			if(i == 0){								//aスタート時の走行モード切り替えフラグ
-				start_flag = 2;
+				start_mode = 2;
 			}
 			i = i + 3;
 		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x77){
 			s_flag = 0;
 			pass[p] = -4;							//a大回り左90
 			if(i == 0){								//aスタート時の走行モード切り替えフラグ
-				start_flag = 2;
+				start_mode = 2;
 			}
 			i = i + 3;
 		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x44 && route[i+3] == 0x77){
@@ -2201,61 +2206,61 @@ void pass_route3(void){
 		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x11){
 			s_flag = 0;
 			pass[p] = -7;							//a斜め右V45in
-			v_flag = 1;
+			MF2.FLAG.V = 1;
 			if(i == 0){								//aスタート時の走行モード切り替えフラグ
-				start_flag = 2;
+				start_mode = 2;
 			}
 			i = i + 2;
-		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x77){
+		}else if(MF2.FLAG.V == 1 && route[i] == 0x44 && route[i+1] == 0x77){
 			s_flag = 0;
 			pass[p] = -7;							//a斜め右V45out
-			v_flag = 0;
+			MF2.FLAG.V = 0;
 			i = i + 2;
 		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x44){
 			s_flag = 0;
 			pass[p] = -8;							//a斜め左V45in
-			v_flag = 1;
+			MF2.FLAG.V = 1;
 			i = i + 2;
-		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x77){
+		}else if(MF2.FLAG.V == 1 && route[i] == 0x11 && route[i+1] == 0x77){
 			s_flag = 0;
 			pass[p] = -8;							//a斜め左V45out
-			v_flag = 0;
+			MF2.FLAG.V = 0;
 			i = i + 2;
-		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x44 && route[i+2] == 0x11){
+		}else if(MF2.FLAG.V == 1 && route[i] == 0x44 && route[i+1] == 0x44 && route[i+2] == 0x11){
 			s_flag = 0;
 			pass[p] = -9;							//a斜め右V90
-			v_flag = 1;
+			MF2.FLAG.V = 1;
 			i = i + 2;
-		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x11 && route[i+2] == 0x44){
+		}else if(MF2.FLAG.V == 1 && route[i] == 0x11 && route[i+1] == 0x11 && route[i+2] == 0x44){
 			s_flag = 0;
 			pass[p] = -10;							//a斜め左V90
-			v_flag = 1;
+			MF2.FLAG.V = 1;
 			i = i + 2;
 		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x44 && route[i+3] == 0x11){
 			s_flag = 0;
 			pass[p] = -11;							//a斜め右V135in
-			v_flag = 1;
+			MF2.FLAG.V = 1;
 			if(i == 0){								//aスタート時の走行モード切り替えフラグ
-				start_flag = 2;
+				start_mode = 2;
 			}
 			i = i + 3;
-		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x44 && route[i+2] == 0x77){
+		}else if(MF2.FLAG.V == 1 && route[i] == 0x44 && route[i+1] == 0x44 && route[i+2] == 0x77){
 			s_flag = 0;
 			pass[p] = -11;							//a斜め右V135out
-			v_flag = 0;
+			MF2.FLAG.V = 0;
 			i = i + 3;
 		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x11 && route[i+3] == 0x44){
 			s_flag = 0;
 			pass[p] = -12;							//a斜め左V135in
-			v_flag = 1;
+			MF2.FLAG.V = 1;
 			i = i + 3;
-		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x11 && route[i+2] == 0x77){
+		}else if(MF2.FLAG.V == 1 && route[i] == 0x11 && route[i+1] == 0x11 && route[i+2] == 0x77){
 			s_flag = 0;
 			pass[p] = -12;							//a斜め左V135out
-			v_flag = 0;
+			MF2.FLAG.V = 0;
 			i = i + 3;
 		}else if(route[i] == 0xff){
-			if(v_flag == 1){
+			if(MF2.FLAG.V == 1){
 				if(pass[p-1] == -1 && pass[p-2] == -1){
 					pass[p-2] = -15;
 					pass[p-1] = -114;
@@ -2272,15 +2277,15 @@ void pass_route3(void){
 			}
 			pass[p] = -114;							//a終了用配列
 			i++;
-		}else if(v_flag == 1 && route[i] == 0x44 && route[i+1] == 0x11){
+		}else if(MF2.FLAG.V == 1 && route[i] == 0x44 && route[i+1] == 0x11){
 			s_flag = 0;
 			pass[p] = 64;							//a斜め半直線
-			v_flag = 1;
+			MF2.FLAG.V = 1;
 			i++;
-		}else if(v_flag == 1 && route[i] == 0x11 && route[i+1] == 0x44){
+		}else if(MF2.FLAG.V == 1 && route[i] == 0x11 && route[i+1] == 0x44){
 			s_flag = 0;
 			pass[p] = 64;							//a斜め半直線
-			v_flag = 1;
+			MF2.FLAG.V = 1;
 			i++;
 		}else if(route[i] == 0x44){
 			pass[p] = -1;							//a右スラローム

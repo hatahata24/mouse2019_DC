@@ -44,19 +44,15 @@ struct coordinate_and_direction{
 	uint8_t route[256];									//a最短経路格納配列
 	uint8_t r_cnt;										//a経路カウンタ
 
-	uint8_t H_accel_flag;
 	uint8_t run_dir;
 
 	uint16_t m_step;
 	uint16_t m_step2;
 	uint8_t pregoal_x, pregoal_y;
-	uint8_t allmap_comp_flag;
 
 	int8_t pass[256];									//pass圧縮後のルート保存用配列
 	uint8_t p_cnt;										//pass経路カウンタ
 	uint8_t pass_mode;									//pass圧縮モード選択
-
-	uint8_t v_flag;										//V斜め状態フラグ
 
 #else													//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
@@ -68,19 +64,15 @@ struct coordinate_and_direction{
 	extern uint8_t route[256];							//a最短経路格納配列
 	extern uint8_t r_cnt;								//a経路カウンタ
 
-	extern uint8_t H_accel_flag;
 	extern uint8_t run_dir;
 
 	extern uint16_t m_step;
 	extern uint16_t m_step2;
 	extern uint8_t pregoal_x, pregoal_y;
-	extern uint8_t allmap_comp_flag;
 
 	extern int8_t pass[256];							//pass圧縮後のルート保存用配列
 	extern uint8_t p_cnt;								//pass経路カウンタ
 	extern uint8_t pass_mode;							//pass圧縮モード選択
-
-	extern uint8_t v_flag;								//V斜め状態フラグ
 
 #endif
 

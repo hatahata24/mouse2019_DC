@@ -23,8 +23,8 @@
 	volatile float epsilon_dif;
 	volatile int16_t accel_hs, speed_max_hs;		//a既知区間加速時使用
 
-	volatile uint8_t start_flag;
-	volatile uint8_t enkai_flag;
+//	volatile uint8_t start_flag;
+	volatile uint8_t start_mode;
 
 	volatile int get_speed_l[log_allay];
 	volatile int get_speed_r[log_allay];
@@ -55,8 +55,8 @@
 	extern volatile float epsilon_dif;
 	extern volatile int16_t accel_hs, speed_max_hs;	//a既知区間加速時使用
 
-	extern volatile uint8_t start_flag;
-	extern volatile uint8_t enkai_flag;
+//	extern volatile uint8_t start_flag;
+	extern volatile uint8_t start_mode;
 
 	extern volatile int get_speed_l[log_allay];
 	extern volatile int get_speed_r[log_allay];
@@ -99,7 +99,7 @@ void slalomB(int16_t, int16_t, uint8_t);									//aスラローム後オフセ�
 
 //----a上位関数----
 void set_position(void);		//a上下位置合わせ
-void set_positionX(uint8_t);	//a上下左右位置合わせ
+void set_positionF(void);		//a前壁利用上下位置合わせ
 void start_sectionA(void);		//a加速スタート区画
 void start_sectionA3(void);		//a加速スタート区画High High Speed
 void half_sectionA(void);		//a加速半区画
