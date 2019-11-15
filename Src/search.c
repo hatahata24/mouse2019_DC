@@ -247,8 +247,13 @@ void searchC(){
 		adv_pos();
 		if(!MF.FLAG.SCND)conf_route();
 
-	}while((mouse.x != goal_x) || (mouse.y != goal_y));
+//	}while((mouse.x != goal_x) || (mouse.y != goal_y));
+	}while(smap[mouse.y][mouse.x] != 0);
 
+	for(int j=0; j<goal_mode-1; j++){
+		one_sectionU();
+		adv_pos();
+	}
 	half_sectionD();
 
 	set_positionF();
@@ -258,6 +263,7 @@ void searchC(){
 	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 	degree_z = target_degree_z;
 	start_mode = 0;
+	goal_mode = 1;
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -349,8 +355,13 @@ void searchC2(){
 		adv_pos();
 		if(!MF.FLAG.SCND)conf_route();
 
-	}while((mouse.x != goal_x) || (mouse.y != goal_y));
+//	}while((mouse.x != goal_x) || (mouse.y != goal_y));
+	}while(smap[mouse.y][mouse.x] != 0);
 
+	for(int j=0; j<goal_mode-1; j++){
+		one_sectionU();
+		adv_pos();
+	}
 	half_sectionD();
 
 	set_positionF();
@@ -360,6 +371,7 @@ void searchC2(){
 	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 	degree_z = target_degree_z;
 	start_mode = 0;
+	goal_mode = 1;
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -442,15 +454,22 @@ void searchD(){
 		adv_pos();
 		if(!MF.FLAG.SCND)conf_route();
 
-	}while((mouse.x != goal_x) || (mouse.y != goal_y));
+//	}while((mouse.x != goal_x) || (mouse.y != goal_y));
+	}while(smap[mouse.y][mouse.x] != 0);
 
+	for(int j=0; j<goal_mode-1; j++){
+		one_sectionU();
+		adv_pos();
+	}
 	half_sectionD();
+	set_positionF();
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
 	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 	degree_z = target_degree_z;
 	start_mode = 0;
+	goal_mode = 1;
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -556,7 +575,7 @@ void searchE(){
 //a引数：なし
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void searchF(){
+/*void searchF(){
 
 	if(MF.FLAG.SCND){
 		load_map_from_eeprom();
@@ -890,7 +909,7 @@ void searchF2(){
 	rotate_180();											//180度回転
 
 }
-
+*/
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //searchF3
@@ -986,13 +1005,19 @@ void searchF3(){
 	mouse.x = goal_x;
 	mouse.y = goal_y;
 
+	for(int j=0; j<goal_mode-1; j++){
+		one_sectionU();
+		adv_pos();
+	}
 	half_sectionD();
+	set_positionF();
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
 	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 	degree_z = target_degree_z;
 	start_mode = 0;
+	goal_mode = 1;
 
 }
 
@@ -1158,20 +1183,27 @@ void searchF4(){
 
 	mouse.x = goal_x;
 	mouse.y = goal_y;
+	mouse.dir = mouse.dir / 2;
+	MF.FLAG.XDIR = 0;
 
 	if(pass[p_cnt-1] != -13 && pass[p_cnt-1] != -14 && pass[p_cnt-1] != -15 && pass[p_cnt-1] != -16){
+		for(int j=0; j<goal_mode-1; j++){
+			one_sectionU();
+			adv_pos();
+		}
 		half_sectionD();
-		full_led_write(BLUE);
+		set_positionF();
+
+		HAL_Delay(500);
+		rotate_180();											//180度回転
+		driveC2(SETPOS_BACK); 							        //a尻を当てる程度に後退。回転後に停止する
+		degree_z = target_degree_z;
+	}else{														//a減速斜めでgoalする場合
+		HAL_Delay(500);
+		rotate_180();											//180度回転
 	}
-
-	HAL_Delay(500);
-	rotate_180();											//180度回転
-	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
-	degree_z = target_degree_z;
 	start_mode = 0;
-
-	mouse.dir = mouse.dir / 2;
-
+	goal_mode = 1;
 }
 
 
@@ -1560,7 +1592,12 @@ void make_smap(void){
 
 	//====aゴール座標を0にする====
 	m_step = 0;												//a歩数カウンタを0にする
-	smap[goal_y][goal_x] = 0;
+
+	for(int j=0; j<goal_mode; j++){
+		for(int k=0; k<goal_mode; k++){
+		smap[goal_y+j][goal_x+k] = 0;
+		}
+	}
 
 	//====a歩数カウンタの重みづけ====
 	int straight = 3;

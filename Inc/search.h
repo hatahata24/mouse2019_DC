@@ -53,6 +53,7 @@ struct coordinate_and_direction{
 	int8_t pass[256];									//pass圧縮後のルート保存用配列
 	uint8_t p_cnt;										//pass経路カウンタ
 	uint8_t pass_mode;									//pass圧縮モード選択
+	uint8_t goal_mode;									//goalマス数選択
 
 #else													//main.c以外からこのファイルが呼ばれている場合
 	/*グローバル変数の宣言*/
@@ -73,6 +74,7 @@ struct coordinate_and_direction{
 	extern int8_t pass[256];							//pass圧縮後のルート保存用配列
 	extern uint8_t p_cnt;								//pass経路カウンタ
 	extern uint8_t pass_mode;							//pass圧縮モード選択
+	extern uint8_t goal_mode;							//goalマス数選択
 
 #endif
 

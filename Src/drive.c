@@ -396,7 +396,7 @@ void set_position(){
 void set_positionF(){
 
 	full_led_write(RED);
-	HAL_Delay(500);
+	HAL_Delay(100);
 
 	MF.FLAG.DRV = 1;
 	MF.FLAG.FWALL = 1;
@@ -521,6 +521,50 @@ void half_sectionD3(void){
 	driveD(-10000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF);						//半区画分指定減速度で減速走行。走行後は停止する
 }
 */
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//half_sectionVA
+// 半区画分加速しながら走行する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void half_sectionVA(void){
+
+	control_start();
+	if(run_mode == LOW){
+		driveA(4000, SPEED_MIN, SPEED_LOW, SEC_HALF_V);						//半区画分加速しながら走行。走行後は停止しない
+	}else if(run_mode == MIDDLE){
+		driveA(6000, SPEED_MIN, SPEED_MIDDLE, SEC_HALF_V);					//半区画分加速しながら走行。走行後は停止しない
+	}else if(run_mode == HIGH){
+		driveA(8000, SPEED_MIN, SPEED_HIGH, SEC_HALF_V);						//半区画分加速しながら走行。走行後は停止しない
+	}else if(run_mode == HIGH_HIGH){
+		driveA(10000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF_V);						//半区画分加速しながら走行。走行後は停止しない
+	}
+	if(!MF.FLAG.SCND)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//half_sectionVD
+// 半区画分減速しながら走行し停止する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void half_sectionVD(void){
+	full_led_write(BLUE);
+
+	control_start();
+	if(run_mode == LOW){
+		driveD(-4000, SPEED_MIN, SPEED_LOW, SEC_HALF_V);						//半区画分指定減速度で減速走行。走行後は停止する
+	}else if(run_mode == MIDDLE){
+		driveD(-6000, SPEED_MIN, SPEED_MIDDLE, SEC_HALF_V);					//半区画分指定減速度で減速走行。走行後は停止する
+	}else if(run_mode == HIGH){
+		driveD(-8000, SPEED_MIN, SPEED_HIGH, SEC_HALF_V);						//半区画分指定減速度で減速走行。走行後は停止する
+	}else if(run_mode == HIGH_HIGH){
+		driveD(-10000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF_V);						//半区画分指定減速度で減速走行。走行後は停止する
+	}
+}
+
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //half_sectionU
@@ -694,8 +738,8 @@ void rotate_R90(void){
 	control_stop();
 	while(degree_z > target_degree_z-80);
 
-	accel_l = -30000;
-	accel_r = 30000;
+	accel_l = -10000;
+	accel_r = 10000;
 	speed_min_l = 100;
 	speed_max_r = -100;
 
@@ -727,8 +771,8 @@ void rotate_L90(void){
 	control_stop();
 	while(degree_z < target_degree_z+80);
 
-	accel_l = 30000;
-	accel_r = -30000;
+	accel_l = 10000;
+	accel_r = -10000;
 	speed_max_l = -100;
 	speed_min_r = 100;
 
@@ -760,10 +804,10 @@ void rotate_180(void){
 
 	drive_start();											//走行開始
 	control_stop();
-	while(degree_z > target_degree_z-170);
+	while(degree_z > target_degree_z-160);
 
-	accel_l = -30000;
-	accel_r = 30000;
+	accel_l = -10000;
+	accel_r = 10000;
 	speed_min_l = 100;
 	speed_max_r = -100;
 
@@ -1167,13 +1211,13 @@ void v_R45(void){
 		if(!MF2.FLAG.V){
 			slalomB(10000, SPEED_LOW, V_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_LOW, V_OFFSET_B+5);
+			slalomB(10000, SPEED_LOW, V_OFFSET_B);
 		}
 	}else if(run_mode == MIDDLE){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-18, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-20, NO_WALL, NO_WALL);
 		}
 		slalomR(-V_M_DEGACCEL, -V_M_OMEGA, -45, SPEED_MIDDLE);
 
@@ -1181,7 +1225,7 @@ void v_R45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+10);
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_B);
 		}
@@ -1189,7 +1233,7 @@ void v_R45(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B-18, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B, NO_WALL, NO_WALL);
 		}
 		slalomR(-V_H_DEGACCEL, -V_H_OMEGA, -45, SPEED_HIGH);
 
@@ -1197,7 +1241,7 @@ void v_R45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F+10);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F);
 		}else{
 			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B);
 		}
@@ -1205,7 +1249,7 @@ void v_R45(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_B-18, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_B, NO_WALL, NO_WALL);
 		}
 		slalomR(-V_H_H_DEGACCEL, -V_H_H_OMEGA, -45, SPEED_HIGH_HIGH);
 
@@ -1213,7 +1257,7 @@ void v_R45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_F+10);
+			slalomB(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_F);
 		}else{
 			slalomB(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_B);
 		}
@@ -1233,23 +1277,23 @@ void v_L45(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_LOW, V_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_LOW, V_OFFSET_B+5, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_LOW, V_OFFSET_B, NO_WALL, NO_WALL);
 		}
-		slalomR(V_DEGACCEL, V_OMEGA, 50, SPEED_LOW);
+		slalomR(V_DEGACCEL, V_OMEGA, 45, SPEED_LOW);
 
 		turn_dir(DIR_TURN_L45_8, 3);									//aマイクロマウス内部位置情報でも左回転処理
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_LOW, V_OFFSET_F+15);
+			slalomB(10000, SPEED_LOW, V_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_LOW, V_OFFSET_B+5);
+			slalomB(10000, SPEED_LOW, V_OFFSET_B);
 		}
 	}else if(run_mode == MIDDLE){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-25, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-20, NO_WALL, NO_WALL);
 		}
 		slalomR(V_M_DEGACCEL, V_M_OMEGA, 45, SPEED_MIDDLE);
 
@@ -1263,10 +1307,9 @@ void v_L45(void){
 		}
 	}else if(run_mode == HIGH){
 		if(!MF2.FLAG.V){
-			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F+5, NO_WALL, NO_WALL);
 		}else{
-//			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B-12, NO_WALL, NO_WALL);
-			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B-25, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B, NO_WALL, NO_WALL);
 		}
 		slalomR(V_H_DEGACCEL, V_H_OMEGA, 45, SPEED_HIGH);
 
@@ -1274,15 +1317,15 @@ void v_L45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F+35);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B+20);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B);
 		}
 	}else if(run_mode == HIGH_HIGH){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_B-25, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_B, NO_WALL, NO_WALL);
 		}
 		slalomR(V_H_H_DEGACCEL, V_H_H_OMEGA, 45, SPEED_HIGH_HIGH);
 
@@ -1290,9 +1333,9 @@ void v_L45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_F+35);
+			slalomB(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_B+20);
+			slalomB(10000, SPEED_HIGH_HIGH, V_H_H_OFFSET_B);
 		}
 	}
 }
@@ -1323,11 +1366,28 @@ void v_R45D(void){
 			slalomB(10000, SPEED_LOW, V_OFFSET_B-10);
 		}
 		driveD(-10000, SPEED_MIN, SPEED_LOW, 10);
+	}else if(run_mode == MIDDLE){
+		if(!MF2.FLAG.V){
+			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_F, NO_WALL, NO_WALL);
+		}else{
+			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-20, NO_WALL, NO_WALL);
+		}
+		slalomR(-V_M_DEGACCEL, -V_M_OMEGA, -45, SPEED_MIDDLE);
+
+		turn_dir(DIR_TURN_R45_8, 3);									//aマイクロマウス内部位置情報でも左回転処理
+		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
+
+		if(!MF2.FLAG.V){
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F-10);
+		}else{
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_B-10);
+		}
+		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 10);
 	}else if(run_mode == HIGH){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B-18, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B, NO_WALL, NO_WALL);
 		}
 		slalomR(-V_H_DEGACCEL, -V_H_OMEGA, -45, SPEED_HIGH);
 
@@ -1335,7 +1395,7 @@ void v_R45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F-10);
 		}else{
 			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B-10);
 		}
@@ -1354,9 +1414,9 @@ void v_L45D(void){
 	full_led_write(YELLOW);
 	if(run_mode == LOW){
 		if(!MF2.FLAG.V){
-			slalomF(10000, SPEED_LOW, V_OFFSET_F+15, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_LOW, V_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_LOW, V_OFFSET_B+5, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_LOW, V_OFFSET_B, NO_WALL, NO_WALL);
 		}
 		slalomR(V_DEGACCEL, V_OMEGA, 55, SPEED_LOW);
 
@@ -1364,16 +1424,33 @@ void v_L45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_LOW, V_OFFSET_F+5);
+			slalomB(10000, SPEED_LOW, V_OFFSET_F-10);
 		}else{
-			slalomB(10000, SPEED_LOW, V_OFFSET_B-5);
+			slalomB(10000, SPEED_LOW, V_OFFSET_B-10);
 		}
 		driveD(-10000, SPEED_MIN, SPEED_LOW, 10);
+	}else if(run_mode == MIDDLE){
+		if(!MF2.FLAG.V){
+			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_F, NO_WALL, NO_WALL);
+		}else{
+			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-20, NO_WALL, NO_WALL);
+		}
+		slalomR(V_M_DEGACCEL, V_M_OMEGA, 45, SPEED_MIDDLE);
+
+		turn_dir(DIR_TURN_L45_8, 3);									//aマイクロマウス内部位置情報でも左回転処理
+		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
+
+		if(!MF2.FLAG.V){
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+25);
+		}else{
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_B-10);
+		}
+		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 10);
 	}else if(run_mode == HIGH){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B-12, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B, NO_WALL, NO_WALL);
 		}
 		slalomR(V_H_DEGACCEL, V_H_OMEGA, 45, SPEED_HIGH);
 
@@ -1381,9 +1458,9 @@ void v_L45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F+25);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F-10);
 		}else{
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B+10);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B-10);
 		}
 		driveD(-10000, SPEED_MIN, SPEED_HIGH, 10);
 	}
@@ -1407,7 +1484,7 @@ void v_R90(void){
 		slalomB(10000, SPEED_LOW, VV_OFFSET_B);
 	}else if(run_mode == MIDDLE){
 		slalomF(10000, SPEED_MIDDLE, VV_M_OFFSET_F, NO_WALL, NO_WALL);
-		slalomR(-VV_M_DEGACCEL, -VV_M_OMEGA, -90, SPEED_HIGH);
+		slalomR(-VV_M_DEGACCEL, -VV_M_OMEGA, -90, SPEED_MIDDLE);
 
 		turn_dir(DIR_TURN_R90_8, 3);									//マイクロマウス内部位置情報でも左回転処理
 
@@ -1508,7 +1585,7 @@ void v_R135(void){
 		if(!MF2.FLAG.V){
 			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F);
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_B);
 		}
 	}else if(run_mode == HIGH){
 		if(!MF2.FLAG.V){
@@ -1524,7 +1601,7 @@ void v_R135(void){
 		if(!MF2.FLAG.V){
 			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F);
+			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_B);
 		}
 	}else if(run_mode == HIGH_HIGH){
 		if(!MF2.FLAG.V){
@@ -1540,7 +1617,7 @@ void v_R135(void){
 		if(!MF2.FLAG.V){
 			slalomB(10000, SPEED_HIGH_HIGH, VVV_H_H_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_HIGH_HIGH, VVV_H_H_OFFSET_F);
+			slalomB(10000, SPEED_HIGH_HIGH, VVV_H_H_OFFSET_B);
 		}
 	}
 }
@@ -1584,7 +1661,7 @@ void v_L135(void){
 		if(!MF2.FLAG.V){
 			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F);
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_B);
 		}
 	}else if(run_mode == HIGH){
 		if(!MF2.FLAG.V){
@@ -1600,7 +1677,7 @@ void v_L135(void){
 		if(!MF2.FLAG.V){
 			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F);
+			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_B);
 		}
 	}else if(run_mode == HIGH_HIGH){
 		if(!MF2.FLAG.V){
@@ -1616,7 +1693,7 @@ void v_L135(void){
 		if(!MF2.FLAG.V){
 			slalomB(10000, SPEED_HIGH_HIGH, VVV_H_H_OFFSET_F);
 		}else{
-			slalomB(10000, SPEED_HIGH_HIGH, VVV_H_H_OFFSET_F);
+			slalomB(10000, SPEED_HIGH_HIGH, VVV_H_H_OFFSET_B);
 		}
 	}
 }
@@ -1647,12 +1724,27 @@ void v_R135D(void){
 			slalomB(10000, SPEED_LOW, VVV_OFFSET_B-10);
 		}
 		driveD(-10000, SPEED_MIN, SPEED_LOW, 10);
+	}else if(run_mode == MIDDLE){
+		if(!MF2.FLAG.V){
+			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_F, NO_WALL, NO_WALL);
+		}else{
+			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B, NO_WALL, NO_WALL);
+		}
+		slalomR(-VVV_M_DEGACCEL, -VVV_M_OMEGA, -135, SPEED_MIDDLE);
+
+		turn_dir(DIR_TURN_R135_8, 3);									//aマイクロマウス内部位置情報でも左回転処理
+		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
+
+		if(!MF2.FLAG.V){
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F-10);
+		}else{
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-10);
+		}
+		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 10);
 	}else if(run_mode == HIGH){
 		if(!MF2.FLAG.V){
-			while(dist_l < VVV_H_OFFSET_F && dist_r < VVV_H_OFFSET_F);
 			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			while(dist_l < VVV_H_OFFSET_B && dist_r < VVV_H_OFFSET_B);
 			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B, NO_WALL, NO_WALL);
 		}
 		slalomR(-VVV_H_DEGACCEL, -VVV_H_OMEGA, -135, SPEED_HIGH);
@@ -1663,7 +1755,7 @@ void v_R135D(void){
 		if(!MF2.FLAG.V){
 			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F-10);
 		}else{
-			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F-10);
+			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_B-10);
 		}
 		driveD(-10000, SPEED_MIN, SPEED_HIGH, 10);
 	}
@@ -1695,12 +1787,27 @@ void v_L135D(void){
 			slalomB(10000, SPEED_LOW, VVV_OFFSET_B-10);
 		}
 		driveD(-10000, SPEED_MIN, SPEED_LOW, 10);
+	}else if(run_mode == MIDDLE){
+		if(!MF2.FLAG.V){
+			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_F, NO_WALL, NO_WALL);
+		}else{
+			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B, NO_WALL, NO_WALL);
+		}
+		slalomR(VVV_M_DEGACCEL, VVV_M_OMEGA, 135, SPEED_MIDDLE);
+
+		turn_dir(DIR_TURN_L135_8, 3);									//aマイクロマウス内部位置情報でも左回転処理
+		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
+
+		if(!MF2.FLAG.V){
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F-10);
+		}else{
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-10);
+		}
+		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 10);
 	}else if(run_mode == HIGH){
 		if(!MF2.FLAG.V){
-			while(dist_l < VVV_H_OFFSET_F && dist_r < VVV_H_OFFSET_F);
 			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			while(dist_l < VVV_H_OFFSET_B && dist_r < VVV_H_OFFSET_B);
 			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B, NO_WALL, NO_WALL);
 		}
 		slalomR(VVV_H_DEGACCEL, VVV_H_OMEGA, 135, SPEED_HIGH);
@@ -1709,10 +1816,8 @@ void v_L135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			while(dist_l < VVV_H_OFFSET_F-10 && dist_r < VVV_H_OFFSET_F-10);
 			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F-10);
 		}else{
-			while(dist_l < VVV_H_OFFSET_B-10 && dist_r < VVV_H_OFFSET_B-10);
 			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_B-10);
 		}
 		driveD(-10000, SPEED_MIN, SPEED_HIGH, 10);
@@ -2145,7 +2250,7 @@ void v_test(void){
 					for(int i = 0; i < 1; i++){
 						v_R45();
 					}
-					half_sectionD();
+					half_sectionVD();
 					break;
 				case 2:
 					//----V左45----
@@ -2154,29 +2259,29 @@ void v_test(void){
 					for(int i = 0; i < 1; i++){
 						v_L45();
 					}
-					half_sectionD();
+					half_sectionVD();
 					break;
 				case 3:
 					//----V右90----
 					printf("V 90 right .\n");
-					half_sectionA();
-					v_R45();
+					half_sectionVA();
+//					v_R45();
 					for(int i = 0; i < 1; i++){
 						v_R90();
 					}
-					v_R45();
-					half_sectionD();
+//					v_R45();
+					half_sectionVD();
 					break;
 				case 4:
 					//----V左90----
 					printf("V 90 left .\n");
-					half_sectionA();
-					v_L45();
+					half_sectionVA();
+//					v_L45();
 					for(int i = 0; i < 1; i++){
 						v_L90();
 					}
-					v_L45();
-					half_sectionD();
+//					v_L45();
+					half_sectionVD();
 					break;
 				case 5:
 					//----V右135----
@@ -2187,7 +2292,7 @@ void v_test(void){
 						v_R135();
 					}
 //					v_R45();
-					half_sectionD();
+					half_sectionVD();
 					break;
 				case 6:
 					//----V左135----
@@ -2198,7 +2303,7 @@ void v_test(void){
 						v_L135();
 					}
 //					v_L45();
-					half_sectionD();
+					half_sectionVD();
 					break;
 				case 7:
 					break;
@@ -2225,24 +2330,24 @@ void v_test(void){
 				case 11:
 					//----V右90----
 					printf("V 90 right .\n");
-					half_sectionA();
-					v_R45();
+					half_sectionVA();
+//					v_R45();
 					for(int i = 0; i < 8; i++){
 						v_R90();
 					}
-					v_R45();
-					half_sectionD();
+//					v_R45();
+					half_sectionVD();
 					break;
 				case 12:
 					//----V左90----
 					printf("V 90 left .\n");
-					half_sectionA();
-					v_L45();
+					half_sectionVA();
+//					v_L45();
 					for(int i = 0; i < 8; i++){
 						v_L90();
 					}
-					v_L45();
-					half_sectionD();
+//					v_L45();
+					half_sectionVD();
 					break;
 				case 13:
 					//----V右135----
@@ -2273,36 +2378,46 @@ void v_test(void){
 				case 17:
 					//----V右45D----
 					printf("V 45 right .\n");
-					half_sectionA();
+					MF2.FLAG.V = 1;
+					half_sectionVA();
 					for(int i = 0; i < 1; i++){
-						v_R45D();
+//						v_R45D();
+						v_R45();
 					}
+					half_sectionVD();
 					break;
 				case 18:
 					//----V左45D----
 					printf("V 45 left .\n");
-					half_sectionA();
+					MF2.FLAG.V = 1;
+					half_sectionVA();
 					for(int i = 0; i < 1; i++){
-						v_L45D();
+//						v_L45D();
+						v_L45();
 					}
+					half_sectionVD();
 					break;
 				case 19:
 					//----V右135D----
 					printf("V 135 right .\n");
-					half_sectionA();
-					v_R45();
+					MF2.FLAG.V = 1;
+					half_sectionVA();
 					for(int i = 0; i < 1; i++){
-						v_R135D();
+//						v_R135D();
+						v_R135();
 					}
+					half_sectionVD();
 					break;
 				case 20:
 					//----V左135D----
 					printf("V 135 left .\n");
-					half_sectionA();
-					v_L45();
+					MF2.FLAG.V = 1;
+					half_sectionVA();
 					for(int i = 0; i < 1; i++){
-						v_L135D();
+//						v_L135D();
+						v_L135();
 					}
+					half_sectionVD();
 					break;
 			}
 		full_led_write(RED);
@@ -2357,6 +2472,7 @@ void pass_test(void){
 
 					MF.FLAG.SCND = 0;
 					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 0;
 					run_mode = MIDDLE;
 					start_mode = 0;
 					accel_hs = 5000;
@@ -2381,6 +2497,7 @@ void pass_test(void){
 					printf("pass press 3.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
 					run_mode = LOW;
 					start_mode = 0;
 					accel_hs = 5000;
@@ -2407,7 +2524,8 @@ void pass_test(void){
 					printf("pass press 3-2.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
-					run_mode = HIGH;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = MIDDLE;
 					start_mode = 0;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
@@ -2429,10 +2547,38 @@ void pass_test(void){
 					goal_y = GOAL_Y;
 					break;
 				case 3:
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
+					printf("pass press 3-2.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
+					start_mode = 0;
+					accel_hs = 5000;
+					speed_max_hs = 1200;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF3();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF3();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+					break;
+				case 4:
 					//----a直線と大回り圧縮と斜めｰｰｰｰ
 					printf("pass press 4.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
 					run_mode = LOW;
 					start_mode = 0;
 					accel_hs = 5000;
@@ -2454,12 +2600,13 @@ void pass_test(void){
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 					break;
-				case 4:
+				case 5:
 					//----a直線と大回り圧縮と斜め High Speedｰｰｰｰ
 					printf("pass press 4.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
-					run_mode = HIGH;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = MIDDLE;
 					start_mode = 0;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
@@ -2480,9 +2627,32 @@ void pass_test(void){
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 					break;
-				case 5:
-					break;
 				case 6:
+					//----a直線と大回り圧縮と斜め High Speedｰｰｰｰ
+					printf("pass press 4.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
+					start_mode = 0;
+					accel_hs = 5000;
+					speed_max_hs = 1200;
+
+					pass_mode = 4;
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF4();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF4();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 				case 7:
 					break;
@@ -2949,27 +3119,7 @@ void sample_course_run(void){
 					break;
 
 				case 4:
-					//----二次探索スラローム走行+既知区間加速----
-/*					printf("Second Run. (Slalom+accel)\n");
-
-					MF.FLAG.SCND = 1;
-					MF.FLAG.ACCL2 = 1;
-					accel_hs = 3000;
-					speed_max_hs = 1000;
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
-
-					get_base();
-
-					searchC();
-					HAL_Delay(500);
-
-					goal_x = goal_y = 0;
-					searchC();
-
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
-*/					break;
+					break;
 
 				case 5:
 					//----スラローム走行&全面探索スラローム走行----
@@ -3083,6 +3233,7 @@ void perfect_run(void){
 					MF.FLAG.SCND = 0;
 					run_mode = LOW;
 					start_mode = 0;
+					goal_mode = 2;
 					goal_x = 7;
 					goal_y = 7;
 
@@ -3106,6 +3257,7 @@ void perfect_run(void){
 					MF.FLAG.SCND = 1;
 					run_mode = LOW;
 					start_mode = 0;
+					goal_mode = 2;
 					goal_x = 7;
 					goal_y = 7;
 
@@ -3129,6 +3281,7 @@ void perfect_run(void){
 					MF.FLAG.SCND = 0;
 					run_mode = LOW;
 					start_mode = 0;
+					goal_mode = 2;
 					goal_x = 7;
 					goal_y = 7;
 
@@ -3152,6 +3305,7 @@ void perfect_run(void){
 					MF.FLAG.SCND = 1;
 					run_mode = LOW;
 					start_mode = 0;
+					goal_mode = 2;
 					goal_x = 7;
 					goal_y = 7;
 
@@ -3245,6 +3399,7 @@ void perfect_slalom(void){
 					MF.FLAG.STRAIGHT = 0;
 					run_mode = LOW;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -3271,7 +3426,7 @@ void perfect_slalom(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = LOW;
 					start_mode = 0;
-
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 					goal_x = 7;
@@ -3297,7 +3452,7 @@ void perfect_slalom(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
-
+					goal_mode = 2;
 					goal_x = 7;
 					goal_y = 7;
 
@@ -3320,7 +3475,7 @@ void perfect_slalom(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
-
+					goal_mode = 2;
 					accel_hs = 3000;
 					speed_max_hs = 1200;
 					goal_x = 7;
@@ -3346,7 +3501,7 @@ void perfect_slalom(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
-
+					goal_mode = 2;
 					accel_hs = 10000;
 					speed_max_hs = 1600;
 					goal_x = 7;
@@ -3372,7 +3527,7 @@ void perfect_slalom(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
-
+					goal_mode = 2;
 					accel_hs = 10000;
 					speed_max_hs = 2000;
 					goal_x = 7;
@@ -3459,6 +3614,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 0;
 					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 800;
 
@@ -3485,6 +3641,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 800;
 
@@ -3511,6 +3668,7 @@ void perfect_pass(void){
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
+					goal_mode = 2;
 					start_mode = 0;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
@@ -3539,6 +3697,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 800;
 
@@ -3569,6 +3728,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 0;
 					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 800;
 
@@ -3594,7 +3754,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
-
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 					goal_x = GOAL_X;
@@ -3644,6 +3804,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 10000;
 					speed_max_hs = 1200;
 					goal_x = GOAL_X;
@@ -3666,6 +3827,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 10000;
 					speed_max_hs = 1600;
 					goal_x = GOAL_X;
@@ -3688,6 +3850,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 20000;
 					speed_max_hs = 2000;
 					goal_x = GOAL_X;
@@ -3736,6 +3899,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 0;
 					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 800;
 
@@ -3761,6 +3925,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 					goal_x = 7;
@@ -3782,6 +3947,7 @@ void perfect_pass(void){
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -3810,6 +3976,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 10000;
 					speed_max_hs = 1600;
 					goal_x = 7;
@@ -3832,6 +3999,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 10000;
 					speed_max_hs = 2000;
 
@@ -3855,6 +4023,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 20000;
 					speed_max_hs = 2500;
 

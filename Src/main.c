@@ -324,11 +324,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 					dg = CTRL_CONT_G * gyro_read_z();			//a角速度制御
 					dg = CTRL_CONT_G * degree_z;				//a角度制御
 */
-					if(MF.FLAG.FWALL){
-						dg = CTRL_CONT_G*4 * (target_degree_z - degree_z);		//a角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
-					}else{
-						dg = CTRL_CONT_G * (target_degree_z - degree_z);		//a角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
-					}
+					dg = CTRL_CONT_G * (target_degree_z - degree_z);		//a角度制御(目標角度はスタートを0度とし、旋回量と対応付け)
 
 					dg = max(min(CTRL_MAX_G, dg), -1 * CTRL_MAX_G);
 					dgl = -1*dg;

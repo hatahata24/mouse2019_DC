@@ -104,8 +104,10 @@ void start_sectionA(void);		//a加速スタート区画
 void start_sectionA3(void);		//a加速スタート区画High High Speed
 void half_sectionA(void);		//a加速半区画
 void half_sectionA3(void);		//a加速半区画High High Speed
+void half_sectionVA(void);		//a加速斜め半区画
 void half_sectionD(void);		//a減速半区画
 void half_sectionD3(void);		//a減速半区画High High Speed
+void half_sectionVD(void);		//a減速斜め半区画
 void half_sectionU(void);		//a等速半区画
 void half_sectionV(void);		//a等速斜め半区画
 void one_section(void);			//a加減速一区画
