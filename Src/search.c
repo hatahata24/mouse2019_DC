@@ -174,11 +174,25 @@ void searchC(){
 	if(MF.FLAG.SCND){
 		load_map_from_eeprom();
 	}
-
 	//====aスタート位置壁情報取得====
 	if(!MF.FLAG.SCND)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
 	if(!MF.FLAG.SCND)wall_info &= ~0x88;									//a前壁は存在するはずがないので削除する
 	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
+
+	if(MF2.FLAG.GOAL){
+		HAL_Delay(500);
+		rotate_180();											//180度回転
+		driveC2(SETPOS_BACK);         							//a尻を当てる程度に後退。回転後に停止する
+		degree_z = target_degree_z;
+		start_mode = 0;
+		goal_mode = 1;
+	}
+
+	//====aスタート位置壁情報取得====
+/*	if(!MF.FLAG.SCND || !MF2.FLAG.GOAL)get_wall_info();						//a壁情報の初期化, 後壁はなくなる
+	if(!MF.FLAG.SCND || !MF2.FLAG.GOAL)wall_info &= ~0x88;					//a前壁は存在するはずがないので削除する
+	if(!MF.FLAG.SCND || !MF2.FLAG.GOAL)write_map();							//a壁情報を地図に記入
+*/
 
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
@@ -258,12 +272,15 @@ void searchC(){
 
 	set_positionF();
 
-	HAL_Delay(500);
-	rotate_180();											//180度回転
-	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
-	degree_z = target_degree_z;
-	start_mode = 0;
-	goal_mode = 1;
+	MF2.FLAG.GOAL = (MF2.FLAG.GOAL+1)%2;
+	if(!MF2.FLAG.GOAL){
+		HAL_Delay(500);
+		rotate_180();										//180度回転
+		driveC2(SETPOS_BACK);         						//a尻を当てる程度に後退。回転後に停止する
+		degree_z = target_degree_z;
+		start_mode = 0;
+		goal_mode = 1;
+	}
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -288,6 +305,15 @@ void searchC2(){
 	if(!MF.FLAG.SCND)wall_info &= ~0x88;									//a前壁は存在するはずがないので削除する
 	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
 
+	if(MF2.FLAG.GOAL){
+		HAL_Delay(500);
+		rotate_180();											//180度回転
+		driveC2(SETPOS_BACK);         							//a尻を当てる程度に後退。回転後に停止する
+		degree_z = target_degree_z;
+		start_mode = 0;
+		goal_mode = 1;
+	}
+
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
 	adv_pos();
@@ -366,12 +392,15 @@ void searchC2(){
 
 	set_positionF();
 
-	HAL_Delay(500);
-	rotate_180();											//180度回転
-	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
-	degree_z = target_degree_z;
-	start_mode = 0;
-	goal_mode = 1;
+	MF2.FLAG.GOAL = (MF2.FLAG.GOAL+1)%2;
+	if(!MF2.FLAG.GOAL){
+		HAL_Delay(500);
+		rotate_180();										//180度回転
+		driveC2(SETPOS_BACK);         						//a尻を当てる程度に後退。回転後に停止する
+		degree_z = target_degree_z;
+		start_mode = 0;
+		goal_mode = 1;
+	}
 
 	if(!MF.FLAG.SCND){
 		store_map_in_eeprom();
@@ -998,8 +1027,6 @@ void searchF3(){
 				}
 				break;
 		}
-//		adv_pos2(pass[p_cnt-1]);
-
 	}while(pass[p_cnt] != -114);
 
 	mouse.x = goal_x;
@@ -1174,7 +1201,6 @@ void searchF4(){
 					}else{
 						half_sectionV();
 					}
-//					half_sectionV();
 				}
 				break;
 		}
@@ -1551,8 +1577,7 @@ void turn_dir(uint8_t t_pat, uint8_t t_mode){
 		mouse.dir = (mouse.dir + t_pat) & 0x03;					//a指定された分mouse.dirを回転させる
 		if(t_mode == 1){
 			if(t_pat == 0x01) target_degree_z -= 90.5;			//a目標角度+右90度
-//			if(t_pat == 0xff) target_degree_z += 90.5;			//a目標角度+左90度
-			if(t_pat == 0xff) target_degree_z += 90.3;			//a目標角度+左90度
+			if(t_pat == 0xff) target_degree_z += 90.5;			//a目標角度+左90度
 			if(t_pat == 0x02) target_degree_z -= 181;			//a目標角度+右180度
 		}
 	}else{														//8方位モード
@@ -1598,6 +1623,8 @@ void make_smap(void){
 		smap[goal_y+j][goal_x+k] = 0;
 		}
 	}
+
+//	smap[goal_y][goal_x] = 0;
 
 	//====a歩数カウンタの重みづけ====
 	int straight = 3;
@@ -2010,7 +2037,7 @@ void make_smap2()
 //a引数：なし
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void pass_route(void){
+/*void pass_route(void){
 	int i;
 	for(i = 0; i < 256; i++){
 		pass[i] = 0;								//pass配列の初期化
@@ -2233,7 +2260,7 @@ void pass_route(void){
 		p++;											//pass配列数カウンタ+1
 	}
 }
-
+*/
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //pass_route2
@@ -2253,29 +2280,29 @@ void pass_route2(void){
 	while(route[i-1] != 0xff){
 		s = 0;
 		if(route[i] == 0x44){
-			pass[p] = -1;
+			pass[p] = -1;							//a右スラローム
 			i++;
 		}else if(route[i] == 0x11){
-			pass[p] = -2;
+			pass[p] = -2;							//a左スラローム
 			i++;
 		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x77){
 			s_flag = 0;
-			pass[p] = -3;
+			pass[p] = -3;							//a大回り右スラローム
 			i = i + 3;
 		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x77){
 			s_flag = 0;
-			pass[p] = -4;
+			pass[p] = -4;							//a大回り左スラローム
 			i = i + 3;
 		}else if(route[i] == 0x77 && route[i+1] == 0x44 && route[i+2] == 0x44 && route[i+3] == 0x77){
 			s_flag = 0;
-			pass[p] = -5;
+			pass[p] = -5;							//a大回り右180スラローム
 			i = i + 4;
 		}else if(route[i] == 0x77 && route[i+1] == 0x11 && route[i+2] == 0x11 && route[i+3] == 0x77){
 			s_flag = 0;
-			pass[p] = -6;
+			pass[p] = -6;							//a大回り左180スラローム
 			i = i + 4;
 		}else if(route[i] == 0xff){
-			pass[p] = -114;
+			pass[p] = -114;							//a終了条件用
 			i++;
 		}else if(route[i] == 0x77){
 			if(s_flag){

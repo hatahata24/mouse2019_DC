@@ -399,9 +399,11 @@ void set_positionF(){
 	HAL_Delay(100);
 
 	MF.FLAG.DRV = 1;
-	MF.FLAG.FWALL = 1;
-	while(MF.FLAG.FWALL);
+//	MF.FLAG.FWALL = 1;
+	MF.FLAG.GCTRL = 1;
+//	while(MF.FLAG.FWALL);
 
+	MF.FLAG.GCTRL = 0;
 	drive_stop();
 }
 
@@ -1217,7 +1219,7 @@ void v_R45(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-20, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-22, NO_WALL, NO_WALL);
 		}
 		slalomR(-V_M_DEGACCEL, -V_M_OMEGA, -45, SPEED_MIDDLE);
 
@@ -1225,7 +1227,7 @@ void v_R45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F);
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+35);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_B);
 		}
@@ -2384,7 +2386,7 @@ void v_test(void){
 //						v_R45D();
 						v_R45();
 					}
-					half_sectionVD();
+					half_sectionD();
 					break;
 				case 18:
 					//----V左45D----
@@ -2395,7 +2397,7 @@ void v_test(void){
 //						v_L45D();
 						v_L45();
 					}
-					half_sectionVD();
+					half_sectionD();
 					break;
 				case 19:
 					//----V右135D----
@@ -2406,7 +2408,7 @@ void v_test(void){
 //						v_R135D();
 						v_R135();
 					}
-					half_sectionVD();
+					half_sectionD();
 					break;
 				case 20:
 					//----V左135D----
@@ -2417,7 +2419,7 @@ void v_test(void){
 //						v_L135D();
 						v_L135();
 					}
-					half_sectionVD();
+					half_sectionD();
 					break;
 			}
 		full_led_write(RED);
@@ -2475,6 +2477,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 0;
 					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 800;
 					start_mode = 0;
@@ -2500,6 +2503,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = LOW;
 					start_mode = 0;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 800;
 
@@ -2527,6 +2531,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -2554,6 +2559,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -2581,6 +2587,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = LOW;
 					start_mode = 0;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 800;
 
@@ -2608,6 +2615,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -2635,6 +2643,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -3641,7 +3650,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 2;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 800;
 
@@ -3668,7 +3677,7 @@ void perfect_pass(void){
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
-					goal_mode = 2;
+					goal_mode = 1;
 					start_mode = 0;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
@@ -3719,6 +3728,32 @@ void perfect_pass(void){
 					break;
 
 				case 5:
+					//----a直線と大回り圧縮と斜めｰｰｰｰ
+					printf("pass press 4.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
+					start_mode = 0;
+					goal_mode = 2;
+					accel_hs = 5000;
+					speed_max_hs = 1200;
+
+					pass_mode = 4;
+
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchF4();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF4();
+
+					goal_x = 7;
+					goal_y = 7;
 					break;
 				case 6:
 					//----a一次探索スラローム走行----
@@ -3941,13 +3976,14 @@ void perfect_pass(void){
 					HAL_Delay(2000);
 
 
-/*					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース----
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース----
 					printf("pass press 3.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
+					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 2;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -3955,8 +3991,6 @@ void perfect_pass(void){
 
 					goal_x = 7;
 					goal_y = 7;
-
-//					get_base();
 
 					searchF3();
 					HAL_Delay(2000);
@@ -3968,9 +4002,36 @@ void perfect_pass(void){
 					degree_z = target_degree_z;
 					HAL_Delay(2000);
 
-*/
+
+					//----a直線と大回り圧縮と斜めｰｰｰｰ
+					printf("pass press 4.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
+					start_mode = 0;
+					goal_mode = 1;
+					accel_hs = 5000;
+					speed_max_hs = 1200;
+
+					pass_mode = 4;
+
+					goal_x = 7;
+					goal_y = 7;
+
+					searchF4();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF4();
+
+					goal_x = 7;
+					goal_y = 7;
+
+
+
 					//----a二次探索スラロームHigh Speed + 既知区間加速----
-					printf("Second Run. (Slalom)\n");
+/*					printf("Second Run. (Slalom)\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
@@ -4035,13 +4096,43 @@ void perfect_pass(void){
 
 					goal_x = goal_y = 0;
 					searchD();
+*/
 
-					//----a直線と大回り圧縮と斜めｰｰｰｰ
-/*					printf("pass press 4.\n");
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース----
+					printf("pass press 3.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
 					start_mode = 0;
+					goal_mode = 1;
+					accel_hs = 5000;
+					speed_max_hs = 1200;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = 7;
+					goal_y = 7;
+
+					searchF3();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF3();
+
+					driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+					degree_z = target_degree_z;
+					HAL_Delay(2000);
+
+
+					//----a直線と大回り圧縮と斜めｰｰｰｰ
+					printf("pass press 4.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
+					start_mode = 0;
+					goal_mode = 1;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -4059,7 +4150,7 @@ void perfect_pass(void){
 					goal_x = 7;
 					goal_y = 7;
 
-*/					break;
+					break;
 			}
 		}
 	}

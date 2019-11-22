@@ -48,7 +48,7 @@ typedef union {					//aプログラム実行中や走行中に自己状態を示
 		uint16_t ENKAI:1;		//a宴会芸 flag(B5)
 		uint16_t LOG:1;			//aログ flag(B6)
 		uint16_t GDRIFT:1;		//aジャイロドリフト flag(B7)
-		uint16_t RSV8:1;		//a予備ビット(B8)
+		uint16_t GOAL:1;		//goal flag(B8)
 		uint16_t RSV9:1;		//a予備ビット(B9)
 		uint16_t RSV10:1;		//a予備ビット(B10)
 		uint16_t RSV11:1;		//a予備ビット(B11)

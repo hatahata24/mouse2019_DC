@@ -203,10 +203,10 @@
 #define sensor_wait 2500//2000//3500
 
 //----wall 判断----
-#define WALL_BASE_FR 	110//100					//FR
+#define WALL_BASE_FR 	120//100			//FR
 #define WALL_BASE_FL 	200					//FL
 #define WALL_BASE_R		120//55				//R
-#define WALL_BASE_L 	150//140     		//L
+#define WALL_BASE_L 	140 	    		//L
 
 //----wall 制御判断----
 #define CTRL_BASE_R		30//50				//R
@@ -234,8 +234,8 @@
 #define LSLALOM_WALL_FR 100//225
 #define LSLALOM_WALL_FL 200//450
 
-#define LSLALOM_M_WALL_FR 100//225
-#define LSLALOM_M_WALL_FL 200//450
+#define LSLALOM_M_WALL_FR 120//100
+#define LSLALOM_M_WALL_FL 240//200
 
 #define LSLALOM_H_WALL_FR 100
 #define LSLALOM_H_WALL_FL 200
@@ -289,7 +289,7 @@
 
 
 //----goal 座標---
-#define GOAL_X 9	//7
-#define GOAL_Y 6	//7
+#define GOAL_X 7	//7
+#define GOAL_Y 7	//7
 
 #endif /* INC_PARAMS_H_ */
