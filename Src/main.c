@@ -339,13 +339,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		if(MF.FLAG.DRV){
 			if(!MF2.FLAG.WG){
-//				pulse_l = pulse_l + dgl + dwl;
-//				pulse_r = pulse_r + dgr + dwr;
-				pulse_l = pulse_l + dgl;
-				pulse_r = pulse_r + dgr;
+				pulse_l = pulse_l + dgl + dwl;
+				pulse_r = pulse_r + dgr + dwr;
+//				pulse_l = pulse_l + dgl;
+//				pulse_r = pulse_r + dgr;
 			}else{
-				pulse_l = pulse_l + dwl;
-				pulse_r = pulse_r + dwr;
+				pulse_l = pulse_l + dgl + dwl;
+				pulse_r = pulse_r + dgr + dwr;
+//				pulse_l = pulse_l + dwl;
+//				pulse_r = pulse_r + dwr;
 			}
 			pulse_l = min(max(pulse_l, -1000), 1000);
 			pulse_r = min(max(pulse_r, -1000), 1000);

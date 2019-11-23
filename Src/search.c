@@ -180,7 +180,7 @@ void searchC(){
 	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
 
 	if(MF2.FLAG.GOAL){
-		HAL_Delay(500);
+//		HAL_Delay(500);
 		rotate_180();											//180度回転
 		driveC2(SETPOS_BACK);         							//a尻を当てる程度に後退。回転後に停止する
 		degree_z = target_degree_z;
@@ -425,7 +425,7 @@ void searchD(){
 
 	//====aスタート位置壁情報取得====
 	if(!MF.FLAG.SCND)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
-	if(!MF.FLAG.SCND)wall_info &= ~0x88;										//a前壁は存在するはずがないので削除する
+	if(!MF.FLAG.SCND)wall_info &= ~0x88;									//a前壁は存在するはずがないので削除する
 	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
@@ -1227,6 +1227,8 @@ void searchF4(){
 	}else{														//a減速斜めでgoalする場合
 		HAL_Delay(500);
 		rotate_180();											//180度回転
+		driveC2(SETPOS_BACK); 							        //a尻を当てる程度に後退。回転後に停止する
+		degree_z = target_degree_z;
 	}
 	start_mode = 0;
 	goal_mode = 1;

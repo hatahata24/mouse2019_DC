@@ -638,14 +638,6 @@ void one_sectionA(void){
 void one_sectionD(void){
 	full_led_write(BLUE);
 	control_start();
-/*	if(run_mode == LOW){
-		driveA(-accel_hs, SPEED_LOW, speed_max_hs, SEC_HALF*2);				//1区画分減速走行。走行後は停止しない
-	}else if(run_mode == MIDDLE){
-		driveA(-accel_hs, SPEED_MIDDLE, speed_max_hs, SEC_HALF*2);			//1区画分減速走行。走行後は停止しない
-	}else if(run_mode == HIGH){
-		driveA(-accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF*2);			//1区画分減速走行。走行後は停止しない
-	}
-*/
 	if(run_mode == LOW){
 		driveD(-accel_hs, SPEED_LOW, speed_max_hs, SEC_HALF*2);				//1区画分減速走行。走行後は停止しない
 	}else if(run_mode == MIDDLE){
@@ -689,14 +681,6 @@ void one_sectionVA(void){
 void one_sectionVD(void){
 	full_led_write(BLUE);
 	control_start();
-/*	if(run_mode == LOW){
-		driveA(-accel_hs, SPEED_LOW, speed_max_hs, SEC_HALF_V*2);				//1区画分減速走行。走行後は停止しない
-	}else if(run_mode == MIDDLE){
-		driveA(-accel_hs, SPEED_MIDDLE, speed_max_hs, SEC_HALF_V*2);			//1区画分減速走行。走行後は停止しない
-	}else if(run_mode == HIGH){
-		driveA(-accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF_V*2);				//1区画分減速走行。走行後は停止しない
-	}
-*/
 	if(run_mode == LOW){
 		driveD(-accel_hs, SPEED_LOW, speed_max_hs, SEC_HALF_V*2);				//1区画分減速走行。走行後は停止しない
 	}else if(run_mode == MIDDLE){

@@ -196,11 +196,11 @@
 //gyro 制御パラメータ
 #define CTRL_BASE_G		1				//G
 #define CTRL_MAX_G		1000			//control value max
-#define CTRL_CONT_G		40//20//10				//Proportional C
+#define CTRL_CONT_G		40				//Proportional C
 
 
 //sensor 系パラメータ
-#define sensor_wait 2500//2000//3500
+#define sensor_wait 2500
 
 //----wall 判断----
 #define WALL_BASE_FR 	120//100			//FR
@@ -209,8 +209,8 @@
 #define WALL_BASE_L 	140 	    		//L
 
 //----wall 制御判断----
-#define CTRL_BASE_R		30//50				//R
-#define CTRL_BASE_L		35//				//L
+#define CTRL_BASE_R		30					//R
+#define CTRL_BASE_L		35					//L
 #define CTRL_MAX_W		1000				//control value max
 #define CTRL_CONT_W		0.75F//0.5F			//Proportional C
 
@@ -289,7 +289,7 @@
 
 
 //----goal 座標---
-#define GOAL_X 7	//7
+#define GOAL_X 9	//7
 #define GOAL_Y 7	//7
 
 #endif /* INC_PARAMS_H_ */
