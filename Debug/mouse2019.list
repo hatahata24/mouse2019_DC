@@ -17176,7 +17176,7 @@ void v_R45D(void){
  800763e:	f44f 71c8 	mov.w	r1, #400	; 0x190
  8007642:	f242 7010 	movw	r0, #10000	; 0x2710
  8007646:	f7fe f8b3 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_LOW, 30);
+		driveD(-30000, SPEED_MIN, SPEED_LOW, 30);
  800764a:	231e      	movs	r3, #30
  800764c:	f44f 72c8 	mov.w	r2, #400	; 0x190
  8007650:	2114      	movs	r1, #20
@@ -17185,7 +17185,7 @@ void v_R45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_HIGH, V_H_OFFSET_F-2);
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
 	}
 }
  8007658:	e07c      	b.n	8007754 <v_R45D+0x184>
@@ -17234,7 +17234,7 @@ void v_R45D(void){
  80076bc:	f44f 7116 	mov.w	r1, #600	; 0x258
  80076c0:	f242 7010 	movw	r0, #10000	; 0x2710
  80076c4:	f7fe f874 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 30);
+		driveD(-30000, SPEED_MIN, SPEED_MIDDLE, 30);
  80076c8:	231e      	movs	r3, #30
  80076ca:	f44f 7216 	mov.w	r2, #600	; 0x258
  80076ce:	2114      	movs	r1, #20
@@ -17287,7 +17287,7 @@ void v_R45D(void){
  800773a:	f44f 7148 	mov.w	r1, #800	; 0x320
  800773e:	f242 7010 	movw	r0, #10000	; 0x2710
  8007742:	f7fe f835 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
  8007746:	231e      	movs	r3, #30
  8007748:	f44f 7248 	mov.w	r2, #800	; 0x320
  800774c:	2114      	movs	r1, #20
@@ -17302,7 +17302,7 @@ void v_R45D(void){
  8007760:	fffffed4 	.word	0xfffffed4
  8007764:	fffff448 	.word	0xfffff448
  8007768:	20000f64 	.word	0x20000f64
- 800776c:	ffffd8f0 	.word	0xffffd8f0
+ 800776c:	ffff8ad0 	.word	0xffff8ad0
  8007770:	fffffe70 	.word	0xfffffe70
  8007774:	ffffe0c0 	.word	0xffffe0c0
 
@@ -17366,7 +17366,7 @@ void v_L45D(void){
  80077e8:	f44f 71c8 	mov.w	r1, #400	; 0x190
  80077ec:	f242 7010 	movw	r0, #10000	; 0x2710
  80077f0:	f7fd ffde 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_LOW, 30);
+		driveD(-30000, SPEED_MIN, SPEED_LOW, 30);
  80077f4:	231e      	movs	r3, #30
  80077f6:	f44f 72c8 	mov.w	r2, #400	; 0x190
  80077fa:	2114      	movs	r1, #20
@@ -17375,7 +17375,7 @@ void v_L45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_HIGH, V_H_OFFSET_F-12);
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
 	}
 }
  8007802:	e07e      	b.n	8007902 <v_L45D+0x18a>
@@ -17424,7 +17424,7 @@ void v_L45D(void){
  8007868:	f44f 7116 	mov.w	r1, #600	; 0x258
  800786c:	f242 7010 	movw	r0, #10000	; 0x2710
  8007870:	f7fd ff9e 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 30);
+		driveD(-30000, SPEED_MIN, SPEED_MIDDLE, 30);
  8007874:	231e      	movs	r3, #30
  8007876:	f44f 7216 	mov.w	r2, #600	; 0x258
  800787a:	2114      	movs	r1, #20
@@ -17477,7 +17477,7 @@ void v_L45D(void){
  80078e8:	f44f 7148 	mov.w	r1, #800	; 0x320
  80078ec:	f242 7010 	movw	r0, #10000	; 0x2710
  80078f0:	f7fd ff5e 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
  80078f4:	231e      	movs	r3, #30
  80078f6:	f44f 7248 	mov.w	r2, #800	; 0x320
  80078fa:	2114      	movs	r1, #20
@@ -17489,7 +17489,7 @@ void v_L45D(void){
  8007906:	bd80      	pop	{r7, pc}
  8007908:	20000456 	.word	0x20000456
  800790c:	20000f64 	.word	0x20000f64
- 8007910:	ffffd8f0 	.word	0xffffd8f0
+ 8007910:	ffff8ad0 	.word	0xffff8ad0
 
 08007914 <v_R90>:
 //v_R90
@@ -18530,7 +18530,7 @@ void v_R135D(void){
  800821e:	f44f 71c8 	mov.w	r1, #400	; 0x190
  8008222:	f242 7010 	movw	r0, #10000	; 0x2710
  8008226:	f7fd fac3 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_LOW, 30);
+		driveD(-30000, SPEED_MIN, SPEED_LOW, 30);
  800822a:	231e      	movs	r3, #30
  800822c:	f44f 72c8 	mov.w	r2, #400	; 0x190
  8008230:	2114      	movs	r1, #20
@@ -18539,7 +18539,7 @@ void v_R135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F+5);
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
 	}
 }
  8008238:	e07c      	b.n	8008334 <v_R135D+0x184>
@@ -18588,7 +18588,7 @@ void v_R135D(void){
  800829c:	f44f 7116 	mov.w	r1, #600	; 0x258
  80082a0:	f242 7010 	movw	r0, #10000	; 0x2710
  80082a4:	f7fd fa84 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 30);
+		driveD(-30000, SPEED_MIN, SPEED_MIDDLE, 30);
  80082a8:	231e      	movs	r3, #30
  80082aa:	f44f 7216 	mov.w	r2, #600	; 0x258
  80082ae:	2114      	movs	r1, #20
@@ -18641,7 +18641,7 @@ void v_R135D(void){
  800831a:	f44f 7148 	mov.w	r1, #800	; 0x320
  800831e:	f242 7010 	movw	r0, #10000	; 0x2710
  8008322:	f7fd fa45 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
  8008326:	231e      	movs	r3, #30
  8008328:	f44f 7248 	mov.w	r2, #800	; 0x320
  800832c:	2114      	movs	r1, #20
@@ -18656,7 +18656,7 @@ void v_R135D(void){
  8008340:	fffffed4 	.word	0xfffffed4
  8008344:	fffff448 	.word	0xfffff448
  8008348:	20000f64 	.word	0x20000f64
- 800834c:	ffffd8f0 	.word	0xffffd8f0
+ 800834c:	ffff8ad0 	.word	0xffff8ad0
  8008350:	fffffe0c 	.word	0xfffffe0c
  8008354:	ffffec78 	.word	0xffffec78
  8008358:	fffffce0 	.word	0xfffffce0
@@ -18722,7 +18722,7 @@ void v_L135D(void){
  80083d0:	f44f 71c8 	mov.w	r1, #400	; 0x190
  80083d4:	f242 7010 	movw	r0, #10000	; 0x2710
  80083d8:	f7fd f9ea 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_LOW, 30);
+		driveD(-30000, SPEED_MIN, SPEED_LOW, 30);
  80083dc:	231e      	movs	r3, #30
  80083de:	f44f 72c8 	mov.w	r2, #400	; 0x190
  80083e2:	2114      	movs	r1, #20
@@ -18731,7 +18731,7 @@ void v_L135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F+5);
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
 	}
 }
  80083ea:	e07e      	b.n	80084ea <v_L135D+0x18a>
@@ -18780,7 +18780,7 @@ void v_L135D(void){
  8008450:	f44f 7116 	mov.w	r1, #600	; 0x258
  8008454:	f242 7010 	movw	r0, #10000	; 0x2710
  8008458:	f7fd f9aa 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 30);
+		driveD(-30000, SPEED_MIN, SPEED_MIDDLE, 30);
  800845c:	231e      	movs	r3, #30
  800845e:	f44f 7216 	mov.w	r2, #600	; 0x258
  8008462:	2114      	movs	r1, #20
@@ -18833,7 +18833,7 @@ void v_L135D(void){
  80084d0:	f44f 7148 	mov.w	r1, #800	; 0x320
  80084d4:	f242 7010 	movw	r0, #10000	; 0x2710
  80084d8:	f7fd f96a 	bl	80057b0 <slalomB>
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
  80084dc:	231e      	movs	r3, #30
  80084de:	f44f 7248 	mov.w	r2, #800	; 0x320
  80084e2:	2114      	movs	r1, #20
@@ -18845,7 +18845,7 @@ void v_L135D(void){
  80084ee:	bd80      	pop	{r7, pc}
  80084f0:	20000456 	.word	0x20000456
  80084f4:	20000f64 	.word	0x20000f64
- 80084f8:	ffffd8f0 	.word	0xffffd8f0
+ 80084f8:	ffff8ad0 	.word	0xffff8ad0
 
 080084fc <test_select>:
 //test_select

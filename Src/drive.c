@@ -1343,7 +1343,7 @@ void v_R45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_LOW, V_OFFSET_F-30);
-		driveD(-10000, SPEED_MIN, SPEED_LOW, 30);
+		driveD(-30000, SPEED_MIN, SPEED_LOW, 30);
 	}else if(run_mode == MIDDLE){
 		slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-20, NO_WALL, NO_WALL);
 		slalomR(-V_M_DEGACCEL, -V_M_OMEGA, -45, SPEED_MIDDLE);
@@ -1352,7 +1352,7 @@ void v_R45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F-15);
-		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 30);
+		driveD(-30000, SPEED_MIN, SPEED_MIDDLE, 30);
 	}else if(run_mode == HIGH){
 		slalomF(10000, SPEED_HIGH, V_H_OFFSET_B-20, NO_WALL, NO_WALL);
 		slalomR(-V_H_DEGACCEL, -V_H_OMEGA, -45, SPEED_HIGH);
@@ -1361,7 +1361,7 @@ void v_R45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_HIGH, V_H_OFFSET_F-2);
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
 	}
 }
 
@@ -1382,7 +1382,7 @@ void v_L45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_LOW, V_OFFSET_F-30);
-		driveD(-10000, SPEED_MIN, SPEED_LOW, 30);
+		driveD(-30000, SPEED_MIN, SPEED_LOW, 30);
 	}else if(run_mode == MIDDLE){
 		slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-20, NO_WALL, NO_WALL);
 		slalomR(V_M_DEGACCEL, V_M_OMEGA, 45, SPEED_MIDDLE);
@@ -1391,7 +1391,7 @@ void v_L45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F-15);
-		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 30);
+		driveD(-30000, SPEED_MIN, SPEED_MIDDLE, 30);
 	}else if(run_mode == HIGH){
 		slalomF(10000, SPEED_HIGH, V_H_OFFSET_B, NO_WALL, NO_WALL);
 		slalomR(V_H_DEGACCEL, V_H_OMEGA, 45, SPEED_HIGH);
@@ -1400,7 +1400,7 @@ void v_L45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_HIGH, V_H_OFFSET_F-12);
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
 	}
 }
 
@@ -1653,7 +1653,7 @@ void v_R135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_LOW, VVV_OFFSET_F-30);
-		driveD(-10000, SPEED_MIN, SPEED_LOW, 30);
+		driveD(-30000, SPEED_MIN, SPEED_LOW, 30);
 	}else if(run_mode == MIDDLE){
 		slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-25, NO_WALL, NO_WALL);
 		slalomR(-VVV_M_DEGACCEL, -VVV_M_OMEGA, -135, SPEED_MIDDLE);
@@ -1662,7 +1662,7 @@ void v_R135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F-15);
-		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 30);
+		driveD(-30000, SPEED_MIN, SPEED_MIDDLE, 30);
 	}else if(run_mode == HIGH){
 		slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B-30, NO_WALL, NO_WALL);
 		slalomR(-VVV_H_DEGACCEL, -VVV_H_OMEGA, -135, SPEED_HIGH);
@@ -1671,7 +1671,7 @@ void v_R135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F+5);
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
 	}
 }
 
@@ -1692,7 +1692,7 @@ void v_L135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_LOW, VVV_OFFSET_F-30);
-		driveD(-10000, SPEED_MIN, SPEED_LOW, 30);
+		driveD(-30000, SPEED_MIN, SPEED_LOW, 30);
 	}else if(run_mode == MIDDLE){
 		slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-25, NO_WALL, NO_WALL);
 		slalomR(VVV_M_DEGACCEL, VVV_M_OMEGA, 135, SPEED_MIDDLE);
@@ -1701,7 +1701,7 @@ void v_L135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F-15);
-		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 30);
+		driveD(-30000, SPEED_MIN, SPEED_MIDDLE, 30);
 	}else if(run_mode == HIGH){
 		slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B-30, NO_WALL, NO_WALL);
 		slalomR(VVV_H_DEGACCEL, VVV_H_OMEGA, 135, SPEED_HIGH);
@@ -1710,7 +1710,7 @@ void v_L135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F+5);
-		driveD(-10000, SPEED_MIN, SPEED_HIGH, 30);
+		driveD(-30000, SPEED_MIN, SPEED_HIGH, 30);
 	}
 }
 
