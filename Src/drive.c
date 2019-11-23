@@ -210,7 +210,7 @@ void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_
 	}
 	accel_l = accel_r = accel_p;
 	//----減速走行----
-	while((dist_l < dist) || (dist_r < dist));			//a左右のモータが減速分の距離以上進むまで待機
+	while((dist_l < dist) && (dist_r < dist));			//a左右のモータが減速分の距離以上進むまで待機
 
 	if(!MF2.FLAG.HACCEL)drive_stop();											//走行停止
 }
@@ -295,7 +295,7 @@ void slalomF(int16_t accel_p, int16_t speed_p, uint8_t dist_p, uint16_t wall_fl,
 	control_start();
 	dist_l = dist_r = 0;
 	while(dist_l < dist_p && dist_r < dist_p){
-		if(ad_fl > wall_fl && ad_fr > wall_fr){
+		if(ad_fl > wall_fl || ad_fr > wall_fr){
 			full_led_write(RED);
 			break;
 		}

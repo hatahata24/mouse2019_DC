@@ -12760,7 +12760,7 @@ void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_
  80051f0:	4b1c      	ldr	r3, [pc, #112]	; (8005264 <driveD+0x1a4>)
  80051f2:	edc3 7a00 	vstr	s15, [r3]
 	//----減速走行----
-	while((dist_l < dist) || (dist_r < dist));			//a左右のモータが減速分の距離以上進むまで待機
+	while((dist_l < dist) && (dist_r < dist));			//a左右のモータが減速分の距離以上進むまで待機
  80051f6:	bf00      	nop
  80051f8:	883b      	ldrh	r3, [r7, #0]
  80051fa:	ee07 3a90 	vmov	s15, r3
@@ -12769,7 +12769,7 @@ void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_
  8005204:	edd3 7a00 	vldr	s15, [r3]
  8005208:	eeb4 7ae7 	vcmpe.f32	s14, s15
  800520c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8005210:	dcf2      	bgt.n	80051f8 <driveD+0x138>
+ 8005210:	dd0c      	ble.n	800522c <driveD+0x16c>
  8005212:	883b      	ldrh	r3, [r7, #0]
  8005214:	ee07 3a90 	vmov	s15, r3
  8005218:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
@@ -13106,12 +13106,12 @@ void slalomF(int16_t accel_p, int16_t speed_p, uint8_t dist_p, uint16_t wall_fl,
  80054e0:	6013      	str	r3, [r2, #0]
 	while(dist_l < dist_p && dist_r < dist_p){
  80054e2:	e00d      	b.n	8005500 <slalomF+0x90>
-		if(ad_fl > wall_fl && ad_fr > wall_fr){
+		if(ad_fl > wall_fl || ad_fr > wall_fr){
  80054e4:	883a      	ldrh	r2, [r7, #0]
  80054e6:	4b1e      	ldr	r3, [pc, #120]	; (8005560 <slalomF+0xf0>)
  80054e8:	681b      	ldr	r3, [r3, #0]
  80054ea:	429a      	cmp	r2, r3
- 80054ec:	d208      	bcs.n	8005500 <slalomF+0x90>
+ 80054ec:	d304      	bcc.n	80054f8 <slalomF+0x88>
  80054ee:	8b3a      	ldrh	r2, [r7, #24]
  80054f0:	4b1c      	ldr	r3, [pc, #112]	; (8005564 <slalomF+0xf4>)
  80054f2:	681b      	ldr	r3, [r3, #0]
