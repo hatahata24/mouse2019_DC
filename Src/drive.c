@@ -2672,7 +2672,7 @@ void goal_test(void){
 					goal_y = GOAL_Y;
 					break;
 				case 2:
-					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース Middle Speed----
 					printf("pass press 3-2.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
@@ -2700,16 +2700,16 @@ void goal_test(void){
 					goal_y = GOAL_Y;
 					break;
 				case 3:
-					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース Middle Speed 4マスgoal----
 					printf("pass press 3-2.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
-					run_mode = HIGH;
+					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 5000;
-					speed_max_hs = 1600;
+					speed_max_hs = 1200;
 
 					pass_mode = 3;						//a半区画ベースでroute配列生成
 
@@ -2728,35 +2728,7 @@ void goal_test(void){
 					goal_y = GOAL_Y;
 					break;
 				case 4:
-					//----a直線と大回り圧縮と斜めｰｰｰｰ
-					printf("pass press 4.\n");
-					MF.FLAG.SCND = 1;
-					MF.FLAG.ACCL2 = 1;
-					MF.FLAG.STRAIGHT = 1;
-					run_mode = LOW;
-					start_mode = 0;
-					goal_mode = 1;
-					accel_hs = 5000;
-					speed_max_hs = 800;
-
-					pass_mode = 4;
-
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
-
-					get_base();
-
-					searchF4();
-					HAL_Delay(2000);
-
-					goal_x = goal_y = 0;
-					searchF4();
-
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
-					break;
-				case 5:
-					//----a直線と大回り圧縮と斜め High Speedｰｰｰｰ
+					//----a直線と大回り圧縮と斜め Middle Speedｰｰｰｰ
 					printf("pass press 4.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
@@ -2783,17 +2755,17 @@ void goal_test(void){
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 					break;
-				case 6:
-					//----a直線と大回り圧縮と斜め High Speedｰｰｰｰ
+				case 5:
+					//----a直線と大回り圧縮と斜め Middle Speed 4マスgoalｰｰｰｰ
 					printf("pass press 4.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
-					run_mode = HIGH;
+					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 5000;
-					speed_max_hs = 1600;
+					speed_max_hs = 1200;
 
 					pass_mode = 4;
 
@@ -2811,30 +2783,56 @@ void goal_test(void){
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 					break;
-				case 7:
-					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
-					printf("pass press 3-4.\n");
-					MF.FLAG.SCND = 1;
+				case 6:
+					//----a一次探索スラローム走行　重ね探索----
+					printf("First Run. (Slalom)\n");
+
+					MF.FLAG.SCND = 0;
 					MF.FLAG.ACCL2 = 1;
-					MF.FLAG.STRAIGHT = 1;
-					run_mode = HIGH_HIGH;
+					MF.FLAG.STRAIGHT = 0;
+					run_mode = MIDDLE;
 					start_mode = 0;
 					goal_mode = 1;
 					accel_hs = 5000;
-					speed_max_hs = 2000;
-
-					pass_mode = 3;						//a半区画ベースでroute配列生成
-
+					speed_max_hs = 800;
+					start_mode = 0;
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 
 					get_base();
 
-					searchF3();
+					searchC2();
 					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
-					searchF3();
+					searchC();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+					break;
+				case 7:
+					//----a一次探索スラローム走行　重ね探索 4マスgoal----
+					printf("First Run. (Slalom)\n");
+
+					MF.FLAG.SCND = 0;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 0;
+					run_mode = MIDDLE;
+					start_mode = 0;
+					goal_mode = 2;
+					accel_hs = 5000;
+					speed_max_hs = 800;
+					start_mode = 0;
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchC2();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchC();
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
