@@ -490,11 +490,11 @@ void half_sectionD(void){
 	if(run_mode == LOW){
 		driveD(-4000, SPEED_MIN, SPEED_LOW, SEC_HALF);						//半区画分指定減速度で減速走行。走行後は停止する
 	}else if(run_mode == MIDDLE){
-		driveD(-6000, SPEED_MIN, SPEED_MIDDLE, SEC_HALF);					//半区画分指定減速度で減速走行。走行後は停止する
+		driveD(-4000, SPEED_MIN, SPEED_MIDDLE, SEC_HALF);					//半区画分指定減速度で減速走行。走行後は停止する
 	}else if(run_mode == HIGH){
-		driveD(-8000, SPEED_MIN, SPEED_HIGH, SEC_HALF);						//半区画分指定減速度で減速走行。走行後は停止する
+		driveD(-4000, SPEED_MIN, SPEED_HIGH, SEC_HALF);						//半区画分指定減速度で減速走行。走行後は停止する
 	}else if(run_mode == HIGH_HIGH){
-		driveD(-10000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF);						//半区画分指定減速度で減速走行。走行後は停止する
+		driveD(-6000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF);				//半区画分指定減速度で減速走行。走行後は停止する
 	}
 }
 
@@ -1203,7 +1203,7 @@ void v_R45(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-22, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_MIDDLE, V_M_OFFSET_B-20, NO_WALL, NO_WALL);
 		}
 		slalomR(-V_M_DEGACCEL, -V_M_OMEGA, -45, SPEED_MIDDLE);
 
@@ -1211,7 +1211,7 @@ void v_R45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+35);
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+15);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_B);
 		}
@@ -1219,7 +1219,7 @@ void v_R45(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B-20, NO_WALL, NO_WALL);
 		}
 		slalomR(-V_H_DEGACCEL, -V_H_OMEGA, -45, SPEED_HIGH);
 
@@ -1227,7 +1227,7 @@ void v_R45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F+28);
 		}else{
 			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B);
 		}
@@ -1287,7 +1287,7 @@ void v_L45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+35);
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+15);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_B);
 		}
@@ -1295,7 +1295,7 @@ void v_L45(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F+5, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B-20, NO_WALL, NO_WALL);
 		}
 		slalomR(V_H_DEGACCEL, V_H_OMEGA, 45, SPEED_HIGH);
 
@@ -1303,7 +1303,7 @@ void v_L45(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F+28);
 		}else{
 			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B);
 		}
@@ -1364,7 +1364,7 @@ void v_R45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F-10);
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+5);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_B-10);
 		}
@@ -1373,7 +1373,7 @@ void v_R45D(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B-20, NO_WALL, NO_WALL);
 		}
 		slalomR(-V_H_DEGACCEL, -V_H_OMEGA, -45, SPEED_HIGH);
 
@@ -1381,7 +1381,7 @@ void v_R45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F-10);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F+18);
 		}else{
 			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B-10);
 		}
@@ -1427,14 +1427,14 @@ void v_L45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+25);
+			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_F+5);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, V_M_OFFSET_B-10);
 		}
 		driveD(-10000, SPEED_MIN, SPEED_MIDDLE, 10);
 	}else if(run_mode == HIGH){
 		if(!MF2.FLAG.V){
-			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, V_H_OFFSET_F-20, NO_WALL, NO_WALL);
 		}else{
 			slalomF(10000, SPEED_HIGH, V_H_OFFSET_B, NO_WALL, NO_WALL);
 		}
@@ -1444,7 +1444,7 @@ void v_L45D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F-10);
+			slalomB(10000, SPEED_HIGH, V_H_OFFSET_F+18);
 		}else{
 			slalomB(10000, SPEED_HIGH, V_H_OFFSET_B-10);
 		}
@@ -1561,7 +1561,7 @@ void v_R135(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-25, NO_WALL, NO_WALL);
 		}
 		slalomR(-VVV_M_DEGACCEL, -VVV_M_OMEGA, -135, SPEED_MIDDLE);
 
@@ -1569,7 +1569,7 @@ void v_R135(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F);
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F+25);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_B);
 		}
@@ -1577,7 +1577,7 @@ void v_R135(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B-30, NO_WALL, NO_WALL);
 		}
 		slalomR(-VVV_H_DEGACCEL, -VVV_H_OMEGA, -135, SPEED_HIGH);
 
@@ -1585,7 +1585,7 @@ void v_R135(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F);
+			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F+45);
 		}else{
 			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_B);
 		}
@@ -1637,7 +1637,7 @@ void v_L135(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-25, NO_WALL, NO_WALL);
 		}
 		slalomR(VVV_M_DEGACCEL, VVV_M_OMEGA, 135, SPEED_MIDDLE);
 
@@ -1645,7 +1645,7 @@ void v_L135(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F);
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F+25);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_B);
 		}
@@ -1653,7 +1653,7 @@ void v_L135(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B-30, NO_WALL, NO_WALL);
 		}
 		slalomR(VVV_H_DEGACCEL, VVV_H_OMEGA, 135, SPEED_HIGH);
 
@@ -1661,7 +1661,7 @@ void v_L135(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F);
+			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F+45);
 		}else{
 			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_B);
 		}
@@ -1714,7 +1714,7 @@ void v_R135D(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-25, NO_WALL, NO_WALL);
 		}
 		slalomR(-VVV_M_DEGACCEL, -VVV_M_OMEGA, -135, SPEED_MIDDLE);
 
@@ -1722,7 +1722,7 @@ void v_R135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F-10);
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F+15);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-10);
 		}
@@ -1731,7 +1731,7 @@ void v_R135D(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B-30, NO_WALL, NO_WALL);
 		}
 		slalomR(-VVV_H_DEGACCEL, -VVV_H_OMEGA, -135, SPEED_HIGH);
 
@@ -1739,7 +1739,7 @@ void v_R135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F-10);
+			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F+35);
 		}else{
 			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_B-10);
 		}
@@ -1777,7 +1777,7 @@ void v_L135D(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-25, NO_WALL, NO_WALL);
 		}
 		slalomR(VVV_M_DEGACCEL, VVV_M_OMEGA, 135, SPEED_MIDDLE);
 
@@ -1785,7 +1785,7 @@ void v_L135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F-10);
+			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_F+15);
 		}else{
 			slalomB(10000, SPEED_MIDDLE, VVV_M_OFFSET_B-10);
 		}
@@ -1794,7 +1794,7 @@ void v_L135D(void){
 		if(!MF2.FLAG.V){
 			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_F, NO_WALL, NO_WALL);
 		}else{
-			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B, NO_WALL, NO_WALL);
+			slalomF(10000, SPEED_HIGH, VVV_H_OFFSET_B-30, NO_WALL, NO_WALL);
 		}
 		slalomR(VVV_H_DEGACCEL, VVV_H_OMEGA, 135, SPEED_HIGH);
 
@@ -1802,7 +1802,7 @@ void v_L135D(void){
 		MF2.FLAG.V = (MF2.FLAG.V+1)%2;
 
 		if(!MF2.FLAG.V){
-			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F-10);
+			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_F+35);
 		}else{
 			slalomB(10000, SPEED_HIGH, VVV_H_OFFSET_B-10);
 		}
@@ -2545,7 +2545,7 @@ void pass_test(void){
 					start_mode = 0;
 					goal_mode = 1;
 					accel_hs = 5000;
-					speed_max_hs = 1200;
+					speed_max_hs = 1600;
 
 					pass_mode = 3;						//a半区画ベースでroute配列生成
 
@@ -2629,7 +2629,7 @@ void pass_test(void){
 					start_mode = 0;
 					goal_mode = 1;
 					accel_hs = 5000;
-					speed_max_hs = 1200;
+					speed_max_hs = 1600;
 
 					pass_mode = 4;
 
@@ -2657,7 +2657,7 @@ void pass_test(void){
 					start_mode = 0;
 					goal_mode = 1;
 					accel_hs = 5000;
-					speed_max_hs = 1200;
+					speed_max_hs = 2000;
 
 					pass_mode = 3;						//a半区画ベースでroute配列生成
 

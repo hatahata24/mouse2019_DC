@@ -182,9 +182,10 @@ void searchC(){
 	if(MF2.FLAG.GOAL){
 //		HAL_Delay(500);
 		rotate_180();											//180度回転
-		driveC2(SETPOS_BACK);         							//a尻を当てる程度に後退。回転後に停止する
-		degree_z = target_degree_z;
-		start_mode = 0;
+//		driveC2(SETPOS_BACK);         							//a尻を当てる程度に後退。回転後に停止する
+//		degree_z = target_degree_z;
+//		start_mode = 0;
+		start_mode = 1;
 		goal_mode = 1;
 	}
 
@@ -308,9 +309,10 @@ void searchC2(){
 	if(MF2.FLAG.GOAL){
 		HAL_Delay(500);
 		rotate_180();											//180度回転
-		driveC2(SETPOS_BACK);         							//a尻を当てる程度に後退。回転後に停止する
-		degree_z = target_degree_z;
-		start_mode = 0;
+//		driveC2(SETPOS_BACK);         							//a尻を当てる程度に後退。回転後に停止する
+//		degree_z = target_degree_z;
+//		start_mode = 0;
+		start_mode = 1;
 		goal_mode = 1;
 	}
 
@@ -495,9 +497,10 @@ void searchD(){
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
-	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
-	degree_z = target_degree_z;
-	start_mode = 0;
+//	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+//	degree_z = target_degree_z;
+//	start_mode = 0;
+	start_mode = 1;
 	goal_mode = 1;
 
 	if(!MF.FLAG.SCND){
@@ -1041,9 +1044,10 @@ void searchF3(){
 
 	HAL_Delay(500);
 	rotate_180();											//180度回転
-	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
-	degree_z = target_degree_z;
-	start_mode = 0;
+//	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+//	degree_z = target_degree_z;
+//	start_mode = 0;
+	start_mode = 1;
 	goal_mode = 1;
 
 }
@@ -1222,15 +1226,16 @@ void searchF4(){
 
 		HAL_Delay(500);
 		rotate_180();											//180度回転
-		driveC2(SETPOS_BACK); 							        //a尻を当てる程度に後退。回転後に停止する
-		degree_z = target_degree_z;
+//		driveC2(SETPOS_BACK); 							        //a尻を当てる程度に後退。回転後に停止する
+//		degree_z = target_degree_z;
 	}else{														//a減速斜めでgoalする場合
 		HAL_Delay(500);
 		rotate_180();											//180度回転
-		driveC2(SETPOS_BACK); 							        //a尻を当てる程度に後退。回転後に停止する
-		degree_z = target_degree_z;
+//		driveC2(SETPOS_BACK); 							        //a尻を当てる程度に後退。回転後に停止する
+//		degree_z = target_degree_z;
 	}
-	start_mode = 0;
+//	start_mode = 0;
+	start_mode = 1;
 	goal_mode = 1;
 }
 
@@ -1645,7 +1650,6 @@ void make_smap(void){
 					}
 					//----a北壁についての処理----
 					if(!(m_temp & 0x08) && y != 15){		//a北壁がなく現在最北端でないとき
-//						if(smap[y+1][x] == 0x03e7){			//a北側が未記入なら
 						if(smap[y+1][x] >= (smap[y][x]+turn)){		//a北側が記入後より大きいなら
 							smap[y+1][x] = smap[y][x] + turn;		//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
@@ -1654,7 +1658,6 @@ void make_smap(void){
 									m_temp_sample[k] = map[y+k][x];				//map配列からマップデータを取り出す
 									if(MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
 									if(!(m_temp_sample[k] & 0x08) && (y+k) != 15) {		//a北壁がなく現在最北端でないとき
-//										if(smap[y+k+1][x] == 0x03e7) {						//a北側が未記入なら
 										if(smap[y+k+1][x] >= (smap[y+k][x]+straight)){		//a北側が記入後より大きいなら
 											smap[y+k+1][x] = smap[y+k][x] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
 										}
@@ -1666,7 +1669,6 @@ void make_smap(void){
 					}
 					//----a東壁についての処理----
 					if(!(m_temp & 0x04) && x != 15){		//a東壁がなく現在最東端でないとき
-//						if(smap[y][x+1] == 0x03e7){			//a東側が未記入なら
 						if(smap[y][x+1] >= (smap[y][x]+turn)){	//a東側が記入後より大きいなら
 							smap[y][x+1] = smap[y][x] + turn;	//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
@@ -1675,7 +1677,6 @@ void make_smap(void){
 									m_temp_sample[k] = map[y][x+k];				//map配列からマップデータを取り出す
 									if(MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
 									if(!(m_temp_sample[k] & 0x04) && (x+k) != 15) {		//a東壁がなく現在最東端でないとき
-//										if(smap[y][x+k+1] == 0x03e7) {						//a東側が未記入なら
 										if(smap[y][x+k+1] >= (smap[y][x+k]+straight)){		//a東側が記入後より大きいなら
 											smap[y][x+k+1] = smap[y][x+k] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
 										}
@@ -1687,7 +1688,6 @@ void make_smap(void){
 					}
 					//----a南壁についての処理----
 					if(!(m_temp & 0x02) && y != 0){			//a南壁がなく現在最南端でないとき
-//						if(smap[y-1][x] == 0x03e7){			//a南側が未記入なら
 						if(smap[y-1][x] >= (smap[y][x]+turn)){	//a南側が記入後より大きいなら
 							smap[y-1][x] = smap[y][x] + turn;	//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
@@ -1696,7 +1696,6 @@ void make_smap(void){
 									m_temp_sample[k] = map[y-k][x];				//map配列からマップデータを取り出す
 									if(MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
 									if(!(m_temp_sample[k] & 0x02) && (y-k) != 0) {		//a南壁がなく現在最南端でないとき
-//										if (smap[y-k-1][x] == 0x03e7) {						//a南側が未記入なら
 										if(smap[y-k-1][x] >= (smap[y-k][x]+straight)){		//a南側が記入後より大きいなら
 											smap[y-k-1][x] = smap[y-k][x] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
 										}
@@ -1708,7 +1707,6 @@ void make_smap(void){
 					}
 					//----a西壁についての処理----
 					if(!(m_temp & 0x01) && x != 0){			//a西壁がなく現在最西端でないとき
-//						if(smap[y][x-1] == 0x03e7){			//a西側が未記入なら
 						if(smap[y][x-1] >= (smap[y][x]+turn)){	//a西側が記入後より大きいなら
 							smap[y][x-1] = smap[y][x] + turn;	//a次の歩数を書き込む
 							if(MF.FLAG.STRAIGHT){
@@ -1717,7 +1715,6 @@ void make_smap(void){
 									m_temp_sample[k] = map[y][x-k];				//map配列からマップデータを取り出す
 									if(MF.FLAG.SCND) m_temp_sample[k] >>= 4;		//a二次走行用のマップを作成する場合上位4bitを使うので4bit分右にシフトさせる
 									if(!(m_temp_sample[k] & 0x01) && (x-k) != 0) {		//a西壁がなく現在最西端でないとき
-//										if (smap[y][x-k-1] == 0x03e7) {						//a西側が未記入なら
 										if(smap[y][x-k-1] >= (smap[y][x-k]+straight)){		//a西側が記入後より大きいなら
 											smap[y][x-k-1] = smap[y][x-k] + straight;		//a直線分インクリメントした値を次のマスの歩数マップに書き込む
 										}

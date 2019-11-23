@@ -123,7 +123,7 @@
 #define V_DEG (V_OMEGA*V_OMEGA/V_DEGACCEL/2)
 
 #define V_M_OFFSET_F 40
-#define V_M_OFFSET_B 96//76
+#define V_M_OFFSET_B 93//76
 #define V_M_DEGACCEL 8000
 #define V_M_OMEGA 400
 #define V_M_DEG (V_H_OMEGA*V_H_OMEGA/V_H_DEGACCEL/2)
@@ -147,7 +147,7 @@
 #define VV_DEG (VV_OMEGA*VV_OMEGA/VV_DEGACCEL/2)
 
 #define VV_M_OFFSET_F 58
-#define VV_M_OFFSET_B 70//58
+#define VV_M_OFFSET_B 82//58
 #define VV_M_DEGACCEL 10000
 #define VV_M_OMEGA 800
 #define VV_M_DEG (VV_H_OMEGA*VV_H_OMEGA/VV_H_DEGACCEL/2)
@@ -177,7 +177,7 @@
 #define VVV_M_DEG (VVV_H_OMEGA*VVV_H_OMEGA/VVV_H_DEGACCEL/2)
 
 #define VVV_H_OFFSET_F 85//80
-#define VVV_H_OFFSET_B 90//65
+#define VVV_H_OFFSET_B 105//65
 #define VVV_H_DEGACCEL 8000
 #define VVV_H_OMEGA 800
 #define VVV_H_DEG (VVV_H_OMEGA*VVV_H_OMEGA/VVV_H_DEGACCEL/2)
@@ -289,7 +289,7 @@
 
 
 //----goal 座標---
-#define GOAL_X 7	//7
-#define GOAL_Y 7	//7
+#define GOAL_X 1	//7
+#define GOAL_Y 0	//7
 
 #endif /* INC_PARAMS_H_ */
