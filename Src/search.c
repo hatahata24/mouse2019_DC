@@ -174,6 +174,7 @@ void searchC(){
 	if(MF.FLAG.SCND){
 		load_map_from_eeprom();
 	}
+
 	//====aスタート位置壁情報取得====
 	if(!MF.FLAG.SCND)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
 	if(!MF.FLAG.SCND)wall_info &= ~0x88;									//a前壁は存在するはずがないので削除する
@@ -1852,6 +1853,8 @@ void make_route(){
 		}
 		i++;													//aカウンタをインクリメント
 	}while(smap[y][x] != 0);									//a進んだ先の歩数マップ値が0（=ゴール）になるまで実行
+	goal_x = x;
+	goal_y = y;
 	mouse.dir = dir_temp;										//dir_tempに退避させた値をmouse.dirにリストア
 }
 

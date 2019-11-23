@@ -150,6 +150,7 @@ void init_test(void);			//a初期基幹関数走行テスト
 void slalom_test(void);			//aスラローム走行テスト
 void v_test(void);				//a斜め走行テス
 void pass_test(void);			//pass圧縮走行テスト
+void goal_test(void);			//a複数マスgoal走行テスト
 
 void simple_run(void);			//a超信地走行
 void slalom_run(void);			//aスラローム走行
