@@ -53,9 +53,9 @@ drive.c:1878:6:init_test	32	static
 drive.c:1980:6:slalom_test	64	static
 drive.c:2180:6:v_test	80	static
 drive.c:2421:6:pass_test	16	static
-drive.c:2667:6:simple_run	16	static
-drive.c:2793:6:slalom_run	16	static
-drive.c:3045:6:sample_course_run	16	static
-drive.c:3187:6:perfect_run	16	static
-drive.c:3341:6:perfect_slalom	16	static
-drive.c:3556:6:perfect_pass	16	static
+drive.c:2693:6:simple_run	16	static
+drive.c:2819:6:slalom_run	16	static
+drive.c:3071:6:sample_course_run	16	static
+drive.c:3213:6:perfect_run	16	static
+drive.c:3367:6:perfect_slalom	16	static
+drive.c:3582:6:perfect_pass	16	static
