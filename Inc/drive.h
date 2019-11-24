@@ -148,7 +148,7 @@ void test_select(void);			//aテスト走行選択
 
 void init_test(void);			//a初期基幹関数走行テスト
 void slalom_test(void);			//aスラローム走行テスト
-void v_test(void);				//a斜め走行テス
+void v_test(void);				//a斜め走行テスト
 void pass_test(void);			//pass圧縮走行テスト
 void goal_test(void);			//a複数マスgoal走行テスト
 

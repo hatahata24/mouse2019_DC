@@ -427,16 +427,16 @@ void searchD(){
 	}
 
 	//====aスタート位置壁情報取得====
-	if(!MF.FLAG.SCND)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
-	if(!MF.FLAG.SCND)wall_info &= ~0x88;									//a前壁は存在するはずがないので削除する
-	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
+//	if(!MF.FLAG.SCND)get_wall_info();										//a壁情報の初期化, 後壁はなくなる
+//	if(!MF.FLAG.SCND)wall_info &= ~0x88;									//a前壁は存在するはずがないので削除する
+//	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
 
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
 	adv_pos();
 
 	//====a歩数マップ・経路作成====
-	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
+//	if(!MF.FLAG.SCND)write_map();											//a壁情報を地図に記入
 	r_cnt = 0;												//a経路カウンタの初期化
 	make_smap();											//a歩数マップ作成
 	make_route();											//a最短経路探索（route配列に動作が格納される）
@@ -484,7 +484,7 @@ void searchD(){
 				break;
 		}
 		adv_pos();
-		if(!MF.FLAG.SCND)conf_route();
+//		if(!MF.FLAG.SCND)conf_route();
 
 //	}while((mouse.x != goal_x) || (mouse.y != goal_y));
 	}while(smap[mouse.y][mouse.x] != 0);
@@ -1224,17 +1224,16 @@ void searchF4(){
 		}
 		half_sectionD();
 		set_positionF();
-
-		HAL_Delay(500);
-		rotate_180();											//180度回転
-//		driveC2(SETPOS_BACK); 							        //a尻を当てる程度に後退。回転後に停止する
-//		degree_z = target_degree_z;
 	}else{														//a減速斜めでgoalする場合
-		HAL_Delay(500);
-		rotate_180();											//180度回転
-//		driveC2(SETPOS_BACK); 							        //a尻を当てる程度に後退。回転後に停止する
-//		degree_z = target_degree_z;
+		for(int j=0; j<goal_mode-1; j++){
+			one_section();
+			adv_pos();
+		}
 	}
+	HAL_Delay(500);
+	rotate_180();											//180度回転
+//	driveC2(SETPOS_BACK); 							        //a尻を当てる程度に後退。回転後に停止する
+//	degree_z = target_degree_z;
 //	start_mode = 0;
 	start_mode = 1;
 	goal_mode = 1;
