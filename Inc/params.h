@@ -22,7 +22,7 @@
 #define SEC_HALF 91//90.5
 #define SEC_HALF_V 130
 #define SEC_START 125
-#define SEC_START_HALF 35.5
+#define SEC_START_HALF 40//35.5
 
 //a走行速度
 #define SPEED_MIN 30//50

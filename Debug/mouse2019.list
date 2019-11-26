@@ -39,9 +39,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  17 .debug_line   00010bd5  00000000  00000000  0006f164  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    000c8693  00000000  00000000  0007fd39  2**0
+ 18 .debug_str    000c8691  00000000  00000000  0007fd39  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  001483cc  2**0
+ 19 .comment      0000007b  00000000  00000000  001483ca  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00005d54  00000000  00000000  00148448  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -12616,8 +12616,6 @@ void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16
  8005080:	eeb4 7ae7 	vcmpe.f32	s14, s15
  8005084:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
  8005088:	dce5      	bgt.n	8005056 <driveA+0x8a>
-
-//	drive_stop();
 }
  800508a:	bf00      	nop
  800508c:	370c      	adds	r7, #12
@@ -13608,7 +13606,7 @@ void start_sectionA(void){
  8005928:	2b02      	cmp	r3, #2
  800592a:	f040 8095 	bne.w	8005a58 <start_sectionA+0x180>
 			driveA(4000, SPEED_MIN, SPEED_LOW, SEC_START_HALF);				//aスタート半区画分加速しながら走行。走行後は停止しない
- 800592e:	2323      	movs	r3, #35	; 0x23
+ 800592e:	2328      	movs	r3, #40	; 0x28
  8005930:	f44f 72c8 	mov.w	r2, #400	; 0x190
  8005934:	211e      	movs	r1, #30
  8005936:	f44f 607a 	mov.w	r0, #4000	; 0xfa0
@@ -13654,7 +13652,7 @@ void start_sectionA(void){
  8005988:	2b02      	cmp	r3, #2
  800598a:	d165      	bne.n	8005a58 <start_sectionA+0x180>
 			driveA(6000, SPEED_MIN, SPEED_MIDDLE, SEC_START_HALF);			//aスタート半区画分加速しながら走行。走行後は停止しない
- 800598c:	2323      	movs	r3, #35	; 0x23
+ 800598c:	2328      	movs	r3, #40	; 0x28
  800598e:	f44f 7216 	mov.w	r2, #600	; 0x258
  8005992:	211e      	movs	r1, #30
  8005994:	f241 7070 	movw	r0, #6000	; 0x1770
@@ -13700,7 +13698,7 @@ void start_sectionA(void){
  80059e6:	2b02      	cmp	r3, #2
  80059e8:	d136      	bne.n	8005a58 <start_sectionA+0x180>
 			driveA(10000, SPEED_MIN, SPEED_HIGH, SEC_START_HALF);			//aスタート半区画分加速しながら走行。走行後は停止しない
- 80059ea:	2323      	movs	r3, #35	; 0x23
+ 80059ea:	2328      	movs	r3, #40	; 0x28
  80059ec:	f44f 7248 	mov.w	r2, #800	; 0x320
  80059f0:	211e      	movs	r1, #30
  80059f2:	f242 7010 	movw	r0, #10000	; 0x2710
@@ -13746,7 +13744,7 @@ void start_sectionA(void){
  8005a44:	2b02      	cmp	r3, #2
  8005a46:	d107      	bne.n	8005a58 <start_sectionA+0x180>
 			driveA(15000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_START_HALF);			//aスタート半区画分加速しながら走行。走行後は停止しない
- 8005a48:	2323      	movs	r3, #35	; 0x23
+ 8005a48:	2328      	movs	r3, #40	; 0x28
  8005a4a:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
  8005a4e:	211e      	movs	r1, #30
  8005a50:	f643 2098 	movw	r0, #15000	; 0x3a98

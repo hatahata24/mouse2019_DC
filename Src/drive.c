@@ -182,8 +182,6 @@ void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16
 
 	//----走行----
 	while((dist_l < dist) || (dist_r < dist));				//左右のモータが指定距離以上進むまで待機
-
-//	drive_stop();
 }
 
 

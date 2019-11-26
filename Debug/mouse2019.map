@@ -5923,7 +5923,7 @@ OUTPUT(mouse2019.elf elf32-littlearm)
  .debug_line    0x0000000000010434      0x720 Src/system_stm32f4xx.o
  .debug_line    0x0000000000010b54       0x81 Startup/startup_stm32f405rgtx.o
 
-.debug_str      0x0000000000000000    0xc8693
+.debug_str      0x0000000000000000    0xc8691
  .debug_str     0x0000000000000000    0xbcc5d Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
                                       0xbcfee (size before relaxing)
  .debug_str     0x00000000000bcc5d      0x665 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
@@ -5946,29 +5946,29 @@ OUTPUT(mouse2019.elf elf32-littlearm)
                                       0xbcdda (size before relaxing)
  .debug_str     0x00000000000bfcc7      0x677 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o
                                       0xbcd01 (size before relaxing)
- .debug_str     0x00000000000c033e     0x6b1d Src/drive.o
-                                      0xc3028 (size before relaxing)
- .debug_str     0x00000000000c6e5b       0xa9 Src/eeprom.o
-                                      0xc250e (size before relaxing)
- .debug_str     0x00000000000c6f04       0xb2 Src/gyro.o
-                                      0xc2912 (size before relaxing)
- .debug_str     0x00000000000c6fb6      0x154 Src/main.o
-                                      0xc3b86 (size before relaxing)
- .debug_str     0x00000000000c710a      0x152 Src/search.o
-                                      0xc2535 (size before relaxing)
- .debug_str     0x00000000000c725c       0x76 Src/sensor.o
-                                      0xc24dc (size before relaxing)
- .debug_str     0x00000000000c72d2       0x46 Src/stm32f4xx_hal_msp.o
+ .debug_str     0x00000000000c033e     0x6b1b Src/drive.o
+                                      0xc3026 (size before relaxing)
+ .debug_str     0x00000000000c6e59       0xa9 Src/eeprom.o
+                                      0xc250c (size before relaxing)
+ .debug_str     0x00000000000c6f02       0xb2 Src/gyro.o
+                                      0xc2910 (size before relaxing)
+ .debug_str     0x00000000000c6fb4      0x154 Src/main.o
+                                      0xc3b84 (size before relaxing)
+ .debug_str     0x00000000000c7108      0x152 Src/search.o
+                                      0xc2533 (size before relaxing)
+ .debug_str     0x00000000000c725a       0x76 Src/sensor.o
+                                      0xc24da (size before relaxing)
+ .debug_str     0x00000000000c72d0       0x46 Src/stm32f4xx_hal_msp.o
                                       0xbd3a6 (size before relaxing)
- .debug_str     0x00000000000c7318       0xcc Src/stm32f4xx_it.o
+ .debug_str     0x00000000000c7316       0xcc Src/stm32f4xx_it.o
                                       0xbc83f (size before relaxing)
- .debug_str     0x00000000000c73e4     0x11f3 Src/syscalls.o
+ .debug_str     0x00000000000c73e2     0x11f3 Src/syscalls.o
                                        0x8895 (size before relaxing)
- .debug_str     0x00000000000c85d7       0x31 Src/sysmem.o
+ .debug_str     0x00000000000c85d5       0x31 Src/sysmem.o
                                        0x7aee (size before relaxing)
- .debug_str     0x00000000000c8608       0x5a Src/system_stm32f4xx.o
+ .debug_str     0x00000000000c8606       0x5a Src/system_stm32f4xx.o
                                       0xbc4c9 (size before relaxing)
- .debug_str     0x00000000000c8662       0x31 Startup/startup_stm32f405rgtx.o
+ .debug_str     0x00000000000c8660       0x31 Startup/startup_stm32f405rgtx.o
                                          0x70 (size before relaxing)
 
 .comment        0x0000000000000000       0x7b
