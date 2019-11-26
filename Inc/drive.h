@@ -93,7 +93,7 @@ void driveU(uint16_t);			//a等速走行（前の速度を維持）
 void driveC(uint16_t);			//aデフォルトインターバルで走行
 void driveC2(uint16_t);			//aデフォルトインターバルで逆方向走行
 void slalomF(int16_t, int16_t, uint8_t, uint16_t, uint16_t);		//aスラローム前オフセット	加速度、目標速度、距離、前壁補正
-void slalomR(int16_t, int16_t, int16_t, int16_t);						//aスラローム旋回	角加速度、最高角速度、角度、重心速度
+void slalomR(int32_t, int16_t, int16_t, int16_t);						//aスラローム旋回	角加速度、最高角速度、角度、重心速度
 void slalomB(int16_t, int16_t, uint8_t);									//aスラローム後オフセット	加速度、目標速度、距離
 
 

@@ -195,7 +195,8 @@ void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_t dist){
 
-	float speed_0 = (speed_l + speed_r) / 2;								//等速走行距離を計算するためにmain.cより参照
+//	float speed_0 = (speed_l + speed_r) / 2;								//等速走行距離を計算するためにmain.cより参照
+	float speed_0 = (target_speed_l + target_speed_r) / 2;								//等速走行距離を計算するためにmain.cより参照
 	speed_min_l = speed_min_r = speed_min_p;
 	speed_max_l = speed_max_r = speed_max_p;
 	accel_l = accel_r = accel_p;							//引数の各パラメータをグローバル変数化
@@ -311,7 +312,7 @@ void slalomF(int16_t accel_p, int16_t speed_p, uint8_t dist_p, uint16_t wall_fl,
 //a引数1：
 //a戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void slalomR(int16_t degaccel_p, int16_t omega_p, int16_t degree_p, int16_t speed_p){
+void slalomR(int32_t degaccel_p, int16_t omega_p, int16_t degree_p, int16_t speed_p){
 	MF.FLAG.GYRO = 1;
 	target_degaccel_z = degaccel_p;
 	target_omega_z = 0;
@@ -859,7 +860,7 @@ void slalom_R90(void){
 		slalomB(10000, SPEED_HIGH_HIGH, SLALOM_4_OFFSET_B);
 	}else if(run_mode == 5){
 		slalomF(10000, SPEED_5, SLALOM_5_OFFSET_F, SLALOM_5_WALL_FL, SLALOM_5_WALL_FR);
-		slalomR(-SLALOM_5_DEGACCEL, -SLALOM_5_OMEGA, -50, SPEED_5);
+		slalomR(-SLALOM_5_DEGACCEL, -SLALOM_5_OMEGA, -45, SPEED_5);
 
 		if(!MF.FLAG.XDIR){
 			turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
@@ -922,7 +923,7 @@ void slalom_L90(void){
 		slalomB(10000, SPEED_HIGH_HIGH, SLALOM_4_OFFSET_B);
 	}else if(run_mode == 5){
 		slalomF(10000, SPEED_5, SLALOM_5_OFFSET_F, SLALOM_5_WALL_FL, SLALOM_5_WALL_FR);
-		slalomR(SLALOM_5_DEGACCEL, SLALOM_5_OMEGA, 50, SPEED_5);
+		slalomR(SLALOM_5_DEGACCEL, SLALOM_5_OMEGA, 45, SPEED_5);
 
 		if(!MF.FLAG.XDIR){
 			turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
@@ -985,7 +986,7 @@ void Lslalom_R90(void){
 		slalomB(10000, SPEED_HIGH_HIGH, LSLALOM_4_OFFSET_B);
 	}else if(run_mode == 5){
 		slalomF(10000, SPEED_5, LSLALOM_5_OFFSET_F, LSLALOM_5_WALL_FL, LSLALOM_5_WALL_FR);
-		slalomR(-LSLALOM_5_DEGACCEL, -LSLALOM_5_OMEGA, -85, SPEED_5);
+		slalomR(-LSLALOM_5_DEGACCEL, -LSLALOM_5_OMEGA, -80, SPEED_5);
 
 		if(!MF.FLAG.XDIR){
 			turn_dir(DIR_TURN_R90, 1);										//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
@@ -1047,7 +1048,7 @@ void Lslalom_L90(void){
 		slalomB(10000, SPEED_HIGH_HIGH, LSLALOM_4_OFFSET_B);
 	}else if(run_mode == 5){
 		slalomF(10000, SPEED_5, LSLALOM_5_OFFSET_F, LSLALOM_5_WALL_FL, LSLALOM_5_WALL_FR);
-		slalomR(LSLALOM_5_DEGACCEL, LSLALOM_5_OMEGA, 85, SPEED_5);
+		slalomR(LSLALOM_5_DEGACCEL, LSLALOM_5_OMEGA, 80, SPEED_5);
 
 		if(!MF.FLAG.XDIR){
 			turn_dir(DIR_TURN_L90, 1);										//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
@@ -2574,8 +2575,8 @@ void pass_test(void){
 					run_mode = MIDDLE;
 					start_mode = 0;
 					goal_mode = 1;
-					accel_hs = 5000;
-					speed_max_hs = 800;
+					accel_hs = 4000;
+					speed_max_hs = 1000;
 					start_mode = 0;
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -2768,7 +2769,7 @@ void pass_test(void){
 					run_mode = HIGH_HIGH;
 					start_mode = 0;
 					goal_mode = 1;
-					accel_hs = 5000;
+					accel_hs = 10000;
 					speed_max_hs = 2000;
 
 					pass_mode = 3;						//a半区画ベースでroute配列生成
@@ -3000,6 +3001,7 @@ void goal_test(void){
 					printf("First Run. (Slalom)\n");
 
 					MF.FLAG.SCND = 0;
+					MF.FLAG.SRC2 = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 0;
 					run_mode = MIDDLE;
@@ -3027,6 +3029,7 @@ void goal_test(void){
 					printf("First Run. (Slalom)\n");
 
 					MF.FLAG.SCND = 0;
+					MF.FLAG.SRC2 = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 0;
 					run_mode = MIDDLE;
@@ -3756,7 +3759,7 @@ void perfect_slalom(void){
 					MF.FLAG.SCND = 0;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 0;
-					run_mode = LOW;
+					run_mode = MIDDLE;
 					start_mode = 0;
 					goal_mode = 2;
 					accel_hs = 5000;
@@ -3783,7 +3786,7 @@ void perfect_slalom(void){
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
-					run_mode = LOW;
+					run_mode = MIDDLE;
 					start_mode = 0;
 					goal_mode = 2;
 					accel_hs = 5000;
@@ -3835,7 +3838,7 @@ void perfect_slalom(void){
 					run_mode = HIGH;
 					start_mode = 0;
 					goal_mode = 2;
-					accel_hs = 3000;
+					accel_hs = 5000;
 					speed_max_hs = 1200;
 					goal_x = 7;
 					goal_y = 7;
@@ -3861,7 +3864,7 @@ void perfect_slalom(void){
 					run_mode = HIGH;
 					start_mode = 0;
 					goal_mode = 2;
-					accel_hs = 10000;
+					accel_hs = 5000;
 					speed_max_hs = 1600;
 					goal_x = 7;
 					goal_y = 7;
@@ -3960,8 +3963,8 @@ void perfect_pass(void){
 					run_mode = MIDDLE;
 					start_mode = 0;
 					goal_mode = 2;
-					accel_hs = 5000;
-					speed_max_hs = 800;
+					accel_hs = 4000;
+					speed_max_hs = 1000;
 
 					goal_x = 7;
 					goal_y = 7;
@@ -3979,16 +3982,16 @@ void perfect_pass(void){
 					break;
 
 				case 2:
-					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース----
+					//----a直線と大回り圧縮----
 					printf("pass press 3.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 5000;
-					speed_max_hs = 800;
+					speed_max_hs = 1000;
 
 					pass_mode = 3;						//a半区画ベースでroute配列生成
 
@@ -4006,35 +4009,8 @@ void perfect_pass(void){
 					goal_x = 7;
 					goal_y = 7;
 					break;
+
 				case 3:
-					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
-					printf("pass press 3-2.\n");
-					MF.FLAG.SCND = 1;
-					MF.FLAG.ACCL2 = 1;
-					MF.FLAG.STRAIGHT = 1;
-					run_mode = HIGH;
-					goal_mode = 1;
-					start_mode = 0;
-					accel_hs = 5000;
-					speed_max_hs = 1200;
-
-					pass_mode = 3;						//a半区画ベースでroute配列生成
-
-					goal_x = 7;
-					goal_y = 7;
-
-					get_base();
-
-					searchF3();
-					HAL_Delay(2000);
-
-					goal_x = goal_y = 0;
-					searchF3();
-
-					goal_x = 7;
-					goal_y = 7;
-					break;
-				case 4:
 					//----a直線と大回り圧縮と斜めｰｰｰｰ
 					printf("pass press 4.\n");
 					MF.FLAG.SCND = 1;
@@ -4044,7 +4020,7 @@ void perfect_pass(void){
 					start_mode = 0;
 					goal_mode = 2;
 					accel_hs = 5000;
-					speed_max_hs = 800;
+					speed_max_hs = 1000;
 
 					pass_mode = 4;
 
@@ -4063,8 +4039,37 @@ void perfect_pass(void){
 					goal_y = 7;
 					break;
 
+				case 4:
+					//----a直線と大回り圧縮 High Speed----
+					printf("pass press 3-2.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
+					goal_mode = 2;
+					start_mode = 0;
+					accel_hs = 5000;
+					speed_max_hs = 1200;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = 7;
+					goal_y = 7;
+
+					get_base();
+
+					searchF3();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF3();
+
+					goal_x = 7;
+					goal_y = 7;
+					break;
+
 				case 5:
-					//----a直線と大回り圧縮と斜めｰｰｰｰ
+					//----a直線と大回り圧縮と斜め High Speedｰｰｰｰ
 					printf("pass press 4.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
@@ -4091,6 +4096,7 @@ void perfect_pass(void){
 					goal_x = 7;
 					goal_y = 7;
 					break;
+
 				case 6:
 					//----a一次探索スラローム走行----
 					printf("First Run.\n");
@@ -4100,8 +4106,8 @@ void perfect_pass(void){
 					run_mode = MIDDLE;
 					start_mode = 0;
 					goal_mode = 2;
-					accel_hs = 5000;
-					speed_max_hs = 800;
+					accel_hs = 4000;
+					speed_max_hs = 1000;
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -4117,7 +4123,7 @@ void perfect_pass(void){
 					degree_z = target_degree_z;
 					HAL_Delay(2000);
 
-
+/*
 					//----a二次探索スラローム+既知区間加速走行 speed2----
 					printf("Second Run. (Continuous)\n");
 					MF.FLAG.SCND = 1;
@@ -4139,23 +4145,23 @@ void perfect_pass(void){
 
 					degree_z = target_degree_z;
 					HAL_Delay(2000);
+*/
 
-
-/*					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース----
+					//----a直線と大回り圧縮----
 					printf("pass press 3.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
+					run_mode = MIDDLE;
 					start_mode = 0;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
 					pass_mode = 3;						//a半区画ベースでroute配列生成
 
-					goal_x = 7;
-					goal_y = 7;
-
-//					get_base();
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 
 					searchF3();
 					HAL_Delay(2000);
@@ -4165,9 +4171,40 @@ void perfect_pass(void){
 
 					driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 					degree_z = target_degree_z;
+					start_mode = 0;
+
 					HAL_Delay(2000);
 
-*/
+
+					//----a直線と大回り圧縮と斜め----
+					printf("pass press 3.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = MIDDLE;
+					start_mode = 0;
+					goal_mode = 2;
+					accel_hs = 5000;
+					speed_max_hs = 1200;
+
+					pass_mode = 4;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					searchF4();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF4();
+
+					driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+					degree_z = target_degree_z;
+					start_mode = 0;
+
+					HAL_Delay(2000);
+
+/*
 					//----a二次探索スラロームHigh Speed + 既知区間加速----
 					printf("Second Run. (Slalom)\n");
 					MF.FLAG.SCND = 1;
@@ -4232,23 +4269,52 @@ void perfect_pass(void){
 
 					goal_x = goal_y = 0;
 					searchD();
+*/
 
-
-					//----a直線と大回り圧縮と斜めｰｰｰｰ
-/*					printf("pass press 4.\n");
+					//----a直線と大回り圧縮 High Speed----
+					printf("pass press 3.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
 					start_mode = 0;
-					accel_hs = 5000;
-					speed_max_hs = 1200;
+					goal_mode = 2;
+					accel_hs = 6000;
+					speed_max_hs = 1600;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					searchF3();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF3();
+
+					driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+					degree_z = target_degree_z;
+					start_mode = 0;
+
+					HAL_Delay(2000);
+
+
+					//----a直線と大回り圧縮と斜めｰｰｰｰ
+					printf("pass press 4.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
+					start_mode = 0;
+					goal_mode = 2;
+					accel_hs = 6000;
+					speed_max_hs = 1600;
 
 					pass_mode = 4;
 
-					goal_x = 7;
-					goal_y = 7;
-
-//					get_base();
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 
 					searchF4();
 					HAL_Delay(2000);
@@ -4256,12 +4322,8 @@ void perfect_pass(void){
 					goal_x = goal_y = 0;
 					searchF4();
 
-					goal_x = 7;
-					goal_y = 7;
-
-*/					break;
-
 					break;
+
 				case 7:
 					//----a一次探索スラローム走行----
 					printf("First Run.\n");
@@ -4271,8 +4333,8 @@ void perfect_pass(void){
 					run_mode = MIDDLE;
 					start_mode = 0;
 					goal_mode = 2;
-					accel_hs = 5000;
-					speed_max_hs = 800;
+					accel_hs = 4000;
+					speed_max_hs = 1000;
 
 					goal_x = 7;
 					goal_y = 7;
@@ -4288,7 +4350,7 @@ void perfect_pass(void){
 					degree_z = target_degree_z;
 					HAL_Delay(2000);
 
-
+/*
 					//----a二次探索スラローム+既知区間加速走行 speed2----
 					printf("Second Run. (Continuous)\n");
 					MF.FLAG.SCND = 1;
@@ -4310,7 +4372,7 @@ void perfect_pass(void){
 
 					degree_z = target_degree_z;
 					HAL_Delay(2000);
-
+*/
 
 					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース----
 					printf("pass press 3.\n");
@@ -4319,7 +4381,7 @@ void perfect_pass(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -4336,6 +4398,7 @@ void perfect_pass(void){
 
 					driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 					degree_z = target_degree_z;
+					start_mode = 0;
 					HAL_Delay(2000);
 
 
@@ -4344,9 +4407,9 @@ void perfect_pass(void){
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
-					run_mode = HIGH;
+					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -4361,10 +4424,11 @@ void perfect_pass(void){
 					goal_x = goal_y = 0;
 					searchF4();
 
-					goal_x = 7;
-					goal_y = 7;
+					driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+					degree_z = target_degree_z;
+					start_mode = 0;
 
-
+					HAL_Delay(2000);
 
 					//----a二次探索スラロームHigh Speed + 既知区間加速----
 /*					printf("Second Run. (Slalom)\n");
@@ -4434,16 +4498,16 @@ void perfect_pass(void){
 					searchD();
 */
 
-					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース----
+					//----a直線と大回り圧縮 High Speed----
 					printf("pass press 3.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
-					goal_mode = 1;
-					accel_hs = 5000;
-					speed_max_hs = 1200;
+					goal_mode = 2;
+					accel_hs = 6000;
+					speed_max_hs = 1600;
 
 					pass_mode = 3;						//a半区画ベースでroute配列生成
 
@@ -4458,19 +4522,21 @@ void perfect_pass(void){
 
 					driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
 					degree_z = target_degree_z;
+					start_mode = 0;
+
 					HAL_Delay(2000);
 
 
-					//----a直線と大回り圧縮と斜めｰｰｰｰ
+					//----a直線と大回り圧縮と斜め High Speedｰｰｰｰ
 					printf("pass press 4.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
-					goal_mode = 1;
-					accel_hs = 5000;
-					speed_max_hs = 1200;
+					goal_mode = 2;
+					accel_hs = 6000;
+					speed_max_hs = 1600;
 
 					pass_mode = 4;
 
@@ -4482,9 +4548,6 @@ void perfect_pass(void){
 
 					goal_x = goal_y = 0;
 					searchF4();
-
-					goal_x = 7;
-					goal_y = 7;
 
 					break;
 			}

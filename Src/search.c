@@ -188,6 +188,7 @@ void searchC(){
 //		start_mode = 0;
 		start_mode = 1;
 		goal_mode = 1;
+		HAL_Delay(500);
 	}
 
 	//====aスタート位置壁情報取得====
