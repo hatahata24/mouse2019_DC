@@ -22,7 +22,7 @@
 #define SEC_HALF 91//90.5
 #define SEC_HALF_V 130
 #define SEC_START 125
-#define SEC_START_HALF 40//35.5
+#define SEC_START_HALF 45//35.5
 
 //a走行速度
 #define SPEED_MIN 30//50
@@ -321,6 +321,36 @@
 #define LROTATE_5_WALL_FR 90
 #define LROTATE_5_WALL_FL 180
 
+#define V45_WALL_FR 100//225
+#define V45_WALL_FL 200//450
+
+#define V45_2_WALL_FR 100//225
+#define V45_2_WALL_FL 200//450
+
+#define V45_3_WALL_FR 100//225
+#define V45_3_WALL_FL 200//450
+
+#define V45_4_WALL_FR 100//225
+#define V45_4_WALL_FL 200//450
+
+#define V45_5_WALL_FR 100//225
+#define V45_5_WALL_FL 200//450
+
+#define V135_WALL_FR 100//225
+#define V135_WALL_FL 200//450
+
+#define V135_2_WALL_FR 100//225
+#define V135_2_WALL_FL 200//450
+
+#define V135_3_WALL_FR 100//225
+#define V135_3_WALL_FL 200//450
+
+#define V135_4_WALL_FR 100//225
+#define V135_4_WALL_FL 200//450
+
+#define V135_5_WALL_FR 100//225
+#define V135_5_WALL_FL 200//450
+
 #define NO_WALL 5000
 
 //----a斜め時柱補正----
@@ -355,7 +385,7 @@
 
 
 //----goal 座標---
-#define GOAL_X 0	//7
-#define GOAL_Y 4	//7
+#define GOAL_X 1	//7
+#define GOAL_Y 0	//7
 
 #endif /* INC_PARAMS_H_ */

@@ -2878,9 +2878,9 @@ void goal_test(void){
 
 					goal_x = goal_y = 0;
 					searchC();
+					while(dist_l < 30);
+					printf("x: %d, y:%d, dir:%d\n", mouse.x, mouse.y, mouse.dir);
 
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
 					break;
 				case 2:
 					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース Middle Speed----
@@ -2894,7 +2894,7 @@ void goal_test(void){
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
-					pass_mode = 3;						//a半区画ベースでroute配列生成
+//					pass_mode = 3;						//a半区画ベースでroute配列生成
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -2922,7 +2922,7 @@ void goal_test(void){
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
-					pass_mode = 3;						//a半区画ベースでroute配列生成
+//					pass_mode = 3;						//a半区画ベースでroute配列生成
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -2950,7 +2950,7 @@ void goal_test(void){
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
-					pass_mode = 4;
+//					pass_mode = 4;
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -2962,9 +2962,6 @@ void goal_test(void){
 
 					goal_x = goal_y = 0;
 					searchF4();
-
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
 					break;
 				case 5:
 					//----a直線と大回り圧縮と斜め Middle Speed 4マスgoalｰｰｰｰ
@@ -2978,7 +2975,7 @@ void goal_test(void){
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
-					pass_mode = 4;
+//					pass_mode = 4;
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -3006,8 +3003,7 @@ void goal_test(void){
 					start_mode = 0;
 					goal_mode = 1;
 					accel_hs = 5000;
-					speed_max_hs = 800;
-					start_mode = 0;
+					speed_max_hs = 1200;
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 
@@ -3034,8 +3030,7 @@ void goal_test(void){
 					start_mode = 0;
 					goal_mode = 2;
 					accel_hs = 5000;
-					speed_max_hs = 800;
-					start_mode = 0;
+					speed_max_hs = 1200;
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 

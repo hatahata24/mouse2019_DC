@@ -956,6 +956,7 @@ void searchF3(){
 	if(MF.FLAG.SCND){
 		load_map_from_eeprom();
 	}
+	pass_mode = 3;
 
 	//====a1区画前進====
 	adv_pos();
@@ -1066,6 +1067,7 @@ void searchF4(){
 	if(MF.FLAG.SCND){
 		load_map_from_eeprom();
 	}
+	pass_mode = 4;
 
 	//====a1区画前進====
 	adv_pos();
@@ -1082,6 +1084,7 @@ void searchF4(){
 	if(start_mode == 0 || start_mode == 1){					//a大回りではない場合、先頭の半区画直進をスキップ
 		pass[p_cnt]--;
 	}
+	mouse.dir = mouse.dir * 2;
 
 	//====a前に壁が無い想定で問答無用で前進====
 	start_sectionA();
@@ -1637,7 +1640,7 @@ void make_smap(void){
 	//====a歩数カウンタの重みづけ====
 	int straight = 3;
 	int turn = 5;
-
+	full_led_write(GREEN);
 	//====a自分の座標にたどり着くまでループ====
 	do{
 		//----aマップ全域を捜索----
@@ -1836,15 +1839,15 @@ void make_route(){
 			}
 			break;
 		case 0x01:												//a右折する場合
-			turn_dir(DIR_TURN_R90, 0);								//a内部情報の方向を90度右回転
+			turn_dir(DIR_TURN_R90, 0);							//a内部情報の方向を90度右回転
 			route[i] = 0x44;									//a格納データ形式を変更
 			break;
 		case 0x02:												//Uターンする場合
-			turn_dir(DIR_TURN_180, 0);								//a内部情報の方向を180度回転
+			turn_dir(DIR_TURN_180, 0);							//a内部情報の方向を180度回転
 			route[i] = 0x22;									//a格納データ形式を変更
 			break;
 		case 0x03:												//a左折する場合
-			turn_dir(DIR_TURN_L90, 0);								//a内部情報の方向を90度左回転
+			turn_dir(DIR_TURN_L90, 0);							//a内部情報の方向を90度左回転
 			route[i] = 0x11;									//a格納データ形式を変更
 			break;
 		default:												//aそれ以外の場合
@@ -1853,8 +1856,11 @@ void make_route(){
 		}
 		i++;													//aカウンタをインクリメント
 	}while(smap[y][x] != 0);									//a進んだ先の歩数マップ値が0（=ゴール）になるまで実行
-	goal_x = x;
-	goal_y = y;
+
+	if(MF.FLAG.SCND){
+		goal_x = x;
+		goal_y = y;												//a二次走行でgoal後自己座標をgoal座標にするのでその時用
+	}
 	mouse.dir = dir_temp;										//dir_tempに退避させた値をmouse.dirにリストア
 }
 
