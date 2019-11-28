@@ -69,6 +69,7 @@ void drive_stop(void){
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void control_start(){
 	MF.FLAG.WCTRL = 1;										//wall制御を有効にする
+	if(run_mode == 5 && MF2.FLAG.TEMP)MF.FLAG.WCTRL = 0;
 	MF.FLAG.GCTRL = 1;										//gyro制御を有効にする
 }
 
@@ -229,7 +230,7 @@ void driveU(uint16_t dist){
 	//----走行----
 	while((dist_l < dist) || (dist_r < dist)){				//左右のモータが指定パルス以上進むまで待機
 		if(MF.FLAG.WEDGE){
-			if(ad_l < WALL_BASE_L-30 || ad_r < WALL_BASE_R-10){
+			if(ad_l < WALL_BASE_L-40 || ad_r < WALL_BASE_R-40){
 				while((dist_l < W_DIST) || (dist_r < W_DIST));	//左右のモータが壁切れ用指定距離以上進むまで待機
 			break;
 			}
@@ -365,8 +366,10 @@ void slalomB(int16_t accel_p, int16_t speed_p, uint8_t dist_p){
 	speed_max_l = speed_max_r = speed_p;
 
 	control_start();
+	MF2.FLAG.TEMP = 1;
 	dist_l = dist_r = 0;
 	while(dist_l < dist_p && dist_r < dist_p);
+	MF2.FLAG.TEMP = 0;
 }
 
 
@@ -448,6 +451,22 @@ void start_sectionA(void){
 		}else if(start_mode == 2){
 			driveA(15000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_START_HALF);			//aスタート半区画分加速しながら走行。走行後は停止しない
 		}
+	}else if(run_mode == 5){
+		if(start_mode == 0){
+			driveA(10000, SPEED_MIN, SPEED_5, SEC_START);					//aスタート区画分加速しながら走行。走行後は停止しない
+		}else if(start_mode == 1){
+			driveA(10000, SPEED_MIN, SPEED_5, SEC_HALF);					//a半区画分加速しながら走行。走行後は停止しない
+		}else if(start_mode == 2){
+			driveA(20000, SPEED_MIN, SPEED_5, SEC_START_HALF);			//aスタート半区画分加速しながら走行。走行後は停止しない
+		}
+	}else if(run_mode == 6){
+		if(start_mode == 0){
+			driveA(25000, SPEED_MIN, SPEED_5, SEC_START);					//aスタート区画分加速しながら走行。走行後は停止しない
+		}else if(start_mode == 1){
+			driveA(25000, SPEED_MIN, SPEED_5, SEC_HALF);					//a半区画分加速しながら走行。走行後は停止しない
+		}else if(start_mode == 2){
+			driveA(45000, SPEED_MIN, SPEED_5, SEC_START_HALF);			//aスタート半区画分加速しながら走行。走行後は停止しない
+		}
 	}
 	start_mode = 1;
 	if(!MF.FLAG.SCND)get_wall_info();								//壁情報を取得，片壁制御の有効・無効の判断
@@ -471,6 +490,10 @@ void half_sectionA(void){
 		driveA(8000, SPEED_MIN, SPEED_HIGH, SEC_HALF);						//半区画分加速しながら走行。走行後は停止しない
 	}else if(run_mode == HIGH_HIGH){
 		driveA(10000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF);						//半区画分加速しながら走行。走行後は停止しない
+	}else if(run_mode == 5){
+		driveA(10000, SPEED_MIN, SPEED_5, SEC_HALF);						//半区画分加速しながら走行。走行後は停止しない
+	}else if(run_mode == 6){
+		driveA(25000, SPEED_MIN, SPEED_6, SEC_HALF);						//半区画分加速しながら走行。走行後は停止しない
 	}
 	if(!MF.FLAG.SCND)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 }
@@ -494,6 +517,10 @@ void half_sectionD(void){
 		driveD(-4000, SPEED_MIN, SPEED_HIGH, SEC_HALF);						//半区画分指定減速度で減速走行。走行後は停止する
 	}else if(run_mode == HIGH_HIGH){
 		driveD(-6000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF);				//半区画分指定減速度で減速走行。走行後は停止する
+	}else if(run_mode == 5){
+		driveD(-8000, SPEED_MIN, SPEED_5, SEC_HALF);				//半区画分指定減速度で減速走行。走行後は停止する
+	}else if(run_mode == 6){
+		driveD(-25000, SPEED_MIN, SPEED_6, SEC_HALF);				//半区画分指定減速度で減速走行。走行後は停止する
 	}
 }
 
@@ -540,8 +567,11 @@ void half_sectionVA(void){
 		driveA(8000, SPEED_MIN, SPEED_HIGH, SEC_HALF_V);						//半区画分加速しながら走行。走行後は停止しない
 	}else if(run_mode == HIGH_HIGH){
 		driveA(10000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF_V);						//半区画分加速しながら走行。走行後は停止しない
+	}else if(run_mode == 5){
+		driveA(10000, SPEED_MIN, SPEED_5, SEC_HALF_V);						//半区画分加速しながら走行。走行後は停止しない
+	}else if(run_mode == 6){
+		driveA(25000, SPEED_MIN, SPEED_6, SEC_HALF_V);						//半区画分加速しながら走行。走行後は停止しない
 	}
-	if(!MF.FLAG.SCND)get_wall_info();										//壁情報を取得，片壁制御の有効・無効の判断
 }
 
 
@@ -563,6 +593,10 @@ void half_sectionVD(void){
 		driveD(-4000, SPEED_MIN, SPEED_HIGH, SEC_HALF_V);						//半区画分指定減速度で減速走行。走行後は停止する
 	}else if(run_mode == HIGH_HIGH){
 		driveD(-6000, SPEED_MIN, SPEED_HIGH_HIGH, SEC_HALF_V);						//半区画分指定減速度で減速走行。走行後は停止する
+	}else if(run_mode == 5){
+		driveD(-8000, SPEED_MIN, SPEED_5, SEC_HALF_V);						//半区画分指定減速度で減速走行。走行後は停止する
+	}else if(run_mode == 6){
+		driveD(-25000, SPEED_MIN, SPEED_6, SEC_HALF_V);						//半区画分指定減速度で減速走行。走行後は停止する
 	}
 }
 
@@ -623,6 +657,10 @@ void one_sectionA(void){
 		driveA(accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF*2);				//1区画分加速走行。走行後は停止しない
 	}else if(run_mode == HIGH_HIGH){
 		driveA(accel_hs, SPEED_HIGH_HIGH, speed_max_hs, SEC_HALF*2);				//1区画分加速走行。走行後は停止しない
+	}else if(run_mode == 5){
+		driveA(accel_hs, SPEED_5, speed_max_hs, SEC_HALF*2);				//1区画分加速走行。走行後は停止しない
+	}else if(run_mode == 6){
+		driveA(accel_hs, SPEED_6, speed_max_hs, SEC_HALF*2);				//1区画分加速走行。走行後は停止しない
 	}
 	if(!MF.FLAG.SCND)get_wall_info();								//壁情報を取得，片壁制御の有効・無効の判断
 }
@@ -645,6 +683,10 @@ void one_sectionD(void){
 		driveD(-accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF*2);			//1区画分減速走行。走行後は停止しない
 	}else if(run_mode == HIGH_HIGH){
 		driveD(-accel_hs, SPEED_HIGH_HIGH, speed_max_hs, SEC_HALF*2);			//1区画分減速走行。走行後は停止しない
+	}else if(run_mode == 5){
+		driveD(-accel_hs, SPEED_5, speed_max_hs, SEC_HALF*2);			//1区画分減速走行。走行後は停止しない
+	}else if(run_mode == 6){
+		driveD(-accel_hs, SPEED_6, speed_max_hs, SEC_HALF*2);			//1区画分減速走行。走行後は停止しない
 	}
 	if(!MF.FLAG.SCND)get_wall_info();								//壁情報を取得，片壁制御の有効・無効の判断
 }
@@ -667,6 +709,10 @@ void one_sectionVA(void){
 		driveA(accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF_V*2);				//1区画分加速走行。走行後は停止しない
 	}else if(run_mode == HIGH_HIGH){
 		driveA(accel_hs, SPEED_HIGH_HIGH, speed_max_hs, SEC_HALF_V*2);				//1区画分加速走行。走行後は停止しない
+	}else if(run_mode == 5){
+		driveA(accel_hs, SPEED_5, speed_max_hs, SEC_HALF_V*2);				//1区画分加速走行。走行後は停止しない
+	}else if(run_mode == 6){
+		driveA(accel_hs, SPEED_6, speed_max_hs, SEC_HALF_V*2);				//1区画分加速走行。走行後は停止しない
 	}
 }
 
@@ -688,6 +734,10 @@ void one_sectionVD(void){
 		driveD(-accel_hs, SPEED_HIGH, speed_max_hs, SEC_HALF_V*2);				//1区画分減速走行。走行後は停止しない
 	}else if(run_mode == HIGH_HIGH){
 		driveD(-accel_hs, SPEED_HIGH_HIGH, speed_max_hs, SEC_HALF_V*2);				//1区画分減速走行。走行後は停止しない
+	}else if(run_mode == 5){
+		driveD(-accel_hs, SPEED_5, speed_max_hs, SEC_HALF_V*2);				//1区画分減速走行。走行後は停止しない
+	}else if(run_mode == 6){
+		driveD(-accel_hs, SPEED_6, speed_max_hs, SEC_HALF_V*2);				//1区画分減速走行。走行後は停止しない
 	}
 }
 
@@ -858,7 +908,7 @@ void slalom_R90(void){
 		slalomB(10000, SPEED_HIGH_HIGH, SLALOM_4_OFFSET_B);
 	}else if(run_mode == 5){
 		slalomF(10000, SPEED_5, SLALOM_5_OFFSET_F, SLALOM_5_WALL_FL, SLALOM_5_WALL_FR);
-		slalomR(-SLALOM_5_DEGACCEL, -SLALOM_5_OMEGA, -45, SPEED_5);
+		slalomR(-SLALOM_5_DEGACCEL, -SLALOM_5_OMEGA, -20, SPEED_5);
 
 		if(!MF.FLAG.XDIR){
 			turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
@@ -921,7 +971,7 @@ void slalom_L90(void){
 		slalomB(10000, SPEED_HIGH_HIGH, SLALOM_4_OFFSET_B);
 	}else if(run_mode == 5){
 		slalomF(10000, SPEED_5, SLALOM_5_OFFSET_F, SLALOM_5_WALL_FL, SLALOM_5_WALL_FR);
-		slalomR(SLALOM_5_DEGACCEL, SLALOM_5_OMEGA, 45, SPEED_5);
+		slalomR(SLALOM_5_DEGACCEL, SLALOM_5_OMEGA, 20, SPEED_5);
 
 		if(!MF.FLAG.XDIR){
 			turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
@@ -992,6 +1042,16 @@ void Lslalom_R90(void){
 			turn_dir(DIR_TURN_R90_8, 3);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
 		}
 		slalomB(10000, SPEED_5, LSLALOM_5_OFFSET_B);
+	}else if(run_mode == 6){
+		slalomF(10000, SPEED_6, LSLALOM_6_OFFSET_F, LSLALOM_6_WALL_FL, LSLALOM_6_WALL_FR);
+		slalomR(-LSLALOM_6_DEGACCEL, -LSLALOM_6_OMEGA, -70, SPEED_6);
+
+		if(!MF.FLAG.XDIR){
+			turn_dir(DIR_TURN_R90, 1);										//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+		}else{
+			turn_dir(DIR_TURN_R90_8, 3);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+		}
+		slalomB(10000, SPEED_6, LSLALOM_6_OFFSET_B);
 	}
 }
 
@@ -1054,6 +1114,16 @@ void Lslalom_L90(void){
 			turn_dir(DIR_TURN_L90_8, 3);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
 		}
 		slalomB(10000, SPEED_5, LSLALOM_5_OFFSET_B);
+	}else if(run_mode == 6){
+		slalomF(10000, SPEED_6, LSLALOM_6_OFFSET_F, LSLALOM_6_WALL_FL, LSLALOM_6_WALL_FR);
+		slalomR(LSLALOM_6_DEGACCEL, LSLALOM_6_OMEGA, 70, SPEED_6);
+
+		if(!MF.FLAG.XDIR){
+			turn_dir(DIR_TURN_L90, 1);										//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+		}else{
+			turn_dir(DIR_TURN_L90_8, 3);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+		}
+		slalomB(10000, SPEED_6, LSLALOM_6_OFFSET_B);
 	}
 }
 
@@ -1165,6 +1235,17 @@ void Lslalom_R180(void){
 			turn_dir(DIR_TURN_R180_8, 3);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
 		}
 		slalomB(10000, SPEED_5, LROTATE_5_OFFSET_B);
+	}else if(run_mode == 6){
+		slalomF(10000, SPEED_6, LROTATE_6_OFFSET_F, LROTATE_6_WALL_FL, LROTATE_6_WALL_FR);
+		slalomR(-LROTATE_6_DEGACCEL, -LROTATE_6_OMEGA, -160, SPEED_6);
+
+		if(!MF.FLAG.XDIR){
+			turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+			turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+		}else{
+			turn_dir(DIR_TURN_R180_8, 3);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+		}
+		slalomB(10000, SPEED_6, LROTATE_6_OFFSET_B);
 	}
 }
 
@@ -1232,6 +1313,17 @@ void Lslalom_L180(void){
 			turn_dir(DIR_TURN_L180_8, 3);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
 		}
 		slalomB(10000, SPEED_5, LROTATE_5_OFFSET_B);
+	}else if(run_mode == 6){
+		slalomF(10000, SPEED_6, LROTATE_6_OFFSET_F, LROTATE_6_WALL_FL, LROTATE_6_WALL_FR);
+		slalomR(LROTATE_6_DEGACCEL, LROTATE_6_OMEGA, 160, SPEED_6);
+
+		if(!MF.FLAG.XDIR){
+			turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+			turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+		}else{
+			turn_dir(DIR_TURN_L180_8, 3);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
+		}
+		slalomB(10000, SPEED_6, LROTATE_6_OFFSET_B);
 	}
 }
 
@@ -2591,35 +2683,7 @@ void pass_test(void){
 					goal_y = GOAL_Y;
 					break;
 				case 1:
-					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース----
-					printf("pass press 3.\n");
-					MF.FLAG.SCND = 1;
-					MF.FLAG.ACCL2 = 1;
-					MF.FLAG.STRAIGHT = 1;
-					run_mode = LOW;
-					start_mode = 0;
-					goal_mode = 1;
-					accel_hs = 5000;
-					speed_max_hs = 800;
-
-					pass_mode = 3;						//a半区画ベースでroute配列生成
-
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
-
-					get_base();
-
-					searchF3();
-					HAL_Delay(2000);
-
-					goal_x = goal_y = 0;
-					searchF3();
-
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
-					break;
-				case 2:
-					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース Middle Speed----
 					printf("pass press 3-2.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
@@ -2646,7 +2710,7 @@ void pass_test(void){
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 					break;
-				case 3:
+				case 2:
 					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
 					printf("pass press 3-2.\n");
 					MF.FLAG.SCND = 1;
@@ -2674,17 +2738,45 @@ void pass_test(void){
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
 					break;
+				case 3:
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High High Speed----
+					printf("pass press 3-2.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH_HIGH;
+					start_mode = 0;
+					goal_mode = 2;
+					accel_hs = 10000;
+					speed_max_hs = 2000;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF3();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF3();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+					break;
 				case 4:
-					//----a直線と大回り圧縮と斜めｰｰｰｰ
+					//----a直線と大回り圧縮と斜め Middle Speedｰｰｰｰ
 					printf("pass press 4.\n");
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
-					run_mode = LOW;
+					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 5000;
-					speed_max_hs = 800;
+					speed_max_hs = 1200;
 
 					pass_mode = 4;
 
@@ -2708,37 +2800,9 @@ void pass_test(void){
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
-					run_mode = MIDDLE;
-					start_mode = 0;
-					goal_mode = 1;
-					accel_hs = 5000;
-					speed_max_hs = 1200;
-
-					pass_mode = 4;
-
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
-
-					get_base();
-
-					searchF4();
-					HAL_Delay(2000);
-
-					goal_x = goal_y = 0;
-					searchF4();
-
-					goal_x = GOAL_X;
-					goal_y = GOAL_Y;
-					break;
-				case 6:
-					//----a直線と大回り圧縮と斜め High Speedｰｰｰｰ
-					printf("pass press 4.\n");
-					MF.FLAG.SCND = 1;
-					MF.FLAG.ACCL2 = 1;
-					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1600;
 
@@ -2764,9 +2828,9 @@ void pass_test(void){
 					MF.FLAG.SCND = 1;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 1;
-					run_mode = HIGH_HIGH;
+					run_mode = 5;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 10000;
 					speed_max_hs = 2000;
 

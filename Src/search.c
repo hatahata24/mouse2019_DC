@@ -1245,6 +1245,117 @@ void searchF4(){
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
+//searchF5
+//aスラローム(+既知区間加速探索走行)+pass圧縮+機体方向&位置未更新+半区画ベース+大回り減速でgoal座標に進む
+//a引数：なし
+//a戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchF5(){
+
+	if(MF.FLAG.SCND){
+		load_map_from_eeprom();
+	}
+	pass_mode = 3;
+
+	//====a1区画前進====
+	adv_pos();
+
+	//====a歩数マップ・経路作成====
+	make_smap();											//a歩数マップ作成
+	make_route();											//a最短経路探索（route配列に動作が格納される）
+
+	//====pass圧縮====
+	p_cnt = 0;												//a経路カウンタの初期化
+	pass_route2();
+
+	//====a前に壁が無い想定で問答無用で前進====
+	start_sectionA();
+
+	MF2.FLAG.HACCEL = 0;
+
+	//====a探索走行====
+	do{
+		//----a進行----
+		switch(pass[p_cnt++]){								//route配列によって進行を決定。経路カウンタを進める
+			//----a右スラローム----
+			case -1:
+				slalom_R90();
+				break;
+
+			//----a左スラローム----
+			case -2:
+				slalom_L90();
+				break;
+
+			//----a大回り右90----
+			case -3:
+				Lslalom_R90();
+				break;
+
+			//----a大回り左90----
+			case -4:
+				Lslalom_L90();
+				break;
+
+			//----a大回り右180----
+			case -5:
+				Lslalom_R180();
+				break;
+
+			//----a大回り左180----
+			case -6:
+				Lslalom_L180();
+				break;
+
+			//----pass配列最後(なお本来呼び出される前にゴールする)----
+			case -114:
+				rotate_180();
+				rotate_180();
+				while(1);
+				break;
+
+			//----a前進----
+			default:
+				if(pass[p_cnt-1] < 4){
+					for(int k = 0; k < pass[p_cnt-1]; k++){
+						half_sectionU();
+					}
+				}else{
+					one_sectionA();
+					MF2.FLAG.HACCEL = 1;
+					int k;
+					for(k = 0; k < pass[p_cnt-1]-4; k++){
+						half_sectionU();
+					}
+					one_sectionD();
+					MF2.FLAG.HACCEL = 0;
+				}
+				break;
+		}
+	}while(pass[p_cnt] != -114);
+
+	mouse.x = goal_x;
+	mouse.y = goal_y;
+
+	for(int j=0; j<goal_mode-1; j++){
+		one_sectionU();
+		adv_pos();
+	}
+	half_sectionD();
+	set_positionF();
+
+	HAL_Delay(500);
+	rotate_180();											//180度回転
+//	driveC2(SETPOS_BACK);         //a尻を当てる程度に後退。回転後に停止する
+//	degree_z = target_degree_z;
+//	start_mode = 0;
+	start_mode = 1;
+	goal_mode = 1;
+
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
 //adv_pos
 //aマイクロマウス内部位置情報で前進させる
 //a引数：なし
@@ -1638,7 +1749,7 @@ void make_smap(void){
 //	smap[goal_y][goal_x] = 0;
 
 	//====a歩数カウンタの重みづけ====
-	int straight = 3;
+	int straight = 2;
 	int turn = 5;
 	full_led_write(GREEN);
 	//====a自分の座標にたどり着くまでループ====
