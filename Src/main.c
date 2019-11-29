@@ -531,7 +531,8 @@ int main(void)
 		  		  //----a超新地走行----
 		  		  printf("Simple Run.\n");
 		  		  //MF.FLAG.WEDGE = 1;
-		  		  simple_run();
+//		  		  simple_run();
+		  		  perfect_run();
 		  		  break;
 
 		  	  case 2:

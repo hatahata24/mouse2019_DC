@@ -194,8 +194,7 @@ void driveA(uint16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void driveD(int16_t accel_p, uint16_t speed_min_p, uint16_t speed_max_p, uint16_t dist){
 
-//	float speed_0 = (speed_l + speed_r) / 2;								//等速走行距離を計算するためにmain.cより参照
-	float speed_0 = (target_speed_l + target_speed_r) / 2;								//等速走行距離を計算するためにmain.cより参照
+	float speed_0 = (target_speed_l + target_speed_r) / 2;					//等速走行距離を計算するためにmain.cより参照
 	speed_min_l = speed_min_r = speed_min_p;
 	speed_max_l = speed_max_r = speed_max_p;
 	accel_l = accel_r = accel_p;							//引数の各パラメータをグローバル変数化
@@ -294,10 +293,19 @@ void slalomF(int16_t accel_p, int16_t speed_p, uint8_t dist_p, uint16_t wall_fl,
 
 	control_start();
 	dist_l = dist_r = 0;
-	while(dist_l < dist_p && dist_r < dist_p){
-		if(ad_fl > wall_fl || ad_fr > wall_fr){
-			full_led_write(RED);
-			break;
+	if(run_mode == 5 && MF2.FLAG.TEMP){
+		while(dist_l < dist_p || dist_r < dist_p){
+			if(ad_fl > wall_fl || ad_fr > wall_fr){
+				full_led_write(RED);
+				break;
+			}
+		}
+	}else{
+		while(dist_l < dist_p && dist_r < dist_p){
+			if(ad_fl > wall_fl || ad_fr > wall_fr){
+				full_led_write(RED);
+				break;
+			}
 		}
 	}
 	drive_stop();
@@ -313,6 +321,7 @@ void slalomF(int16_t accel_p, int16_t speed_p, uint8_t dist_p, uint16_t wall_fl,
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void slalomR(int32_t degaccel_p, int16_t omega_p, int16_t degree_p, int16_t speed_p){
 	MF.FLAG.GYRO = 1;
+	full_led_write(WHITE);
 	target_degaccel_z = degaccel_p;
 	target_omega_z = 0;
 	speed_G = speed_p;
@@ -366,10 +375,8 @@ void slalomB(int16_t accel_p, int16_t speed_p, uint8_t dist_p){
 	speed_max_l = speed_max_r = speed_p;
 
 	control_start();
-	MF2.FLAG.TEMP = 1;
 	dist_l = dist_r = 0;
 	while(dist_l < dist_p && dist_r < dist_p);
-	MF2.FLAG.TEMP = 0;
 }
 
 
@@ -907,7 +914,9 @@ void slalom_R90(void){
 		}
 		slalomB(10000, SPEED_HIGH_HIGH, SLALOM_4_OFFSET_B);
 	}else if(run_mode == 5){
+		MF2.FLAG.TEMP = 1;
 		slalomF(10000, SPEED_5, SLALOM_5_OFFSET_F, SLALOM_5_WALL_FL, SLALOM_5_WALL_FR);
+		MF2.FLAG.TEMP = 0;
 		slalomR(-SLALOM_5_DEGACCEL, -SLALOM_5_OMEGA, -20, SPEED_5);
 
 		if(!MF.FLAG.XDIR){
@@ -915,7 +924,9 @@ void slalom_R90(void){
 		}else{
 			turn_dir(DIR_TURN_R90_8, 3);								//マイクロマウス内部位置情報でも左回転処理&目標角度左90度
 		}
+		MF2.FLAG.TEMP = 1;
 		slalomB(10000, SPEED_5, SLALOM_5_OFFSET_B);
+		MF2.FLAG.TEMP = 0;
 	}
 	if(!MF.FLAG.SCND)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
 }
@@ -970,7 +981,9 @@ void slalom_L90(void){
 		}
 		slalomB(10000, SPEED_HIGH_HIGH, SLALOM_4_OFFSET_B);
 	}else if(run_mode == 5){
+		MF2.FLAG.TEMP = 1;
 		slalomF(10000, SPEED_5, SLALOM_5_OFFSET_F, SLALOM_5_WALL_FL, SLALOM_5_WALL_FR);
+		MF2.FLAG.TEMP = 0;
 		slalomR(SLALOM_5_DEGACCEL, SLALOM_5_OMEGA, 20, SPEED_5);
 
 		if(!MF.FLAG.XDIR){
@@ -978,7 +991,9 @@ void slalom_L90(void){
 		}else{
 			turn_dir(DIR_TURN_L90_8, 3);								//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
 		}
+		MF2.FLAG.TEMP = 1;
 		slalomB(10000, SPEED_5, SLALOM_5_OFFSET_B);
+		MF2.FLAG.TEMP = 0;
 	}
 	if(!MF.FLAG.SCND)get_wall_info();					//壁情報を取得，片壁制御の有効・無効の判断
 }
@@ -1204,7 +1219,7 @@ void Lslalom_R180(void){
 		slalomB(10000, SPEED_MIDDLE, LROTATE_2_OFFSET_B);
 	}else if(run_mode == HIGH){
 		slalomF(10000, SPEED_HIGH, LROTATE_3_OFFSET_F, LROTATE_3_WALL_FL, LROTATE_3_WALL_FR);
-		slalomR(-LROTATE_3_DEGACCEL, -LROTATE_3_OMEGA, -180, SPEED_HIGH);
+		slalomR(-LROTATE_3_DEGACCEL, -LROTATE_3_OMEGA, -170, SPEED_HIGH);
 
 		if(!MF.FLAG.XDIR){
 			turn_dir(DIR_TURN_R90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
@@ -1282,7 +1297,7 @@ void Lslalom_L180(void){
 		slalomB(10000, SPEED_MIDDLE, LROTATE_2_OFFSET_B);
 	}else if(run_mode == HIGH){
 		slalomF(10000, SPEED_HIGH, LROTATE_3_OFFSET_F, LROTATE_3_WALL_FL, LROTATE_3_WALL_FR);
-		slalomR(LROTATE_3_DEGACCEL, LROTATE_3_OMEGA, 180, SPEED_HIGH);
+		slalomR(LROTATE_3_DEGACCEL, LROTATE_3_OMEGA, 170, SPEED_HIGH);
 
 		if(!MF.FLAG.XDIR){
 			turn_dir(DIR_TURN_L90, 1);									//マイクロマウス内部位置情報でも左回転処理&目標角度右90度
@@ -2664,7 +2679,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 0;
 					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 4000;
 					speed_max_hs = 1000;
 					start_mode = 0;
@@ -2690,7 +2705,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = MIDDLE;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1200;
 
@@ -2718,7 +2733,7 @@ void pass_test(void){
 					MF.FLAG.STRAIGHT = 1;
 					run_mode = HIGH;
 					start_mode = 0;
-					goal_mode = 1;
+					goal_mode = 2;
 					accel_hs = 5000;
 					speed_max_hs = 1600;
 
@@ -3155,26 +3170,36 @@ void sample_course_run(void){
 					break;
 
 				case 1:
-					//----サンプルコース1　超信地----
+					//----サンプルコース1　爆速ターン連続----
+					run_mode = 5;
+
 					half_sectionA();
-					half_sectionD();
-					rotate_R90();
-					half_sectionA();
-					half_sectionD();
-					rotate_R90();
-					half_sectionA();
+					slalom_R90();
+					slalom_L90();
+					slalom_L90();
+					slalom_R90();
+					slalom_R90();
+					for(int k=0; k<5; k++){
+						slalom_R90();
+						slalom_R90();
+						slalom_L90();
+						slalom_L90();
+						slalom_R90();
+						slalom_R90();
+					}
 					half_sectionD();
 					break;
 
 				case 2:
 					//----サンプルコース1　超信地----
+					run_mode = 5;
+
 					half_sectionA();
-					half_sectionD();
-					rotate_L90();
-					half_sectionA();
-					half_sectionD();
-					rotate_L90();
-					half_sectionA();
+					slalom_R90();
+					slalom_L90();
+					slalom_R90();
+					slalom_L90();
+					slalom_R90();
 					half_sectionD();
 					break;
 
@@ -3654,117 +3679,234 @@ void perfect_run(void){
 		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET){
 			  HAL_Delay(50);
 			  while(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET);
+			  drive_ready();
 			  switch(mode){
 
 				case 0:
+					//----a一次探索スラローム走行----
+					printf("First Run.\n");
+					MF.FLAG.SCND = 0;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 0;
+					run_mode = MIDDLE;
+					start_mode = 0;
+					goal_mode = 2;
+					accel_hs = 4000;
+					speed_max_hs = 1000;
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchC();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchC();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 
 				case 1:
-					//----a一次探索連続走行----
-					printf("First Run. (Continuous)\n");
-
+					//----a一次重ね探索スラローム走行----
+					printf("First Run.\n");
 					MF.FLAG.SCND = 0;
-					run_mode = LOW;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 0;
+					run_mode = MIDDLE;
 					start_mode = 0;
 					goal_mode = 2;
-					goal_x = 7;
-					goal_y = 7;
+					accel_hs = 4000;
+					speed_max_hs = 1000;
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 
 					get_base();
 
-					searchB();
+					searchC2();
 					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
-					searchB();
+					searchC();
 
-					goal_x = 7;
-					goal_y = 7;
-
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 
 				case 2:
-					//----a二次探索走行----
-					printf("Second Run. (Continuous)\n");
-
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
+					printf("pass press 3-2.\n");
 					MF.FLAG.SCND = 1;
-					run_mode = LOW;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH;
 					start_mode = 0;
 					goal_mode = 2;
-					goal_x = 7;
-					goal_y = 7;
+					accel_hs = 5000;
+					speed_max_hs = 1600;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 
 					get_base();
 
-					searchB();
+					searchF3();
 					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
-					searchB();
+					searchF3();
 
-					goal_x = 7;
-					goal_y = 7;
-
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 
 				case 3:
-					//----a一次探索スラローム走行----
-					printf("First Run. (Slalom)\n");
-
-					MF.FLAG.SCND = 0;
-					run_mode = LOW;
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High High Speed----
+					printf("pass press 3-2.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH_HIGH;
 					start_mode = 0;
 					goal_mode = 2;
-					goal_x = 7;
-					goal_y = 7;
+					accel_hs = 10000;
+					speed_max_hs = 2000;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 
 					get_base();
 
-					searchC();
+					searchF3();
 					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
-					searchC();
+					searchF3();
 
-					goal_x = 7;
-					goal_y = 7;
-
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 
 				case 4:
-					//---a二次探索スラローム走行----
-					printf("Second Run. (Slalom)\n");
-
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High High Speed----
+					printf("pass press 3-2.\n");
 					MF.FLAG.SCND = 1;
-					run_mode = LOW;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = HIGH_HIGH;
 					start_mode = 0;
 					goal_mode = 2;
-					goal_x = 7;
-					goal_y = 7;
+					accel_hs = 15000;
+					speed_max_hs = 2500;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 
 					get_base();
 
-					searchC();
+					searchF3();
 					HAL_Delay(2000);
 
 					goal_x = goal_y = 0;
-					searchC();
+					searchF3();
 
-					goal_x = 7;
-					goal_y = 7;
-
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 
 				case 5:
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
+					printf("pass press 3-4.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = 5;
+					start_mode = 0;
+					goal_mode = 2;
+					accel_hs = 25000;
+					speed_max_hs = 3000;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF3();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF3();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 
 				case 6:
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
+					printf("pass press 3-4.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = 5;
+					start_mode = 0;
+					goal_mode = 2;
+					accel_hs = 10000;
+					speed_max_hs = 2000;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF3();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF3();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 				case 7:
-/*			  		  for(int i=0; i<m_select; i++){
-			  			  buzzer(mario_select[i][0], mario_select[i][1]);
-			  		  }
-*/					perfect_slalom();
+					//----a直線と大回り圧縮(adv_posを停止)+半区画ベース High Speed----
+					printf("pass press 3-4.\n");
+					MF.FLAG.SCND = 1;
+					MF.FLAG.ACCL2 = 1;
+					MF.FLAG.STRAIGHT = 1;
+					run_mode = 5;
+					start_mode = 0;
+					goal_mode = 2;
+					accel_hs = 22000;
+					speed_max_hs = 3000;
+
+					pass_mode = 3;						//a半区画ベースでroute配列生成
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
+
+					get_base();
+
+					searchF3();
+					HAL_Delay(2000);
+
+					goal_x = goal_y = 0;
+					searchF3();
+
+					goal_x = GOAL_X;
+					goal_y = GOAL_Y;
 					break;
 			}
 		}
