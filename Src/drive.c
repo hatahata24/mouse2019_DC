@@ -321,7 +321,7 @@ void slalomF(int16_t accel_p, int16_t speed_p, uint8_t dist_p, uint16_t wall_fl,
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void slalomR(int32_t degaccel_p, int16_t omega_p, int16_t degree_p, int16_t speed_p){
 	MF.FLAG.GYRO = 1;
-	full_led_write(WHITE);
+//	full_led_write(WHITE);
 	target_degaccel_z = degaccel_p;
 	target_omega_z = 0;
 	speed_G = speed_p;
@@ -3715,6 +3715,8 @@ void perfect_run(void){
 					MF.FLAG.SCND = 0;
 					MF.FLAG.ACCL2 = 1;
 					MF.FLAG.STRAIGHT = 0;
+					MF.FLAG.SRC2 = 1;
+
 					run_mode = MIDDLE;
 					start_mode = 0;
 					goal_mode = 2;
@@ -3727,10 +3729,17 @@ void perfect_run(void){
 					get_base();
 
 					searchC2();
+					start_mode = 1;
+					goal_mode = 1;
+
 					HAL_Delay(2000);
 
+					rotate_180();											//180度回転
+					MF.FLAG.SCND = 1;
+					MF.FLAG.SRC2 = 0;
 					goal_x = goal_y = 0;
-					searchC();
+					run_mode = HIGH;
+					searchF3();
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -3748,7 +3757,7 @@ void perfect_run(void){
 					accel_hs = 5000;
 					speed_max_hs = 1600;
 
-					pass_mode = 3;						//a半区画ベースでroute配列生成
+//					pass_mode = 3;						//a半区画ベースでroute配列生成
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -3777,7 +3786,7 @@ void perfect_run(void){
 					accel_hs = 10000;
 					speed_max_hs = 2000;
 
-					pass_mode = 3;						//a半区画ベースでroute配列生成
+//					pass_mode = 3;						//a半区画ベースでroute配列生成
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -3806,7 +3815,7 @@ void perfect_run(void){
 					accel_hs = 15000;
 					speed_max_hs = 2500;
 
-					pass_mode = 3;						//a半区画ベースでroute配列生成
+//					pass_mode = 3;						//a半区画ベースでroute配列生成
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -3835,7 +3844,7 @@ void perfect_run(void){
 					accel_hs = 25000;
 					speed_max_hs = 3000;
 
-					pass_mode = 3;						//a半区画ベースでroute配列生成
+//					pass_mode = 3;						//a半区画ベースでroute配列生成
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -3864,7 +3873,7 @@ void perfect_run(void){
 					accel_hs = 10000;
 					speed_max_hs = 2000;
 
-					pass_mode = 3;						//a半区画ベースでroute配列生成
+//					pass_mode = 3;						//a半区画ベースでroute配列生成
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
@@ -3892,7 +3901,7 @@ void perfect_run(void){
 					accel_hs = 22000;
 					speed_max_hs = 3000;
 
-					pass_mode = 3;						//a半区画ベースでroute配列生成
+//					pass_mode = 3;						//a半区画ベースでroute配列生成
 
 					goal_x = GOAL_X;
 					goal_y = GOAL_Y;
